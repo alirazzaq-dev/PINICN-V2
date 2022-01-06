@@ -1,28 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import './styles.css';
+import { makeStyles } from '@mui/styles';
+// import './styles.css';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
+// import Grid from '@mui/material/Grid';
 import PICNIClogo from '../../assets/logo.svg'
-import Hidden from '@mui/material/Hidden';
-import Menu from '@mui/material/Menu';
-import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+// import Hidden from '@mui/material/Hidden';
+// import Menu from '@mui/material/Menu';
+// import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import {LeftPaneContent} from '../LeftPane';
+
+import MenuIcon from '@mui/icons-material/Menu';
 
 
 import {
     AppBar,
     Toolbar,
-    Typography,
     IconButton,
     Drawer,
     Link,
     MenuItem,
 } from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
-
-import { makeStyles } from '@mui/styles';
-
-import { Link as RouterLink } from "react-router-dom";
 
 
 type color = "inherit" | "secondary" | "primary" | "success" | "error" | "info" | "warning" | undefined
@@ -60,41 +57,12 @@ const headersButtonsData: headersButtonsDataType[] = [
 ];
 
 
-const useStyles = makeStyles(() => ({
-    header: {
-        backgroundColor: "#ffffff",
-        paddingRight: "50px",
-        paddingLeft: "50px",
-        boxShadow: 'none',
-        border: "1px solid rgba(0, 0, 0, 0.05)",
-        "@media (max-width: 900px)": {
-            paddingLeft: 0,
-            paddingRight: 0,
-        },
-    },
-    menuButton: {
-        fontFamily: "Roboto Open Sans, sans-serif",
-        fontWeight: 700,
-        fontSize: "14px",
-        height: "40px",
-        width: "150px",
-        marginLeft: "20px",
-        color: "#ffffff",
-        borderRadius: 0,
-    },
-    toolbar: {
-        display: "flex",
-        justifyContent: "space-between",
-    },
-    drawerContainer: {
-        padding: "20px 30px",
-    },
-}));
-
 
 const Header = () => {
 
-    // const { header, menuButton, toolbar, drawerContainer } = useStyles();
+    const classes = useStyles();
+
+    const [walletConnect, setWalletConnect] = useState(false);
 
     const [state, setState] = useState({
         mobileView: false,
@@ -123,13 +91,13 @@ const Header = () => {
 
     const displayDesktop = () => {
         return (
-            <Toolbar className="toolbar" style={{ border: "0px solid black" }}>
-                <div style={{ border: "0px solid black" }}>
-                    <Link href="/" style={{textDecoration: "none", cursor: "pointer"}}>
+            <Toolbar className={classes.toolbar}>
+                <div>
+                    <Link href="/" className={classes.logo}>
                         <img src={PICNIClogo} alt="LOGO" />
                     </Link>
                 </div>
-                <div style={{ border: "0px solid black" }}>
+                <div>
                     {getMenuButtons()}
                 </div>
             </Toolbar>
@@ -137,22 +105,51 @@ const Header = () => {
     };
 
     const getMenuButtons = () => {
-        return headersButtonsData.map(({ label, href, type }) => {
-            return (
+        if(!walletConnect){
+            return(
                 <Button
-                    color={type}
-                    variant="contained"
-                    {...{
-                        key: label,
-                        to: href,
-                        component: RouterLink,
-                        className: "menuButton"
-                    }}
-                >
-                    {label}
+                color="secondary"
+                variant="contained"
+                onClick={() => setWalletConnect(true)}
+                sx= {{
+                    fontFamily: "Roboto Open Sans, sans-serif",
+                    fontWeight: 700,
+                    fontSize: "14px",
+                    height: "40px",
+                    width: "180px",
+                    marginLeft: "20px",
+                    color: "#ffffff",
+                    borderRadius: 0,
+                }}
+            >
+                Connect Wallet
                 </Button>
-            );
-        });
+            )
+        }
+        else{
+            return headersButtonsData.map(({ label, href, type }, key) => {
+                return (
+                    <Button
+                        key={key}
+                        color={type}
+                        variant="contained"
+                        sx= {{
+                            fontFamily: "Roboto Open Sans, sans-serif",
+                            fontWeight: 700,
+                            fontSize: "14px",
+                            height: "40px",
+                            width: "150px",
+                            marginLeft: "20px",
+                            color: "#ffffff",
+                            borderRadius: 0,
+                        }}
+                    >
+                        {label}
+                    </Button>
+                )
+    
+            });
+        }
     };
     
     const displayMobile = () => {
@@ -166,9 +163,9 @@ const Header = () => {
             setState((prevState) => ({ ...prevState, drawerOpen: false }));
 
         return (
-            <Toolbar style={{ border: "0px solid black", display: "flex", justifyContent: "space-between" }}>
+            <Toolbar className={classes.toolbar}>
 
-                <div style={{ border: "0px solid black", display: "flex", justifyContent: "space-between", alignSelf: "center", alignItems: "center" }}>
+                <div className={classes.toolbarLeftSection}>
 
                     <IconButton
                         {...{
@@ -183,15 +180,15 @@ const Header = () => {
                         <MenuIcon />
                     </IconButton>
 
-                    <Link href= "/"  sx={{ textDecoration: "none", cursor: "pointer"}}>
+                    <Link href= "/"  className={classes.logo} >
                         <img src={PICNIClogo} alt="LOGO" />
                     </Link>
 
                 </div>
 
 
-                <div style={{ border: "0px solid black", display: "flex", justifyContent: "space-between", alignSelf: "center", alignItems: "center" }}>
-                    <IconButton
+                {/* <div style={{ border: "0px solid black", display: "flex", justifyContent: "space-between", alignSelf: "center", alignItems: "center" }}> */}
+                    {/* <IconButton
                         {...{
                             sx: { color: "black", border: "0px solid black", marginRight: 0 },
                             edge: "end",
@@ -202,28 +199,51 @@ const Header = () => {
                         }}
                     >
                         <ArrowCircleDownIcon fontSize="large" />
-                    </IconButton>
+                    </IconButton> */}
+                    {
+                        !walletConnect && (
+                                        <Button
+                                        color="secondary"
+                                        variant="contained"
+                                        onClick={() => setWalletConnect(true)}
+                                        sx= {{
+                                            fontFamily: "Roboto Open Sans, sans-serif",
+                                            fontWeight: 700,
+                                            fontSize: "14px",
+                                            height: "40px",
+                                            width: "180px",
+                                            marginLeft: "20px",
+                                            color: "#ffffff",
+                                            borderRadius: 0,
+                                        }}
+                                    >
+                                        Connect Wallet
+                                        </Button>
 
-                    <Button
-                        color={headersButtonsData[2].type}
-                        variant="contained"
-                        className="menuButton"
-                    >
-                        {headersButtonsData[2].label}
-                    </Button>
-                </div>
+                        )
+                    }
 
-                <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    MenuListProps={{
-                        'aria-labelledby': 'basic-button',
-                    }}
-                >
-                    <MenuItem onClick={handleClose}> {headersButtonsData[0].label} </MenuItem>
-                </Menu>
+                    {
+                        walletConnect && (
+                                <Button
+                                    color={headersButtonsData[2].type}
+                                    variant="contained"
+                                    sx= {{
+                                        fontFamily: "Roboto Open Sans, sans-serif",
+                                        fontWeight: 700,
+                                        fontSize: "14px",
+                                        height: "40px",
+                                        width: "150px",
+                                        marginLeft: "20px",
+                                        color: "#ffffff",
+                                        borderRadius: 0,
+                                    }}
+                                                        >
+                                    {headersButtonsData[2].label}
+                                </Button>
+
+                        )
+                    }
 
                 <Drawer
                     {...{
@@ -232,7 +252,7 @@ const Header = () => {
                         onClose: handleDrawerClose,
                     }}
                 >
-                    <div className="drawerContainer">{LeftPaneContent()}</div>
+                    <div className={classes.drawerContainer}>{LeftPaneContent()}</div>
                 </Drawer>
 
             </Toolbar>
@@ -241,15 +261,73 @@ const Header = () => {
 
     return (
         <header>
-            <AppBar className="header" style={{ border: "0px solid black" }}>
+            <AppBar 
+                sx={{
+                    backgroundColor: "#ffffff",
+                    paddingRight: "20px",
+                    paddingLeft: "20px",
+                    boxShadow: 'none',
+                    border: "1px solid rgba(0, 0, 0, 0.05)",
+                    "@media (max-width: 900px)": {
+                        paddingLeft: 0,
+                        paddingRight: 0,
+                    },
+                }} 
+            >
                 {mobileView ? displayMobile() : displayDesktop()}
             </AppBar>
-        </header>
+        // </header>
     );
 
 }
 
-export default Header
+export default Header;
 
 
+const useStyles = makeStyles(() => ({
+    header: {
+        backgroundColor: "#ffffff",
+        paddingRight: "20px",
+        paddingLeft: "20px",
+        boxShadow: 'none',
+        border: "1px solid rgba(0, 0, 0, 0.05)",
+        "@media (max-width: 900px)": {
+            paddingLeft: 0,
+            paddingRight: 0,
+        },
+    },
+    logo: {
+        border: "0px solid blue",
+        textDecoration: "none", 
+        cursor: "pointer",
+        // height: "100%",
 
+    },
+    menuButton: {
+        border: "0px solid blue",
+        fontFamily: "Roboto Open Sans, sans-serif",
+        fontWeight: 700,
+        fontSize: "14px",
+        height: "40px",
+        width: "150px",
+        marginLeft: "20px",
+        color: "#ffffff",
+        borderRadius: 0,
+    },
+    toolbar: {
+        border: "0px solid black", 
+        display: "flex",
+        justifyContent: "space-between",
+
+    },
+    toolbarLeftSection : {
+        border: "0px solid black", 
+        display: "flex", 
+        justifyContent: "space-between", 
+        alignSelf: "center", 
+        alignItems: "center" 
+    },
+    drawerContainer: {
+        padding: "20px 30px",
+    },
+}));

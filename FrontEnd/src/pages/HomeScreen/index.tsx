@@ -3,11 +3,11 @@ import { makeStyles } from '@mui/styles';
 
 const HomeScreen = () => {
 
-    const { container } = useStyles();
+    const classes = useStyles();
 
     
     return (
-        <div className={container} >
+        <div className={classes.container} >
             Home Screen
         </div>
     )
@@ -18,7 +18,10 @@ export default HomeScreen
 
 const useStyles = makeStyles(() => ({
     container: {
-        border: "1px solid black"
+        border: "0px solid black",
+        // display: "flex",
+        // flexDirection: "row",
+        // flexGrow: 3,
     }
 
 }));

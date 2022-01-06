@@ -1,6 +1,6 @@
 import React from 'react'
 import './styles.css';
-import { makeStyles } from '@mui/styles';
+// import { makeStyles } from '@mui/styles';
 import productSVG from "../../assets/product.svg"
 import RemoveIcon from '@mui/icons-material/Remove';
 import './styles.css'
@@ -16,7 +16,7 @@ export const LeftPaneContent = () => {
         <div className="paneContainer">
 
             <div className="mainHeadingContainer"> 
-                <img src={productSVG} />
+                <img src={productSVG} alt="Products" />
                 <span className="mainHeadingText">
                     Products 
                 </span>
@@ -24,6 +24,8 @@ export const LeftPaneContent = () => {
             
             <div className="productDetailContainer">
                 <div className="productHeading"> <Icon /> PICNIC LaunchPad </div>
+                
+
                 <div className="productSubheadingText"> 
                     <Link href="/PresaleForm" style={{textDecoration: "none", cursor: "pointer", color: "black"}}>
                         Create a presale 
@@ -35,11 +37,12 @@ export const LeftPaneContent = () => {
                     </Link>
                 </div>
             </div>
+
             <div className="productDetailContainer">
                 <div className="productHeading"> <Icon /> PICNIC Locker </div>
                 <div className="productSubheadingText"> 
                     <Link href="/TokenLocker" style={{textDecoration: "none", cursor: "pointer", color: "black"}}>
-                        Lock a Token 
+                        Token Locker 
                     </Link>
                      
                 </div>
@@ -48,14 +51,18 @@ export const LeftPaneContent = () => {
                         Locked Tokens Listings 
                     </Link>
                 </div>
+            </div>
+
+            <div className="productDetailContainer">
+                <div className="productHeading"> <Icon /> PICNIC LP Locker </div>
                 <div className="productSubheadingText"> 
                     <Link href="/LPLocker" style={{textDecoration: "none", cursor: "pointer", color: "black"}}>
-                        Lock LP Tokens 
+                        LP Toker
                     </Link>
                 </div>
                 <div className="productSubheadingText"> 
                     <Link href="/LPLockerListing" style={{textDecoration: "none", cursor: "pointer", color: "black"}}>
-                        Locked LP Tokens Listings 
+                        Locked LP Listings 
                     </Link>
                  </div>
             </div>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap'); */
 
 .LeftPane-container{
     /* border: 1px solid black; */
@@ -18,7 +18,7 @@
     height: 100%;
     margin: 10px;
     margin-top: 80px;
-    padding: 10px;
+    /* padding: 10px; */
 }
 
 .mainHeadingContainer {
@@ -64,8 +64,8 @@
     .paneContainer {
         border: "1px solid black";
         height: 100%;
-        margin: 10px;
+        margin: 5px;
         margin-top: 10px;
-        padding: 10px;
+        /* padding: 10px; */
     }
 }
