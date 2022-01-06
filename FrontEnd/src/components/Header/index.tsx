@@ -114,12 +114,14 @@ const Header = () => {
                 sx= {{
                     fontFamily: "Roboto Open Sans, sans-serif",
                     fontWeight: 700,
-                    fontSize: "14px",
-                    height: "40px",
-                    width: "180px",
+                    fontSize: "12px",
+                    height: "35px",
+                    width: "150px",
                     marginLeft: "20px",
                     color: "#ffffff",
                     borderRadius: 0,
+                    display: "flex",
+                    alignItems: "center"
                 }}
             >
                 Connect Wallet
@@ -136,9 +138,9 @@ const Header = () => {
                         sx= {{
                             fontFamily: "Roboto Open Sans, sans-serif",
                             fontWeight: 700,
-                            fontSize: "14px",
-                            height: "40px",
-                            width: "150px",
+                            fontSize: "12px",
+                            height: "35px",
+                            width: "120px",
                             marginLeft: "20px",
                             color: "#ffffff",
                             borderRadius: 0,
@@ -209,9 +211,9 @@ const Header = () => {
                                         sx= {{
                                             fontFamily: "Roboto Open Sans, sans-serif",
                                             fontWeight: 700,
-                                            fontSize: "14px",
-                                            height: "40px",
-                                            width: "180px",
+                                            fontSize: "12px",
+                                            height: "35px",
+                                            width: "150px",
                                             marginLeft: "20px",
                                             color: "#ffffff",
                                             borderRadius: 0,
@@ -231,9 +233,9 @@ const Header = () => {
                                     sx= {{
                                         fontFamily: "Roboto Open Sans, sans-serif",
                                         fontWeight: 700,
-                                        fontSize: "14px",
-                                        height: "40px",
-                                        width: "150px",
+                                        fontSize: "12px",
+                                        height: "35px",
+                                        width: "120px",
                                         marginLeft: "20px",
                                         color: "#ffffff",
                                         borderRadius: 0,
@@ -291,6 +293,8 @@ const useStyles = makeStyles(() => ({
         paddingLeft: "20px",
         boxShadow: 'none',
         border: "1px solid rgba(0, 0, 0, 0.05)",
+        fontFamily: "Roboto Open Sans, sans-serif",
+
         "@media (max-width: 900px)": {
             paddingLeft: 0,
             paddingRight: 0,
@@ -305,7 +309,6 @@ const useStyles = makeStyles(() => ({
     },
     menuButton: {
         border: "0px solid blue",
-        fontFamily: "Roboto Open Sans, sans-serif",
         fontWeight: 700,
         fontSize: "14px",
         height: "40px",
