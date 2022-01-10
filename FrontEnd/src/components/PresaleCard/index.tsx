@@ -30,9 +30,10 @@ const PresaleCard = () => {
             <div className={classes.headerContainer}>
 
                 <Grid container sx={{border: "0px solid black", height: "100%", width: "100%", display: "flex", justifyContent: "space-between"}}>
+                   
                     <Grid item xs={4} lg={5} sx={{border: "0px solid black", display: "flex" }}>
 
-                        <Grid item xs={6} style={{border: "0px solid black", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                        {/* <Grid item xs={6} style={{border: "0px solid black", display: "flex", justifyContent: "center", alignItems: "center"}}>
                             <Avatar 
                                 src={AvatarLogo}
                                 alt="Coin Logo"
@@ -48,7 +49,8 @@ const PresaleCard = () => {
                                     $PIC
                                 </div>
                             </div>
-                        </Grid>
+                        </Grid> */}
+                    <LogoNameSymbol src={AvatarLogo} name="PICNIC" symbol="$PIC" logoHeight={50} />
                     </Grid>
 
                     <Grid item lg={5} sx={{ border: "0px solid black", display: "flex", alignItems: "center"}}>
@@ -244,6 +246,7 @@ const useStyles = makeStyles(() => ({
 import CircularProgress, { CircularProgressProps } from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { fontSize } from '@mui/system';
+import LogoNameSymbol from '../LogoNameSymbol';
 
 function CircularProgressWithLabel(
   props: CircularProgressProps & { value: number },

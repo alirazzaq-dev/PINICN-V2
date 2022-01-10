@@ -247,15 +247,19 @@ const Header = () => {
                         )
                     }
 
-                <Drawer
-                    {...{
-                        anchor: "left",
-                        open: drawerOpen,
-                        onClose: handleDrawerClose,
-                    }}
-                >
-                    <div className={classes.drawerContainer}>{LeftPaneContent()}</div>
-                </Drawer>
+                    <Drawer
+                        {...{
+                            anchor: "left",
+                            open: drawerOpen,
+                            onClose: handleDrawerClose,
+                            style: {
+                                // border: "1px solid black",
+                                // backgroundColor: "red"
+                            }
+                        }}
+                    >
+                        <div className={classes.drawerContainer}>{LeftPaneContent()}</div>
+                    </Drawer>
 
             </Toolbar>
         );
@@ -331,6 +335,9 @@ const useStyles = makeStyles(() => ({
         alignItems: "center" 
     },
     drawerContainer: {
-        padding: "20px 30px",
+        width: "300px",
+        // padding: "10px",
+        // backgroundColor: "red"
+
     },
 }));
