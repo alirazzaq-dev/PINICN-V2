@@ -1,0 +1,29 @@
+.Layout-container {
+    height: 100%;
+    width: 100%;
+    background: #fbfbfb;
+
+}
+
+.Layout-body{
+    display: flex;
+    /* border: 1px solid red; */
+}
+
+.Layout-Leftpane {
+    display: flex;
+    width: 20vw;
+    height: 100vh;
+}
+
+@media (max-width: 1000px) {
+    .Layout-Leftpane {
+        width: 25vw;
+    }
+}
+
+@media (max-width: 900px) {
+    .Layout-Leftpane {
+        display: none;
+    }
+}
