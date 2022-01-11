@@ -55,8 +55,9 @@ const TokenLocker = () => {
                         <div>
                             
                             <div className={classes.summaryContainer} >
-                                <div style={{border: "0px solid black", margin: "10px 0px"}} > Lock summary </div>
+                                {/* <div style={{border: "0px solid black", margin: "10px 0px"}} > Lock summary </div> */}
 
+                                <div style={{border: "0px solid black", margin: "5px 0px"}} > Token Name: <span> ABC Coin </span> </div>
                                 <div style={{border: "0px solid black", margin: "5px 0px"}} > Token Address: <span> 0x000000000000000000000000000000000000 </span> </div>
                                 <div style={{border: "0px solid black", margin: "5px 0px"}} > Locker owner: <span> 0x0000001234123435325987502398475983475 </span> </div>
                                 <div style={{border: "0px solid black", margin: "5px 0px"}} > Total Supply: <span> 1000000000 </span> </div>
@@ -152,7 +153,7 @@ const useStyles = makeStyles(() => ({
         width: "100px"
     },
     summaryContainer: {
-        border: "0px solid black", width: "95%",  margin: "5px auto", fontSize: "14px", color: "#363636"
+        border: "0px solid black", width: "95%",  margin: "5px auto", fontSize: "14px", color: "#363636", display: "none"
     }
 
 
