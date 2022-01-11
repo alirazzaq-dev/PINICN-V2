@@ -1,27 +1,15 @@
 import React from 'react'
 import { makeStyles } from '@mui/styles';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { borderRadius } from '@mui/system';
-import LogoNameSymbol from "../../components/LogoNameSymbol";
 import image from '../../assets/AvatarLogo.svg'
 import LockListing from '../../components/LockerListing';
 import ToggleButtons from '../../components/ToggleButtons';
+import PaginationComponent from "../../components/Pagination"
 
 
 const LockerListing = () => {
+    
     const classes = useStyles();
-    
-    const [alignment, setAlignment] = React.useState('all');
-
-    const handleChange = (
-      event: React.MouseEvent<HTMLElement>,
-      newAlignment: string,
-    ) => {
-      setAlignment(newAlignment);
-    };
-
-    
+        
     return (
         <div className={classes.lockerContainer}>
             <div className={classes.lockerBody}>
@@ -43,9 +31,10 @@ const LockerListing = () => {
 
                         </div>
 
-                        <div className={classes.lockerInputContainer}>
-                            Input
+                        <div className={classes.lockerInputContainer}>  
+                            <input placeholder="Search by token address" className={classes.lockerInput} />
                         </div>
+
                     </div> 
                     
                         <div className={classes.tableHeader}>
@@ -69,7 +58,15 @@ const LockerListing = () => {
                             <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
                             <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
                             <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
+                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
+                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
+                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
+                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
 
+                        </div>
+
+                        <div className={classes.paginationContainer}>
+                            <PaginationComponent count={7} />
                         </div>
 
             
@@ -95,7 +92,6 @@ const useStyles = makeStyles(() => ({
             // border: "1px solid red",
             width: "90%",
             margin: "20px auto",
-
         },   
     },
     lockerTitleContainer: {
@@ -109,14 +105,12 @@ const useStyles = makeStyles(() => ({
         paddingTop: "20px",
         display: "flex",
         justifyContent: "space-between"
-
     },
     lockertitleText: {
         // border: "1px solid black",
         fontWeight: "bold",
         fontSize: "24px"
         // height: "30px"
-
     },
     lockerSwtchButtonsContainer: {
         border: "1px solid #1F88FE", 
@@ -129,16 +123,19 @@ const useStyles = makeStyles(() => ({
         // color: "red"
     },
     lockerInputContainer: {
+        border: "0px solid black",
+        width: "90%",
+        display: "flex",
+        margin: "10px auto 20px auto",
+        height: "30px"
+    },
+    lockerInput: {
         // border: "1px solid black",
-        // width: "90%",
-        margin: "10px 20px 20px 20px",
-        padding: "5px 10px",
+        width: "100%",
+        borderRadius: 0,
+        borderColor: "transparent",
         backgroundColor: "rgba(126, 126, 126, 0.08 )",
-        // opacity: "0.08",
-        // color: "black"
-
-        // height: "30px"
-
+        // padding: "5px 10px",
     },
     tableHeader: {
         // border: "1px solid black",
@@ -156,7 +153,17 @@ const useStyles = makeStyles(() => ({
         justifyContent: "flex-start"
     },
     tableBody: {
-        // border: "1px solid black"
     },
+    paginationContainer: {
+        // border: "1px solid black",
+        marginTop: "10px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    pagination: {
+        // border: "1px solid black",
+
+    }
 
 }));

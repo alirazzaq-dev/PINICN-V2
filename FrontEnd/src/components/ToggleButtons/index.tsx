@@ -35,7 +35,8 @@ const ToggleButtons: FC<ToggleButtonsProps> = ({text1, text2}) => {
         <ToggleButton 
         sx={{border: 0, fontSize: "8px", borderRadius: 0, '&.MuiToggleButton-root.Mui-selected': { 
             backgroundColor: "#1F88FE", 
-            color: "#fff" }
+            color: "#fff" 
+        }
     }}
         value="my">{text2}</ToggleButton>
 
