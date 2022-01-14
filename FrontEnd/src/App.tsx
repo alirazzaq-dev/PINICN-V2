@@ -11,6 +11,7 @@ import TokenLocker from './pages/TokenLocker';
 import LockerListing from './pages/LockerListing';
 import LPLocker from './pages/LPLocker';
 import LPLockerListing from './pages/LPLockerListing';
+import LockerDetail from './pages/LockerDetail';
 
 function App() {
   return (
@@ -21,9 +22,16 @@ function App() {
         <Route path="Presales" element={<Presales />} /> 
 
         <Route path="TokenLocker" element={<TokenLocker />} /> 
-        <Route path="LockerListing" element={<LockerListing />} /> 
+        <Route path="LockerListing" >
+            <Route path="" element={<LockerListing />} /> 
+            <Route path=":lockerID" element={<LockerDetail /> } />
+        </Route>       
+
         <Route path="LPLocker" element={<LPLocker />} /> 
-        <Route path="LPLockerListing" element={<LPLockerListing />} /> 
+        <Route path="LPLockerListing" >
+            <Route path="" element={<LPLockerListing />} /> 
+            <Route path=":lockerID" element={<LockerDetail /> } />
+        </Route>  
 
     </Route>       
   </Routes>

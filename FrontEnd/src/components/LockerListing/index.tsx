@@ -2,6 +2,7 @@ import React, {FC} from 'react'
 import { makeStyles } from '@mui/styles';
 import LogoNameSymbol from '../LogoNameSymbol';
 import Divider from '@mui/material/Divider';
+import { Link } from "@mui/material";
 
 
 interface LockerListingProps {
@@ -35,7 +36,9 @@ const LockerListing: FC<LockerListingProps> = ({src, name, symbol, amount, start
                 {endTime}
             </div>
             <div className={classes.lockerListingElement} style={{justifyContent: "center"}}>
-                view
+                <Link href="LockerListing/1" style={{ textDecoration: "none", cursor: "pointer" }}>
+                    view
+                </Link>
             </div>
     </div>
 )
