@@ -1,14 +1,55 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { makeStyles } from '@mui/styles';
 import image from '../../assets/AvatarLogo.svg'
 import LockListing from '../../components/LockerListing';
 import ToggleButtons from '../../components/ToggleButtons';
 import PaginationComponent from "../../components/Pagination"
+import { ethers } from "ethers";
+import { useDispatch, useSelector } from 'react-redux';
+import {addLockerData, setLockTokenLoading, DataType, setLockTokenInfo} from '../../components/Store'
+
+const LOCKER_FACTORY_ABI = require("../../abis/PICNICLockerFactory.json")
 
 
 const LockerListing = () => {
-    
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const { userInfo, lockersData, lockTokenInfo, masterContracts } = useSelector((state: DataType) => state);
+    console.log("lockersData", lockersData)
+
+
+    // const fetchAllLockers = async () => {
+    //     const lotteryContract = new ethers.Contract(masterContracts.lockerFactory, LOCKER_FACTORY_ABI.abi, provider)
+    //     const LokcersCount = Number(await lotteryContract.lockerCount());
+    //     console.log("New", Number(LokcersCount))
+    //     const lockers = [];
+    //     for(let count = LokcersCount; count > 0; count--){
+    //         const locker = await lotteryContract.loker(count);
+    //         const lockerInfo = {
+    //             id: Number(locker.id),
+    //             lockTime: Number(locker.lockTime),
+    //             lockerAddress:  locker.lockerAddress,
+    //             numOfTokens: Number(locker.numOfTokens),
+    //             owner: locker.owner,
+    //             status: locker.status,
+    //             tokenAddress: locker.tokenAddress,
+    //             unlockTime: Number(locker.unlockTime)
+    //         }
+    //         // console.log(lockerInfo)
+    //         lockers.push(lockerInfo)
+    //     }
+
+    //     dispatch(addLockerData({count: LokcersCount, lockers: lockers}))
+
+    // }
+
+    // useEffect(()=> {
+    //     fetchAllLockers();
+    // }, [])
+
+
         
     return (
         <div className={classes.lockerContainer}>
@@ -45,23 +86,23 @@ const LockerListing = () => {
                                 Amount
                             </div>
                             <div className={classes.tableHeaderElement}>
-                                Lock Time
+                                Lock Date
                             </div>
                             <div className={classes.tableHeaderElement}>
-                                Unlock Time
+                                Unlock Date
                             </div>
                         </div>
 
                         <div className={classes.tableBody}>
 
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
+                            {
+                                lockersData?.lockers?.map((locker) => {
+                                    return (
+                                        <LockListing id= {locker.id} name="Ali" symbol='ALIC' src={image} amount={locker.numOfTokens} startTime={locker.lockTime} endTime={locker.unlockTime} />
+                                    )
+                                })
+                            }
+
 
                         </div>
 
