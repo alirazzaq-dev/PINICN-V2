@@ -1,0 +1,7 @@
+[build]
+  base = "FrontEnd"
+  command = "yarn run build"
+  publish = "build"
+
+
+
