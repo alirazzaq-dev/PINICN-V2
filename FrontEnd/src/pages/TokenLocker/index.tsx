@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { makeStyles } from '@mui/styles';
 import ToggleButton from '@mui/material/ToggleButton';
 import Button from '@mui/material/Button';
@@ -10,13 +10,173 @@ import LockListing from '../../components/LockerListing';
 import ToggleButtons from '../../components/ToggleButtons';
 import ButtonComponent from '../../components/Button';
 
-
+import {LockTokenInputInfo, setLockTokenLoading, DataType, setLockTokenInfo} from '../../components/Store'
+import axios from "axios";
+import { useDispatch, useSelector } from 'react-redux';
+import { ethers } from "ethers";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const TokenLocker = () => {
 
     const classes = useStyles();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const dispatch = useDispatch();
+    const { userInfo, networkDetail, lockTokenInfo, masterContracts } = useSelector((state: DataType) => state);
+    // console.log("lockTokenInfo ", lockTokenInfo)
+    
+    const today = new Date()
+    const offset = new Date().getTimezoneOffset() * 60 * 1000
+    
+    const [currentTime, setCurrentTime] = useState<number>(today.getTime()) 
+    const hangleTimeChange = (e: any) => {
+        setCurrentTime(new Date(e).getTime())
+    }
 
-    console.log((Date.now()/100).toFixed(0));
+    const addDay = () => {
+        var current = new Date(currentTime);
+        // console.log("current before 1 day", current.getTime())
+        current.setDate(current.getDate() + 1)
+        setCurrentTime(current.getTime())
+        
+    }
+
+    const addYear = () => {
+        var current = new Date(currentTime);
+        // console.log("current before 1 year", current.getTime() )
+        current.setFullYear(current.getFullYear() + 1)
+        setCurrentTime(current.getTime())
+    }
+
+    const [tokens, setTokens] = useState<number>(0);
+    const handleTokens = (e: any) => {
+        setMax(null)
+        setTokens(Number(e))
+    }
+
+    const [max, setMax] = useState<number | null>(null);
+    const setMaxTokens = () => {
+        setMax(Number(lockTokenInfo?.youhold))
+        setTokens(Number(lockTokenInfo?.youhold))
+    }
+
+    const fetchInputTokenInfo = async (address: any) => {
+        
+        if(address === ""){
+            dispatch(setLockTokenInfo(null))
+            setMax(null)
+            return;
+        }
+
+        dispatch(setLockTokenInfo(null))
+        dispatch(setLockTokenLoading(true))
+        // console.log("fethcContractInfo start")
+        // console.log(address)
+
+        let res: any;
+
+        try {
+
+            if (networkDetail.id === 56) {
+                // console.log("this")
+                res = await axios.get(`https://api.bscscan.com/api?module=contract&action=getabi&address=${address}&apikey=NP3ZXMF51W5G48FMV9T5GGC1K67YV5UEXC`)
+            }
+            else if (networkDetail.id === 97) {
+                res = await axios.get(`https://api-testnet.bscscan.com/api?module=contract&action=getabi&address=${address}&apikey=NP3ZXMF51W5G48FMV9T5GGC1K67YV5UEXC`)
+            }
+            
+        }
+        catch (e) {
+            console.log("err")
+            // setTokenInfo({ loading: false, error: true })
+            throw ("Unable to fetch this token data")
+        }
+        
+        // console.log(res)
+
+        let Contract: any;
+        try {
+            Contract = new ethers.Contract(address, JSON.parse(res.data.result), provider)        
+        }
+        catch (err) {
+            console.log(err)
+            throw ("Unable to fetch this token data")
+        }
+
+        if (!Contract) {
+            return;
+        }
+
+        const symbol = await Contract.symbol();
+        const totalSupply = await Contract.totalSupply();
+        const decimals = await Contract.decimals();
+        const balanceOf = await Contract.balanceOf(userInfo.userAddress);
+        const name = await Contract.name();
+        const allowance = await Contract.allowance(userInfo.userAddress, masterContracts.lockerFactory );
+
+        const lockTokenInfo: LockTokenInputInfo = {
+            loading: false,
+            address: address,
+            methods: Contract,
+            name: String(name),
+            symbol: String(symbol),
+            decimal: Number(decimals),
+            totalSupply: Number(totalSupply),
+            youhold: Number(balanceOf),
+            allowance: Number(allowance)
+        }
+
+        // console.log("lockTokenInfo", lockTokenInfo)
+
+        dispatch(setLockTokenInfo(lockTokenInfo))
+
+    }
+
+    const handleApprove = async () => {
+        console.log("approval tokens ", tokens)
+
+        const allowance = await lockTokenInfo.methods.allowance(userInfo.userAddress, masterContracts.lockerFactory );
+        console.log("allowance ", Number(allowance))
+        if(Number(allowance) >= tokens ){
+            alert("Successfully Approved")
+        }
+        else{
+            try{
+                const signer = provider.getSigner()
+                const approvalTx = lockTokenInfo.methods.connect(signer);
+        
+                await approvalTx.approve(masterContracts.lockerFactory, tokens);
+            }
+            catch(e){
+                alert(e)
+            }
+        }
+
+    }
+
+    const handleLock = async () => {
+
+        console.log("Tokens to lock ", tokens)
+        const timeRequiered = ((currentTime - offset)/1000).toFixed();
+        console.log("Locked till  ", timeRequiered)
+
+
+        const fees = await masterContracts.lockerFactoryMethods.lockFee();
+        console.log("fees ", Number(fees))
+
+        const signer = provider.getSigner()
+        const lockTx = masterContracts.lockerFactoryMethods.connect(signer);
+        const options = {value: fees}
+
+        try{
+            const tx = await lockTx.createLcoker(0, lockTokenInfo.address, tokens, timeRequiered, options);
+            let receipt = await tx.wait();
+            console.log(receipt);
+        }
+        catch(e){
+            alert(e)
+        }
+        
+    }
 
     return (
         <div className={classes.lockerContainer}>
@@ -35,19 +195,43 @@ const TokenLocker = () => {
 
                         <div className={classes.lockerInputs}>
                             <div className={classes.lockerInputContainer}>
-                                <input placeholder="Enter token address" className={classes.lockerInput} />
-                                <div className={classes.yourBalance} > Your Balance: 0 PICINC</div>
+                                <input 
+                                    type="text" 
+                                    onChange={(e) => fetchInputTokenInfo(e.target.value)} 
+                                    placeholder="Enter token address" 
+                                    className={classes.lockerInput} 
+                                    />
+
+                            {
+                                lockTokenInfo?.symbol ?
+                                    <div className={classes.yourBalance} > Balance: {lockTokenInfo?.youhold} {lockTokenInfo?.symbol}</div> :
+                                    lockTokenInfo?.loading ? 
+                                    <div className={classes.yourBalance} > <CircularProgress size={25}/>  </div> :
+                                    null
+                            }
                             </div>
 
                             <div className={classes.lockerInputContainer}>
-                                <input placeholder="Enter token amount to lock" className={classes.lockerInput} />
-                                <ButtonComponent text='Max' width='50px' />
+                                <input 
+                                    type="number" 
+                                    value={max && max> 0 ? max : tokens} 
+                                    placeholder="Enter token amount to lock"
+                                    onChange={(e)=> handleTokens(e.target.value)} 
+                                    className={classes.lockerInput} />
+                                <ButtonComponent text='Max' width='50px' onClick={setMaxTokens} />
                             </div>
 
                             <div className={classes.lockerInputContainer}>
-                                <input type="datetime-local"  value="2014-02-09" className={classes.lockerInput} />
-                                <ButtonComponent text='Tomorrow' width='100px'/>
-                                <ButtonComponent text='+1 Year' width='100px' />
+                                <input 
+                                    onChange={(e) => hangleTimeChange(e.target.value) }
+                                    type="datetime-local"  
+                                    data-date-format="DD-YYYY-MM"
+                                    value={new Date(currentTime - offset).toISOString().slice(0,19) } 
+                                    min={new Date(today).toISOString().slice(0,19)}
+                                    className={classes.lockerInput} 
+                                    />
+                                <ButtonComponent text='+1 Day' width='100px' onClick={ addDay }/>
+                                <ButtonComponent text='+1 Year' width='100px' onClick= { addYear }/>
                             </div>
 
                         </div>
@@ -67,8 +251,15 @@ const TokenLocker = () => {
                             </div>
 
                             <div style={{display: "flex", justifyContent: "center", alignItems: "center", padding: "20px"}}>
-                                <ButtonComponent text='Approve Tokens' width='150px' style={{marginRight: "20px"}}/>
-                                <ButtonComponent text='Lock Tokens' width='150px' />
+                                <ButtonComponent 
+                                    onClick={handleApprove}
+                                    text={`Approve ${tokens > 0 ? tokens : ""} Tokens`} 
+                                    width='150px' 
+                                    style={{marginRight: "20px"}}
+                                    />
+                                <ButtonComponent 
+                                    onClick={handleLock}
+                                    text='Lock Tokens' width='150px' />
                             </div>
 
                         </div>
@@ -139,7 +330,7 @@ const useStyles = makeStyles(() => ({
         backgroundColor: "rgba(126, 126, 126, 0.08 )",
         width: "150px",
         "@media (max-width: 900px)": {
-            width: "200px",
+            width: "150px",
         },
 
 

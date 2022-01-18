@@ -5,13 +5,16 @@ import React, {FC} from 'react'
 interface ButtonProps {
     text: string,
     width: string,
-    style?: CSSProperties
+    style?: CSSProperties,
+    onClick?: () => void 
 }
 
-const ButtonComponent: FC<ButtonProps> = ({text, width, style} ) => {
+const ButtonComponent: FC<ButtonProps> = ({text, width, style, onClick} ) => {
 
     return (
-        <Button sx={{
+        <Button 
+        onClick={onClick}    
+        sx={{
             ...style,
             borderRadius: 0, 
             bgcolor: "#1F88FE", 

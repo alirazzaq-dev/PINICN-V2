@@ -2,9 +2,11 @@ import React, {FC} from 'react'
 import { makeStyles } from '@mui/styles';
 import LogoNameSymbol from '../LogoNameSymbol';
 import Divider from '@mui/material/Divider';
+import { Link } from "@mui/material";
 
 
 interface LockerListingProps {
+    id: number,
     src: string,
     name: string,
     symbol: string,
@@ -13,9 +15,14 @@ interface LockerListingProps {
     endTime: number
 }
 
-const LockerListing: FC<LockerListingProps> = ({src, name, symbol, amount, startTime, endTime}) => {
+const LockerListing: FC<LockerListingProps> = ({id, src, name, symbol, amount, startTime, endTime}) => {
 
     const classes = useStyles();
+
+    console.log("startTime", new Date(startTime * 1000).toLocaleDateString("en-US")    )
+
+    const startingTime = new Date(startTime * 1000).toLocaleDateString("en-US");
+    const EndingTime = new Date(endTime * 1000).toLocaleDateString("en-US");
 
 
     return (       
@@ -29,13 +36,15 @@ const LockerListing: FC<LockerListingProps> = ({src, name, symbol, amount, start
                 {amount}
             </div>
             <div className={classes.lockerListingElement}>
-                {startTime}
+                {startingTime}
             </div>
             <div className={classes.lockerListingElement}>
-                {endTime}
+                {EndingTime}
             </div>
             <div className={classes.lockerListingElement} style={{justifyContent: "center"}}>
-                view
+                <Link href={`LockerListing/${id}`} style={{ textDecoration: "none", cursor: "pointer" }}>
+                    view
+                </Link>
             </div>
     </div>
 )

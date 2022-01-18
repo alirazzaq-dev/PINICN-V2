@@ -1,14 +1,26 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { makeStyles } from '@mui/styles';
 import image from '../../assets/AvatarLogo.svg'
 import LockListing from '../../components/LockerListing';
 import ToggleButtons from '../../components/ToggleButtons';
 import PaginationComponent from "../../components/Pagination"
+import { ethers } from "ethers";
+import { useDispatch, useSelector } from 'react-redux';
+import {LockerInfo, addLockerData, setLockTokenLoading, DataType, setLockTokenInfo} from '../../components/Store'
+
+const LOCKER_FACTORY_ABI = require("../../abis/PICNICLockerFactory.json")
 
 
 const LockerListing = () => {
-    
+
+    // const provider = new ethers.providers.Web3Provider(window.ethereum);
     const classes = useStyles();
+    // const dispatch = useDispatch();
+    const { lockersData } = useSelector((state: DataType) => state);
+    console.log("lockersData", lockersData)
+
+    const tokenLockers = lockersData.lockers ? lockersData.lockers.filter( (locker)  => locker.type === 0) : [];
+
         
     return (
         <div className={classes.lockerContainer}>
@@ -45,23 +57,23 @@ const LockerListing = () => {
                                 Amount
                             </div>
                             <div className={classes.tableHeaderElement}>
-                                Lock Time
+                                Lock Date
                             </div>
                             <div className={classes.tableHeaderElement}>
-                                Unlock Time
+                                Unlock Date
                             </div>
                         </div>
 
                         <div className={classes.tableBody}>
 
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
-                            <LockListing name="Ali" symbol='ALIC' src={image} amount={1000} startTime={51351} endTime={11111} />
+                            {
+                                lockersData?.lockers?.map((locker) => {
+                                    return (
+                                        <LockListing key={locker.id} id= {locker.id} name="Ali" symbol='ALIC' src={image} amount={locker.numOfTokens} startTime={locker.lockTime} endTime={locker.unlockTime} />
+                                    )
+                                })
+                            }
+
 
                         </div>
 
