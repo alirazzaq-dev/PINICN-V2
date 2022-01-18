@@ -44,6 +44,7 @@ function App() {
         const locker = await lotteryContract.loker(count);
         const lockerInfo = {
             id: Number(locker.id),
+            type: locker.type,
             lockTime: Number(locker.lockTime),
             lockerAddress:  locker.lockerAddress,
             numOfTokens: Number(locker.numOfTokens),

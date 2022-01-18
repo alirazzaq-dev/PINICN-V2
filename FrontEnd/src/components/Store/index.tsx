@@ -29,6 +29,7 @@ export interface LockTokenInputInfo {
 
 export interface LockerInfo {
   id: number;
+  type: number
   lockTime: number
   lockerAddress: string
   numOfTokens: number
