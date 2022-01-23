@@ -26,6 +26,8 @@ contract PICNICLockerFactory is Ownable {
     struct Loker {
         uint id;
         Type _type;
+        string name;
+        string symbol;
         address owner; 
         address tokenAddress;
         address lockerAddress;
@@ -62,12 +64,17 @@ contract PICNICLockerFactory is Ownable {
 
         lockerCount++;
 
-        PLock lockerr = new PLock(lockerCount, _msgSender(), _token, _numOfTokens, _unlockTime);
+        string memory _name = IERC20(_token).name();
+        string memory _symbol = IERC20(_token).symbol();
+
+        PLock lockerr = new PLock(lockerCount, _msgSender(), _token, _name, _symbol, _numOfTokens, _unlockTime);
         IERC20(_token).transferFrom(_msgSender(), address(lockerr), _numOfTokens);
 
         loker[lockerCount] = Loker(
             lockerCount,
             _type,
+            _name,
+            _symbol,
             _msgSender(),
             _token,
             address(lockerr),

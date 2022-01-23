@@ -5,33 +5,50 @@ import AvatarLogo from "../../assets/AvatarLogo.svg"
 import Avatar from '@mui/material/Avatar';
 
 interface LogoNameSymbolProps {
-    src: string,
+    src?: string,
     name: string,
     symbol: string,
     logoHeight?: number,
 } 
 
-const LogoNameSymbol: FC<LogoNameSymbolProps> = ({src, name, symbol, logoHeight= 30}) => {
+const LogoNameSymbol: FC<LogoNameSymbolProps> = ({src, name, symbol, logoHeight= 25}) => {
 
     const classes = useStyles();
+
+    console.log("Name ", name.slice(0,1).toUpperCase())
 
     return (
         <div className={classes.rootContainer} style={{}}>
 
         <div className={classes.avatarContainer} style={{}}>
-            <Avatar 
-                src={src}
-                alt="Coin Logo"
-                sx={{ border: "0px solid black", width: logoHeight, height: logoHeight, bgcolor: "#F5F5F5", }} />
+            {
+                src ?
+                <Avatar 
+                    src={src ? src : name.slice(0,1).toUpperCase()}
+                    alt="Coin Logo"
+                    sx={{ border: "0px solid black", width: logoHeight, height: logoHeight, 
+                    bgcolor: "#F5F5F5" 
+                    }} />
+                :
+                <Avatar 
+                    sx={{ border: "0px solid black", width: logoHeight, height: logoHeight, 
+                    bgcolor: "#53C48A" 
+                    }}>
+                    
+                    {name.slice(0,1).toUpperCase()}
+                    
+                    </Avatar>
+
+            }
         </div>
     
         <div  style={{border: "0px solid black", display: "flex", justifyContent: "center", alignItems: "center"}}>
             
             <div style={{border: "0px solid black"}}>
-                <div style={{border: "0px solid black", fontSize: "14px", fontWeight:"550", color: "#363636"}}>
+                <div style={{border: "0px solid black", fontSize: "10px", fontWeight:"550", color: "#363636"}}>
                     {name} 
                 </div >
-                <div style={{border: "0px solid black", fontSize: "12px", color: "#CCCCCC"}}>
+                <div style={{border: "0px solid black", fontSize: "8px", color: "#CCCCCC"}}>
                     {symbol.toUpperCase()}
                 </div>
             </div>

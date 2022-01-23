@@ -16,6 +16,7 @@ import LockerDetail from './pages/LockerDetail';
 import { useDispatch, useSelector } from 'react-redux';
 import { DataType, addLockerData, setLockerMasterMethods } from './components/Store';
 import { ethers } from "ethers";
+import { symbolName } from 'typescript';
 
 const LOCKER_FACTORY_ABI = require("./abis/PICNICLockerFactory.json")
 
@@ -38,13 +39,16 @@ function App() {
   const fetchAllLockers = async () => {
     const lotteryContract = new ethers.Contract(masterContracts.lockerFactory, LOCKER_FACTORY_ABI.abi, provider)
     const LokcersCount = Number(await lotteryContract.lockerCount());
-    console.log("New", Number(LokcersCount))
+    // console.log("New", Number(LokcersCount))
     const lockers = [];
     for(let count = LokcersCount; count > 0; count--){
         const locker = await lotteryContract.loker(count);
+        console.log("locker ", locker)
         const lockerInfo = {
             id: Number(locker.id),
-            type: locker.type,
+            type: locker._type,
+            name: locker.name,
+            symbol: locker.symbol,
             lockTime: Number(locker.lockTime),
             lockerAddress:  locker.lockerAddress,
             numOfTokens: Number(locker.numOfTokens),

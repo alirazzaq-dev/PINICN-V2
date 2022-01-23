@@ -29,7 +29,9 @@ export interface LockTokenInputInfo {
 
 export interface LockerInfo {
   id: number;
-  type: number
+  type: number;
+  name: string,
+  symbol: string,
   lockTime: number
   lockerAddress: string
   numOfTokens: number
@@ -77,7 +79,7 @@ const initialState: DataType = {
   loading: false,
   transectionProgress: false,
   masterContracts: {
-    lockerFactory: "0xfcA0CcEDAaC3850Be9b03E5833e015A90fffb6aa",
+    lockerFactory: "0xa9E87c3CF197BDA73341245e9e2ecAA5494Bb40D",
     lockerFactoryMethods: null
   },
   lockTokenInfo: defaultLockTokenInfo,

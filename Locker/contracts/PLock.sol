@@ -18,6 +18,8 @@ contract PLock is Context {
 
     struct Loker {
         uint id;
+        string name;
+        string symbol;
         address owner; 
         address tokenAddress;
         uint numOfTokens;
@@ -47,28 +49,30 @@ contract PLock is Context {
         uint _lockerID, 
         address _owner, 
         address _token, 
+        string memory _name,
+        string memory _symbol,
         uint _numOfTokens, 
         uint _unlockTime
     ) 
     {
         master = msg.sender;
-        loker = Loker(_lockerID, _owner, _token, _numOfTokens, block.timestamp, _unlockTime );
+        loker = Loker(_lockerID, _name, _symbol, _owner, _token, _numOfTokens, block.timestamp, _unlockTime );
     }
 
 
-    function unlockTokens(uint _numOfTokens) public Expired onlyMaster {
+    function unlockTokens(uint _numOfTokens) public Expired onlyMaster{
         IERC20(loker.tokenAddress).transfer(loker.owner, _numOfTokens);
         loker.numOfTokens = loker.numOfTokens.sub(_numOfTokens);   
     }
 
-    function addTokenstoALocker(uint _numOfTokens) public NotExpired onlyMaster {
+    function addTokenstoALocker(uint _numOfTokens) public NotExpired onlyMaster{
 
         require(_numOfTokens > 0, "Tokens should be more than zero");
         loker.numOfTokens = loker.numOfTokens.add(_numOfTokens);
 
     }
 
-    function increaseLocktime(uint _additionTime) public NotExpired onlyMaster {
+    function increaseLocktime(uint _additionTime) public NotExpired onlyMaster{
 
         require(_additionTime > 0, "Addition time should be more than zero");
         loker.unlockTime = loker.unlockTime.add(_additionTime);

@@ -167,13 +167,14 @@ const TokenLocker = () => {
         const lockTx = masterContracts.lockerFactoryMethods.connect(signer);
         const options = {value: fees}
 
-        try{
+        try {
             const tx = await lockTx.createLcoker(0, lockTokenInfo.address, tokens, timeRequiered, options);
-            let receipt = await tx.wait();
+            let receipt: any = await tx.wait();
             console.log(receipt);
+            alert(`Success. blockHash: ${receipt.blockHash}`)
         }
-        catch(e){
-            alert(e)
+        catch(e: any) {
+            alert(e.data.message)
         }
         
     }
@@ -328,9 +329,9 @@ const useStyles = makeStyles(() => ({
         alignItems: "center",
         fontSize: "10px", color: "#363636",
         backgroundColor: "rgba(126, 126, 126, 0.08 )",
-        width: "150px",
+        width: "200px",
         "@media (max-width: 900px)": {
-            width: "150px",
+            width: "200px",
         },
 
 

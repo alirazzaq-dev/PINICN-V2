@@ -7,7 +7,7 @@ import { Link } from "@mui/material";
 
 interface LockerListingProps {
     id: number,
-    src: string,
+    src?: string,
     name: string,
     symbol: string,
     amount: number,

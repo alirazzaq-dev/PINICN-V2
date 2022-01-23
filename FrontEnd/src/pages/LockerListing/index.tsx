@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 import { makeStyles } from '@mui/styles';
 import image from '../../assets/AvatarLogo.svg'
 import LockListing from '../../components/LockerListing';
@@ -7,6 +7,7 @@ import PaginationComponent from "../../components/Pagination"
 import { ethers } from "ethers";
 import { useDispatch, useSelector } from 'react-redux';
 import {LockerInfo, addLockerData, setLockTokenLoading, DataType, setLockTokenInfo} from '../../components/Store'
+import { ConstructionOutlined } from '@mui/icons-material';
 
 const LOCKER_FACTORY_ABI = require("../../abis/PICNICLockerFactory.json")
 
@@ -17,9 +18,45 @@ const LockerListing = () => {
     const classes = useStyles();
     // const dispatch = useDispatch();
     const { lockersData } = useSelector((state: DataType) => state);
-    console.log("lockersData", lockersData)
+    
+    // console.log("tokenLockers", lockersData)
+    // console.log("tokenLockers", tokenLockers)
+    
+    const [page, setPage] = useState(1);
+    console.log("page", page)
+    
+    const [tokenLockers, setTokenLockers] = useState<LockerInfo[] | null>([]);
+    const [activeTokenLockers, setActiveTokenLockers] = useState<LockerInfo[] | null>([]);
 
-    const tokenLockers = lockersData.lockers ? lockersData.lockers.filter( (locker)  => locker.type === 0) : [];
+
+    // useEffect(()=> {
+    
+    //     setTokenLockers(lockersData.lockers ? lockersData.lockers.filter((locker) => locker.type === 0) : [])
+    //     const startIndex = page * 10 - 10;
+    //     const endIndex = startIndex + 10;      
+    //     setActiveTokenLockers( tokenLockers && tokenLockers.slice(startIndex, endIndex) )
+
+    // }, [lockersData.lockers])
+
+
+    useEffect(()=> {
+
+        const  active = lockersData.lockers ? lockersData.lockers.filter((locker) => locker.type === 0) : []
+        
+        console.log("activeTokenLockers Before ", tokenLockers)
+        console.log("activeTokenLockers page ", page)
+        
+        const startIndex = page * 10 - 10;
+        const endIndex = startIndex + 10;
+
+        console.log("startIndex ", startIndex)
+        console.log("endIndex ", endIndex)
+      
+        setTokenLockers( active && active.slice(startIndex, endIndex) )
+        console.log("activeTokenLockers After ", tokenLockers)
+        
+    
+    }, [page, lockersData.lockers])
 
         
     return (
@@ -36,7 +73,7 @@ const LockerListing = () => {
                                     Token Listing
                                 </span>
                             </div>
-                            
+
                             <div className={classes.lockerSwtchButtonsContainer}>
                                 <ToggleButtons text1='All' text2='My Locks'/>
                             </div>
@@ -48,7 +85,7 @@ const LockerListing = () => {
                         </div>
 
                     </div> 
-                    
+
                         <div className={classes.tableHeader}>
                             <div className={classes.tableHeaderElement}>
                                 Token
@@ -67,18 +104,17 @@ const LockerListing = () => {
                         <div className={classes.tableBody}>
 
                             {
-                                lockersData?.lockers?.map((locker) => {
+                                tokenLockers?.map((locker) => {
                                     return (
-                                        <LockListing key={locker.id} id= {locker.id} name="Ali" symbol='ALIC' src={image} amount={locker.numOfTokens} startTime={locker.lockTime} endTime={locker.unlockTime} />
+                                        <LockListing key={locker.id} id= {locker.id} name={locker.name} symbol={locker.symbol} amount={locker.numOfTokens} startTime={locker.lockTime} endTime={locker.unlockTime} />
                                     )
                                 })
                             }
 
-
                         </div>
 
                         <div className={classes.paginationContainer}>
-                            <PaginationComponent count={7} />
+                            <PaginationComponent total={tokenLockers ? tokenLockers.length : 0} page={page} setPage={setPage} />
                         </div>
 
             
