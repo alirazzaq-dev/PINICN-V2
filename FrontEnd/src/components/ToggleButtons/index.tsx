@@ -1,14 +1,13 @@
-import React, {FC} from 'react'
-import { ToggleButton, ToggleButtonGroup } from '@mui/material'
+import React, { FC } from "react";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 
 interface ToggleButtonsProps {
-    text1: string,
-    text2: string
-} 
+    text1: string;
+    text2: string;
+}
 
-const ToggleButtons: FC<ToggleButtonsProps> = ({text1, text2}) => {
-  
-    const [alignment, setAlignment] = React.useState('all');
+const ToggleButtons: FC<ToggleButtonsProps> = ({ text1, text2 }) => {
+    const [alignment, setAlignment] = React.useState("all");
     // const [buttonSelected, setButtonSelected] = React.useState({
     //     button1: true,
     //     button2: false
@@ -36,45 +35,53 @@ const ToggleButtons: FC<ToggleButtonsProps> = ({text1, text2}) => {
     // }
 
     const handleChange = (
-      event: React.MouseEvent<HTMLElement>,
-      newAlignment: string,
+        event: React.MouseEvent<HTMLElement>,
+        newAlignment: string
     ) => {
-      setAlignment(newAlignment);
+        setAlignment(newAlignment);
     };
 
     return (
         <ToggleButtonGroup
-        sx={{height: "100%"}}
-        color="primary"
-        value={alignment}
-        exclusive
-        onChange={handleChange}
-        
+            sx={{ height: "100%" }}
+            color="primary"
+            value={alignment}
+            exclusive
+            onChange={handleChange}
         >
-        <ToggleButton 
-            // onClick={ setButton1 }
-            value="all" 
-            sx={{border: 0, fontSize: "8px", borderRadius: 0, '&.MuiToggleButton-root.Mui-selected': { 
-                backgroundColor: "#1F88FE", 
-                color: "#fff" 
-                }
-            }}>
+            <ToggleButton
+                // onClick={ setButton1 }
+                value="all"
+                sx={{
+                    border: 0,
+                    fontSize: "8px",
+                    borderRadius: 0,
+                    "&.MuiToggleButton-root.Mui-selected": {
+                        backgroundColor: "#1F88FE",
+                        color: "#fff",
+                    },
+                }}
+            >
                 {text1}
-        </ToggleButton>
+            </ToggleButton>
 
-        <ToggleButton 
-            // onClick={ setButton2 }
-            value="my"
-            sx={{border: 0, fontSize: "8px", borderRadius: 0, '&.MuiToggleButton-root.Mui-selected': { 
-                backgroundColor: "#1F88FE", 
-                color: "#fff" 
-            }
-          }}
-          >
-            {text2}
-        </ToggleButton>
+            <ToggleButton
+                // onClick={ setButton2 }
+                value="my"
+                sx={{
+                    border: 0,
+                    fontSize: "8px",
+                    borderRadius: 0,
+                    "&.MuiToggleButton-root.Mui-selected": {
+                        backgroundColor: "#1F88FE",
+                        color: "#fff",
+                    },
+                }}
+            >
+                {text2}
+            </ToggleButton>
+        </ToggleButtonGroup>
+    );
+};
 
-    </ToggleButtonGroup>    )
-}
-
-export default ToggleButtons
+export default ToggleButtons;

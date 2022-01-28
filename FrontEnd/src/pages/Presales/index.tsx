@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const Presale = () => {
-    return (
-        <div>
-            Presales
-        </div>
-    )
-}
+    return <div>Presales</div>;
+};
 
-export default Presale
+export default Presale;

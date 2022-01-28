@@ -9,6 +9,7 @@
     "@mui/icons-material": "^5.2.5",
     "@mui/material": "5.2.5",
     "@mui/styles": "^5.2.3",
+    "@mui/system": "^5.3.0",
     "@reduxjs/toolkit": "^1.7.1",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
@@ -36,7 +37,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "npm_config_yes=true npx prettier --tab-width 4 --write src"
   },
   "eslintConfig": {
     "extends": [

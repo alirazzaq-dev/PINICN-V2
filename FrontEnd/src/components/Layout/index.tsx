@@ -1,15 +1,14 @@
-import React from 'react'
-import Header from '../Header'
+import React from "react";
+import Header from "../Header";
 import { Outlet } from "react-router-dom";
-import LeftPane from '../LeftPane';
-import { makeStyles } from '@mui/styles';
+import LeftPane from "../LeftPane";
+import { makeStyles } from "@mui/styles";
 
-import './styles.css';
+import "./styles.css";
 
 const Layout = () => {
-
-    const { layoutContainer, layoutBody, layoutLeftpane, outletContainer } = useStyles();
-
+    const { layoutContainer, layoutBody, layoutLeftpane, outletContainer } =
+        useStyles();
 
     return (
         <div className={layoutContainer}>
@@ -24,13 +23,11 @@ const Layout = () => {
                     <Outlet />
                 </div>
             </div>
-
         </div>
-    )
-}
+    );
+};
 
 export default Layout;
-
 
 const useStyles = makeStyles(() => ({
     layoutContainer: {
@@ -38,10 +35,10 @@ const useStyles = makeStyles(() => ({
         width: "100%",
         background: "#fbfbfb",
     },
-    layoutBody : {
-        display: "flex"
+    layoutBody: {
+        display: "flex",
     },
-    layoutLeftpane : {
+    layoutLeftpane: {
         display: "flex",
         width: "20vw",
         height: "100vh",
@@ -53,9 +50,8 @@ const useStyles = makeStyles(() => ({
         },
     },
     outletContainer: {
-        border: "0px solid black", width: "100%", marginTop: "50px"
-    }
-    
-        
+        border: "0px solid black",
+        width: "100%",
+        marginTop: "50px",
+    },
 }));
-

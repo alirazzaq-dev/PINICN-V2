@@ -2,10 +2,9 @@
     height: 100%;
     width: 100%;
     background: #fbfbfb;
-
 }
 
-.Layout-body{
+.Layout-body {
     display: flex;
     /* border: 1px solid red; */
 }

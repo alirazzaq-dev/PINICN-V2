@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const PresaleForm = () => {
-    return (
-        <div>
-            PresaleForm
-        </div>
-    )
-}
+    return <div>PresaleForm</div>;
+};
 
-export default PresaleForm
+export default PresaleForm;
