@@ -1,99 +1,97 @@
-import React, {useEffect} from 'react'
-import { makeStyles } from '@mui/styles';
-import image from '../../assets/AvatarLogo.svg'
-import LockListing from '../../components/LockerListing';
-import ToggleButtons from '../../components/ToggleButtons';
-import PaginationComponent from "../../components/Pagination"
+import React, { useEffect } from "react";
+import { makeStyles } from "@mui/styles";
+import image from "../../assets/AvatarLogo.svg";
+import LockListing from "../../components/LockerListing";
+import ToggleButtons from "../../components/ToggleButtons";
+import PaginationComponent from "../../components/Pagination";
 import { ethers } from "ethers";
-import { useDispatch, useSelector } from 'react-redux';
-import {LockerInfo, addLockerData, setLockTokenLoading, DataType, setLockTokenInfo} from '../../components/Store'
+import { useDispatch, useSelector } from "react-redux";
+import {
+    LockerInfo,
+    addLockerData,
+    setLockTokenLoading,
+    DataType,
+    setLockTokenInfo,
+} from "../../components/Store";
 
-const LOCKER_FACTORY_ABI = require("../../abis/PICNICLockerFactory.json")
-
+const LOCKER_FACTORY_ABI = require("../../abis/PICNICLockerFactory.json");
 
 const LockerListing = () => {
-
     // const provider = new ethers.providers.Web3Provider(window.ethereum);
     const classes = useStyles();
     // const dispatch = useDispatch();
     const { lockersData } = useSelector((state: DataType) => state);
-    console.log("lockersData", lockersData)
+    console.log("lockersData", lockersData);
 
-    const tokenLockers = lockersData.lockers ? lockersData.lockers.filter( (locker)  => locker.type === 0) : [];
+    const tokenLockers = lockersData.lockers
+        ? lockersData.lockers.filter((locker) => locker.type === 0)
+        : [];
 
-        
     return (
         <div className={classes.lockerContainer}>
             <div className={classes.lockerBody}>
-                    <div className={classes.lockerTitleContainer}>
-                        <div className={classes.lockertitleSectoin}>
-
-                            <div className={classes.lockertitleText}>
-                                <span style={{color: "#53C48A"}}>
-                                    Locked
-                                </span>{" "}
-                                <span style={{color: "#363636"}}>
-                                    Token Listing
-                                </span>
-                            </div>
-                            
-                            <div className={classes.lockerSwtchButtonsContainer}>
-                                <ToggleButtons text1='All' text2='My Locks'/>
-                            </div>
-
+                <div className={classes.lockerTitleContainer}>
+                    <div className={classes.lockertitleSectoin}>
+                        <div className={classes.lockertitleText}>
+                            <span style={{ color: "#53C48A" }}>Locked</span>{" "}
+                            <span style={{ color: "#363636" }}>
+                                Token Listing
+                            </span>
                         </div>
 
-                        <div className={classes.lockerInputContainer}>  
-                            <input placeholder="Search by token address" className={classes.lockerInput} />
+                        <div className={classes.lockerSwtchButtonsContainer}>
+                            <ToggleButtons text1="All" text2="My Locks" />
                         </div>
+                    </div>
 
-                    </div> 
-                    
-                        <div className={classes.tableHeader}>
-                            <div className={classes.tableHeaderElement}>
-                                Token
-                            </div>
-                            <div className={classes.tableHeaderElement}>
-                                Amount
-                            </div>
-                            <div className={classes.tableHeaderElement}>
-                                Lock Date
-                            </div>
-                            <div className={classes.tableHeaderElement}>
-                                Unlock Date
-                            </div>
-                        </div>
+                    <div className={classes.lockerInputContainer}>
+                        <input
+                            placeholder="Search by token address"
+                            className={classes.lockerInput}
+                        />
+                    </div>
+                </div>
 
-                        <div className={classes.tableBody}>
+                <div className={classes.tableHeader}>
+                    <div className={classes.tableHeaderElement}>Token</div>
+                    <div className={classes.tableHeaderElement}>Amount</div>
+                    <div className={classes.tableHeaderElement}>Lock Date</div>
+                    <div className={classes.tableHeaderElement}>
+                        Unlock Date
+                    </div>
+                </div>
 
-                            {
-                                lockersData?.lockers?.map((locker) => {
-                                    return (
-                                        <LockListing key={locker.id} id= {locker.id} name="Ali" symbol='ALIC' src={image} amount={locker.numOfTokens} startTime={locker.lockTime} endTime={locker.unlockTime} />
-                                    )
-                                })
-                            }
+                <div className={classes.tableBody}>
+                    {lockersData?.lockers?.map((locker) => {
+                        return (
+                            <LockListing
+                                key={locker.id}
+                                id={locker.id}
+                                name="Ali"
+                                symbol="ALIC"
+                                src={image}
+                                amount={locker.numOfTokens}
+                                startTime={locker.lockTime}
+                                endTime={locker.unlockTime}
+                            />
+                        );
+                    })}
+                </div>
 
-
-                        </div>
-
-                        <div className={classes.paginationContainer}>
-                            <PaginationComponent count={7} />
-                        </div>
-
-            
+                <div className={classes.paginationContainer}>
+                    <PaginationComponent count={7} />
+                </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default LockerListing
+export default LockerListing;
 
 const useStyles = makeStyles(() => ({
     lockerContainer: {
         // border: "1px solid red",
         fontFamily: "Roboto Open Sans, sans-serif",
-
     },
     lockerBody: {
         // border: "1px solid black",
@@ -104,10 +102,10 @@ const useStyles = makeStyles(() => ({
             // border: "1px solid red",
             width: "90%",
             margin: "20px auto",
-        },   
+        },
     },
     lockerTitleContainer: {
-        border: "1px solid rbga(0,0,0,0.5)" ,
+        border: "1px solid rbga(0,0,0,0.5)",
         // borderColor: ""
         // height: 90,
     },
@@ -116,19 +114,18 @@ const useStyles = makeStyles(() => ({
         margin: "20px 20px 0px 20px",
         paddingTop: "20px",
         display: "flex",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
     },
     lockertitleText: {
         // border: "1px solid black",
         fontWeight: "bold",
-        fontSize: "24px"
+        fontSize: "24px",
         // height: "30px"
     },
     lockerSwtchButtonsContainer: {
-        border: "1px solid #1F88FE", 
+        border: "1px solid #1F88FE",
         height: "25px",
-        color: "#7D7D7D"
-
+        color: "#7D7D7D",
     },
     lockerSwtchButton: {
         // border: "1px solid black",
@@ -139,7 +136,7 @@ const useStyles = makeStyles(() => ({
         width: "90%",
         display: "flex",
         margin: "10px auto 20px auto",
-        height: "30px"
+        height: "30px",
     },
     lockerInput: {
         // border: "1px solid black",
@@ -155,27 +152,24 @@ const useStyles = makeStyles(() => ({
         backgroundColor: "rgba(126, 126, 126, 0.08 )",
         display: "flex",
         height: "25px",
-        fontSize: "14px"
+        fontSize: "14px",
     },
     tableHeaderElement: {
         // border: "1px solid black",
         width: "20%",
         display: "flex",
         alignItems: "center",
-        justifyContent: "flex-start"
+        justifyContent: "flex-start",
     },
-    tableBody: {
-    },
+    tableBody: {},
     paginationContainer: {
         // border: "1px solid black",
         marginTop: "10px",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
     },
     pagination: {
         // border: "1px solid black",
-
-    }
-
+    },
 }));

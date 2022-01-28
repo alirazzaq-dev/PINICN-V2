@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const LPLockerListing = () => {
-    return (
-        <div>
-            LPLockerListing
-        </div>
-    )
-}
+    return <div>LPLockerListing</div>;
+};
 
-export default LPLockerListing
+export default LPLockerListing;
