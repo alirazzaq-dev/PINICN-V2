@@ -101,22 +101,28 @@ const dataSlice = createSlice({
     setActiveUserInfo(state, { payload }: PayloadAction<{ address: string, balance: number, erc20Symbol: string }>) {
       state.userInfo.userAddress = payload.address;
     },
+    
     setActiveUser(state, { payload }: PayloadAction<string>) {
       state.userInfo.userAddress = payload;
     },
+
     setNetworkDetails(state, { payload }: PayloadAction<NetworkDetail>) {
       state.networkDetail.id = payload.id;
       state.networkDetail.chain = payload.chain;
     },
+
     setLoading(state, { payload }: PayloadAction<boolean>) {
       state.loading = payload
     },
+
     setLockerMasterMethods(state, {payload}: PayloadAction<any>){
       state.masterContracts.lockerFactoryMethods = payload
     },
+
     setTransactionProgress(state, { payload }: PayloadAction<boolean>) {
       state.transectionProgress = payload
     },
+
     setLockTokenInfo(state, { payload }: PayloadAction<LockTokenInputInfo | null> ) {
       if (payload === null) {
         state.lockTokenInfo = defaultLockTokenInfo;
@@ -126,20 +132,15 @@ const dataSlice = createSlice({
 
       }
     },
+
     setLockTokenLoading(state, { payload }: PayloadAction<boolean>) {
       state.lockTokenInfo.loading = payload;
     },
+
     addLockerData(state, { payload }: PayloadAction<{count: number, lockers: LockerInfo[]}>) {
       state.lockersData.lockersCount = payload.count;
       state.lockersData.lockers = payload.lockers;
     },
-
-
-
-
-
-
-
 
 
 
