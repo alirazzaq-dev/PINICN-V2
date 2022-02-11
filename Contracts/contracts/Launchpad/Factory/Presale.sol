@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: Unlicense
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -6,6 +6,8 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+
+import "hardhat/console.sol";
 
 import "./LaunchPadLib.sol";
 import "./ILPLokcerManager.sol";
@@ -15,25 +17,18 @@ contract Presale is Ownable {
     using LaunchPadLib for *;
     using SafeMath for uint256;
 
-
-    uint public upfrontfee = 0.2 ether;
-    uint8 public salesFeeInPercent = 2;
-
+    uint8 public salesFeeInPercent;
+    LaunchPadLib.RefundType public refundType;
+    LaunchPadLib.LaunchpadAddresses public launchpadAddresses;
 
     // Declare a set state variable    
-    address public teamAddr;
-    address public devAddr;
-      
-
-    //# PancakeSwap on local network:
-    address public pancakeSwapFactoryAddr;
-    address public pancakeSwapRouterAddr;
-    address public WBNBAddr;
-
-    address public LPLockerManager;
-
-
-
+    // address public teamAddr;
+    // address public devAddr;
+    // //# PancakeSwap on local network:
+    // address public pancakeSwapFactoryAddr;
+    // address public pancakeSwapRouterAddr;
+    // address public WBNBAddr;
+    // address public lpLockerManager;
 
     //# PancakeSwap on BSC mainnet
     // address pancakeSwapFactoryAddr = 0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73;
@@ -48,20 +43,20 @@ contract Presale is Ownable {
     ////////////////////////////// MAPPINGS ///////////////////////////////////
 
     LaunchPadLib.PresaleInfo public presaleInfo;
-    LaunchPadLib.PresalectCounts public presalectCounts;
-    LaunchPadLib.PresaleParticipationCriteria public presaleParticipationCriteria;
+    LaunchPadLib.PresalectCounts public presaleCounts;
+    LaunchPadLib.ParticipationCriteria public participationCriteria;
     LaunchPadLib.InternalData public internalData;
+    LaunchPadLib.PreSaleStatus public preSaleStatus =  LaunchPadLib.PreSaleStatus.PENDING;
 
     mapping(address => LaunchPadLib.Participant) public participant;
 
-
     modifier isPresaleActive() {
-        require (block.timestamp >= presaleParticipationCriteria.presaleTimes.startedAt, "Presale hasn't begin yet. please wait");
-        require( block.timestamp < presaleParticipationCriteria.presaleTimes.expiredAt, "Presale is over. Try next time");
-        if(presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.pending){
-            presaleInfo.preSaleStatus = LaunchPadLib.PreSaleStatus.inProgress;
+        require (block.timestamp >= participationCriteria.presaleTimes.startedAt, "Presale hasn't begin yet. please wait");
+        require( block.timestamp < participationCriteria.presaleTimes.expiredAt, "Presale is over. Try next time");
+        if(preSaleStatus == LaunchPadLib.PreSaleStatus.PENDING){
+            preSaleStatus = LaunchPadLib.PreSaleStatus.INPROGRESS;
         }
-        require(presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.inProgress, "Presale is not in progress");
+        require(preSaleStatus == LaunchPadLib.PreSaleStatus.INPROGRESS, "Presale is not in progress");
         _;
     }
 
@@ -70,106 +65,66 @@ contract Presale is Ownable {
         _;
     }
 
+    modifier isPresaleEnded(){
+        require (
+            preSaleStatus == LaunchPadLib.PreSaleStatus.SUCCEED || 
+            preSaleStatus == LaunchPadLib.PreSaleStatus.FAILED, 
+            "Presale is not concluded yet"
+        );
+        _;
+    }
+
     constructor (
-        uint _presaleID,
-        address _owner,
-        LaunchPadLib.PresaleType _presaleType,
-        IERC20 _preSaleToken,
-        IERC20 _criteriaTokenAddr,
-        uint8 _reservedTokensPCForLP,
-        uint256 _tokensForSale,
-
-        // Participation Criteria
-        uint256 _priceOfEachToken,
-        uint256 _minTokensForParticipation,
-        LaunchPadLib.PresaleTimes memory _presaleTimes,
-        LaunchPadLib.ReqestedTokens memory _reqestedTokens
+        uint8 _salesFeeInPercent,
+        LaunchPadLib.PresaleInfo memory _presaleInfo,
+        LaunchPadLib.ParticipationCriteria memory _critera,
+        LaunchPadLib.LaunchpadAddresses memory _launchpadAddresses
     ){
-
-        presaleInfo = LaunchPadLib.PresaleInfo(
-            _presaleID,
-            _presaleType,
-            _preSaleToken,
-            _owner,
-
-            _priceOfEachToken,
-            _tokensForSale,                     // 1000    tokensForSale
-            _reservedTokensPCForLP,
-            _tokensForSale,                     // remainingTokensForSale = tokensForSale (initially)
-            0,
-            LaunchPadLib.PreSaleStatus.pending
-        );
-
-        presaleParticipationCriteria = LaunchPadLib.PresaleParticipationCriteria (
-            _criteriaTokenAddr,
-            _minTokensForParticipation,
-            _reqestedTokens,
-            _presaleTimes
-        );
-
-        presalectCounts = LaunchPadLib.PresalectCounts (
-            0,
-            0
-        );
-
+        transferOwnership(_presaleInfo.presaleOwnerAddr);
+        salesFeeInPercent = _salesFeeInPercent;
+        presaleInfo = _presaleInfo;
+        participationCriteria = _critera;
+        presaleCounts = LaunchPadLib.PresalectCounts( _presaleInfo.tokensForSale, 0, 0, 0 );
+        launchpadAddresses = _launchpadAddresses;
     }
 
-    function setAddresses(
-        address _pancakeSwapFactoryAddr, 
-        address _pancakeSwapRouterAddr, 
-        address _WBNBAddr,
-        address  _teamAddr,
-        address _devAddr,
-        address _lpLockerManager
-        ) public onlyPresaleOwner {
 
-        pancakeSwapFactoryAddr = _pancakeSwapFactoryAddr;
-        pancakeSwapRouterAddr = _pancakeSwapRouterAddr; 
-        WBNBAddr = _WBNBAddr;
+    function validateBuyRequest(uint256 _numOfTokensRequested) internal returns (bool){
 
-        teamAddr = _teamAddr;
-        devAddr = _devAddr;
-
-        LPLockerManager = _lpLockerManager;
-    }
-
-    function validateBuyRequest(uint256 _numOfTokensRequested) internal {
-
-        LaunchPadLib.PresaleInfo memory info = presaleInfo;
-        LaunchPadLib.PresaleParticipationCriteria memory criteria = presaleParticipationCriteria;
         LaunchPadLib.Participant memory currentParticipant = participant[msg.sender];
 
-        require(info.remainingTokensForSale > 0 , "the sale is sold out");
+        require(presaleCounts.remainingTokensForSale > 0 , "the sale is sold out");
 
-        if(info.typeOfPresale == LaunchPadLib.PresaleType.onlyWhiteListed){
+        if(presaleInfo.typeOfPresale == LaunchPadLib.PresaleType.WHITELISTED){
             require( currentParticipant.isWhiteListed == true, "Only whitelisted users are allowed to participate");
         }
         
-        if(info.typeOfPresale == LaunchPadLib.PresaleType.onlyTokenHolders){
-            require(criteria.criteriaToken.balanceOf(msg.sender) >= criteria.minTokensForParticipation, "You don't hold enough criteria tokens");
+        if(presaleInfo.typeOfPresale == LaunchPadLib.PresaleType.TOKENHOLDERS){
+            require(IERC20(participationCriteria.criteriaToken).balanceOf(msg.sender) >= participationCriteria.minTokensForParticipation, "You don't hold enough criteria tokens");
         }
-
-        require(_numOfTokensRequested <= info.remainingTokensForSale, "insufficient tokens to fulfill this order");
-        require(msg.value >= _numOfTokensRequested*info.price, "insufficient funds");
         
         if(currentParticipant.tokens == 0) {
-            presalectCounts.participantsCount++;
-            require(_numOfTokensRequested >= criteria.reqestedTokens.minTokensReq, "Request for tokens is low, Please request more than minTokensReq");
+            presaleCounts.contributors++;
+            require(_numOfTokensRequested >= participationCriteria.reqestedTokens.minTokensReq, "Request for tokens is low, Please request more than minTokensReq");
         }
 
-        require(_numOfTokensRequested + currentParticipant.tokens <= criteria.reqestedTokens.maxTokensReq, "Request for tokens is high, Please request less than maxTokensReq");
+        require(_numOfTokensRequested + currentParticipant.tokens <= participationCriteria.reqestedTokens.maxTokensReq, "Request for tokens is high, Please request less than maxTokensReq");
 
+        return true;
 
     }
 
     function buyTokensOnPresale(uint256 _numOfTokensRequested) public payable isPresaleActive {
 
-        validateBuyRequest(_numOfTokensRequested);
+        require(_numOfTokensRequested <= presaleCounts.remainingTokensForSale, "insufficient tokens to fulfill this order");
+        require(msg.value >= _numOfTokensRequested*participationCriteria.price, "insufficient funds");
+
+        require(validateBuyRequest(_numOfTokensRequested));
 
         LaunchPadLib.Participant memory currentParticipant = participant[msg.sender];
 
-        presaleInfo.accumulatedBalance = presaleInfo.accumulatedBalance.add(msg.value);
-        presaleInfo.remainingTokensForSale = presaleInfo.remainingTokensForSale.sub(_numOfTokensRequested);
+        presaleCounts.accumulatedBalance = presaleCounts.accumulatedBalance.add(msg.value);
+        presaleCounts.remainingTokensForSale = presaleCounts.remainingTokensForSale.sub(_numOfTokensRequested);
 
         uint newValue = currentParticipant.value.add(msg.value);
         uint newTokens = currentParticipant.tokens.add(_numOfTokensRequested);
@@ -181,79 +136,81 @@ contract Presale is Ownable {
 
     function finalizePresale() public onlyPresaleOwner {
         
-        LaunchPadLib.PresaleInfo memory info = presaleInfo;
-
-        require(info.preSaleStatus == LaunchPadLib.PreSaleStatus.inProgress, "Presale is not in progress");
+        require(preSaleStatus == LaunchPadLib.PreSaleStatus.INPROGRESS, "Presale is not in progress");
 
         require (
-            block.timestamp > presaleParticipationCriteria.presaleTimes.expiredAt ||
-            info.remainingTokensForSale == 0,
+            block.timestamp > participationCriteria.presaleTimes.expiredAt ||
+            presaleCounts.remainingTokensForSale == 0,
             "Presale is not over yet"
         );
         
-        uint256 totalTokensSold = info.tokensForSale.sub(info.remainingTokensForSale);
+        uint256 totalTokensSold = presaleInfo.tokensForSale - presaleCounts.remainingTokensForSale;
         
-        if( totalTokensSold >= presaleParticipationCriteria.reqestedTokens.softCap ){
+        if( totalTokensSold >= participationCriteria.reqestedTokens.softCap ){
             
-            uint256 tokensToAddLiquidity = totalTokensSold.mul(info.reservedTokensPCForLP).div(100);
+            uint256 tokensToAddLiquidity = totalTokensSold.mul(presaleInfo.reservedTokensPCForLP).div(100);
             
                 uint256 poolShareBNB = distributeRevenue();
+                // console.log("poolShareBNB", poolShareBNB);
 
-                require(info.preSaleToken.approve(pancakeSwapRouterAddr, tokensToAddLiquidity), "unable to approve token tranfer to pancakeSwapRouterAddr");
+                addLiquidity(tokensToAddLiquidity, poolShareBNB);
+                lockLiquidity();
 
-                // (uint amountToken, uint amountETH, uint liquidity) = 
-                IUniswapV2Router02(pancakeSwapRouterAddr).addLiquidityETH{value : poolShareBNB}(
-                    address(info.preSaleToken),
-                    tokensToAddLiquidity,
-                    0,
-                    0,
-                    address(this),
-                    block.timestamp + 5*60
-                );
-
-                require(lockLiquidity(), "liquidity lock is unseccessful");
+                // require(lockLiquidity(), "liquidity lock is unseccessful");
 
                 internalData.totalTokensSold = totalTokensSold;
                 internalData.tokensAddedToLiquidity = tokensToAddLiquidity;
-                internalData.extraTokens = info.remainingTokensForSale +  info.remainingTokensForSale.mul(info.reservedTokensPCForLP).div(100) ;
-                presaleInfo.preSaleStatus = LaunchPadLib.PreSaleStatus.succeed;
+                internalData.extraTokens = extraTokensOnSeccess();
+                // console.log("extraTokensOnSeccess", extraTokensOnSeccess());
+                
+                preSaleStatus = LaunchPadLib.PreSaleStatus.SUCCEED;
            
         }
         else {
 
-            internalData.extraTokens = info.tokensForSale +  info.tokensForSale.mul(info.reservedTokensPCForLP).div(100);
-            presaleInfo.preSaleStatus = LaunchPadLib.PreSaleStatus.failed;
+            // internalData.extraTokens = presaleInfo.tokensForSale +  presaleInfo.tokenForLocker + presaleInfo.tokensForSale.mul(presaleInfo.reservedTokensPCForLP).div(100);
+            internalData.extraTokens = IERC20(presaleInfo.preSaleToken).balanceOf(address(this));
+            preSaleStatus = LaunchPadLib.PreSaleStatus.FAILED;
 
         }
         
     }
 
-    function lockLiquidity() internal returns(bool) {
+    function extraTokensOnSeccess() internal view returns (uint) {
+        uint remainingTokensFromLP = presaleCounts.remainingTokensForSale.mul(presaleInfo.reservedTokensPCForLP).div(100);
+        return presaleCounts.remainingTokensForSale + remainingTokensFromLP;
+    }
+
+    function addLiquidity(uint tokensToAddLiquidity, uint poolShareBNB) internal {
+        require(IERC20(presaleInfo.preSaleToken).approve(launchpadAddresses.pancakeSwapRouterAddr, tokensToAddLiquidity), "unable to approve token tranfer to pancakeSwapRouterAddr");
+
+        IUniswapV2Router02(launchpadAddresses.pancakeSwapRouterAddr).addLiquidityETH{value : poolShareBNB}(
+            address(presaleInfo.preSaleToken),
+            tokensToAddLiquidity,
+            0,
+            0,
+            address(this),
+            block.timestamp + 60
+        );
+    }
+
+    function lockLiquidity() internal {
         
-        LaunchPadLib.PresaleInfo memory info = presaleInfo;
-        uint _lpLockupTime = presaleParticipationCriteria.presaleTimes.lpLockupTime;
-
-        address pairAddress = IUniswapV2Factory(pancakeSwapFactoryAddr).getPair(address(info.preSaleToken), WBNBAddr);
+        // uint _lpLockupTime = participationCriteria.presaleTimes.lpLockupTime;
+        address pairAddress = IUniswapV2Factory(launchpadAddresses.pancakeSwapFactoryAddr).getPair(presaleInfo.preSaleToken, launchpadAddresses.WBNBAddr);
         uint totalLPs = IERC20(pairAddress).balanceOf(address(this)); 
-
-        require(IERC20(pairAddress).approve(LPLockerManager, totalLPs), "unable to approve token tranfer to pancakeSwapRouterAddr");
-        uint _lockerID = ILPLokcerManager(LPLockerManager).createLPLcoker(info.presaleOwnerAddr, pairAddress, totalLPs, _lpLockupTime);
-
-        internalData.totalLP = totalLPs;
-        internalData.lockerID = _lockerID;
-   
-        return true;
-    
+        internalData.totalLPLocked = totalLPs;
+       
     }
 
     function distributeRevenue() internal returns (uint256) {
 
         LaunchPadLib.PresaleInfo memory info = presaleInfo;
 
-        uint256 revenueFromPresale = info.accumulatedBalance;
+        uint256 revenueFromPresale = presaleCounts.accumulatedBalance;
 
-        uint256 devTeamShareBNB = revenueFromPresale.mul(salesFeeInPercent).div(100);
         uint256 poolShareBNB = revenueFromPresale.mul(info.reservedTokensPCForLP).div(100);
+        uint256 devTeamShareBNB = revenueFromPresale.mul(salesFeeInPercent).div(100);
         uint256 ownersShareBNB = revenueFromPresale.sub(poolShareBNB.add(devTeamShareBNB));
 
         internalData.revenueFromPresale = revenueFromPresale;
@@ -265,11 +222,11 @@ contract Presale is Ownable {
         // payable(info.presaleOwnerAddr).transfer(ownersShareBNB);
 
         uint devShare = devTeamShareBNB.mul(75).div(100);
-        require(payable(devAddr).send(devShare), "cannot send dev's share"); 
+        require(payable(launchpadAddresses.devAddr).send(devShare), "cannot send dev's share"); 
         // payable(devAddr).transfer(devShare);
 
         uint teamShare = devTeamShareBNB.sub(devShare);
-        require(payable(teamAddr).send(teamShare), "cannot send devTeam's share");
+        require(payable(launchpadAddresses.teamAddr).send(teamShare), "cannot send devTeam's share");
         // payable(teamAddr).transfer(teamShare);        
 
         return  poolShareBNB;
@@ -277,32 +234,30 @@ contract Presale is Ownable {
 
     }
 
-    function claimTokensOrARefund() public  {
+    function claimTokensOrARefund() public isPresaleEnded {
         
         LaunchPadLib.Participant memory _participant = participant[msg.sender];
 
-        require(_participant.value > 0);
+        require(_participant.value > 0, "Nothing to claim");
 
-        IERC20 tokenAddress = presaleInfo.preSaleToken;
+        IERC20 tokenAddress = IERC20(presaleInfo.preSaleToken);
 
         participant[msg.sender].value = 0;
         participant[msg.sender].tokens = 0;
 
-        presalectCounts.claimsCount++;
+        presaleCounts.claimsCount++;
 
-        LaunchPadLib.PreSaleStatus _status = presaleInfo.preSaleStatus;
-
-        require(_status == LaunchPadLib.PreSaleStatus.succeed || _status == LaunchPadLib.PreSaleStatus.failed, "Presale is not concluded yet");
+        // require(preSaleStatus == LaunchPadLib.PreSaleStatus.SUCCEED || preSaleStatus == LaunchPadLib.PreSaleStatus.FAILED, "Presale is not concluded yet");
 
         uint avaialbelBalance = tokenAddress.balanceOf(address(this));
         
-        if (_status == LaunchPadLib.PreSaleStatus.succeed){
+        if (preSaleStatus == LaunchPadLib.PreSaleStatus.SUCCEED){
             require(_participant.tokens > 0, "No tokens to claim");
             require(avaialbelBalance >= _participant.tokens , "Not enough tokens are available");
             bool tokenDistribution = tokenAddress.transfer(msg.sender, _participant.tokens);
             require(tokenDistribution, "Unable to transfer tokens to the participant");
         }
-        else if(_status == LaunchPadLib.PreSaleStatus.failed) {
+        else {
             require(_participant.value > 0, "No amount to refund");
             bool refund = payable(msg.sender).send(_participant.value);
             require(refund, "Unable to refund amount to the participant");
@@ -310,7 +265,7 @@ contract Presale is Ownable {
 
     }
 
-    function burnOrWithdrawTokens(LaunchPadLib.Withdrawtype _withdrawtype ) public onlyPresaleOwner  {
+    function withdrawExtraTokens() public onlyPresaleOwner  isPresaleEnded {
 
         uint tokensToReturn = internalData.extraTokens;
         
@@ -320,32 +275,55 @@ contract Presale is Ownable {
 
         LaunchPadLib.PresaleInfo memory info = presaleInfo;
 
-        if(_withdrawtype == LaunchPadLib.Withdrawtype.withdraw ){
-            bool tokenDistribution = info.preSaleToken.transfer(msg.sender, tokensToReturn);
+        if(participationCriteria.refundType == LaunchPadLib.RefundType.WITHDRAW ){
+            bool tokenDistribution = IERC20(info.preSaleToken).transfer(msg.sender, tokensToReturn);
             assert( tokenDistribution);
         }
         else{
-            bool tokenDistribution = info.preSaleToken.transfer(0x000000000000000000000000000000000000dEaD , tokensToReturn);
+            bool tokenDistribution = IERC20(info.preSaleToken).transfer(0x000000000000000000000000000000000000dEaD , tokensToReturn);
             assert( tokenDistribution );
         }
     }
 
-    function chageSaleType(LaunchPadLib.PresaleType _type, address _address) public onlyPresaleOwner {
-        if(_type == LaunchPadLib.PresaleType.onlyTokenHolders){
+    function chageSaleType(LaunchPadLib.PresaleType _type, address _address, uint minimumTokens) public onlyPresaleOwner {
+        if(_type == LaunchPadLib.PresaleType.TOKENHOLDERS) {
             presaleInfo.typeOfPresale = _type;
-            presaleParticipationCriteria.criteriaToken = IERC20(_address);
+            participationCriteria.criteriaToken = _address;
+            participationCriteria.minTokensForParticipation = minimumTokens;
         }
         else {
             presaleInfo.typeOfPresale = _type;
-            presaleParticipationCriteria.criteriaToken = IERC20(address(0));
         }
     }
 
-    function whiteListUsersToBuyTokens(address _address) public onlyPresaleOwner {
-        participant[_address].isWhiteListed = true;
+    function unlockTokens() public onlyPresaleOwner isPresaleEnded{
+
+        require(block.timestamp >= participationCriteria.presaleTimes.tokenLockupTime, "Not allowed");
+
+        require(
+            IERC20(presaleInfo.preSaleToken).transfer(msg.sender, presaleInfo.tokenForLocker),
+             "Unable to transfer presale tokens to the presale owner"
+            );
+
     }
 
+    function unlockLPTokens() public onlyPresaleOwner isPresaleEnded {
 
+        require(block.timestamp >= participationCriteria.presaleTimes.lpLockupTime, "Not allowed");
 
+        address pairAddress = IUniswapV2Factory(launchpadAddresses.pancakeSwapFactoryAddr).getPair(presaleInfo.preSaleToken, launchpadAddresses.WBNBAddr);
+
+        require(
+            IERC20(pairAddress).transfer(presaleInfo.presaleOwnerAddr, internalData.totalLPLocked),
+            "Unable to transfer presale tokens to the presale owner"
+        );
+
+    }
+
+    function whiteListUsers(address[] memory _addresses) public onlyPresaleOwner {
+        for(uint i=0; i < _addresses.length; i++){
+            participant[_addresses[i]].isWhiteListed = true;
+        }
+    }
 
 }

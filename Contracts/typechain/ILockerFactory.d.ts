@@ -84,7 +84,7 @@ export class ILockerFactory extends BaseContract {
     createLcoker(
       _type: BigNumberish,
       _owner: string,
-      _token: string,
+      _tokenAddress: string,
       _numOfTokens: BigNumberish,
       _unlockTime: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -94,7 +94,7 @@ export class ILockerFactory extends BaseContract {
   createLcoker(
     _type: BigNumberish,
     _owner: string,
-    _token: string,
+    _tokenAddress: string,
     _numOfTokens: BigNumberish,
     _unlockTime: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -104,11 +104,11 @@ export class ILockerFactory extends BaseContract {
     createLcoker(
       _type: BigNumberish,
       _owner: string,
-      _token: string,
+      _tokenAddress: string,
       _numOfTokens: BigNumberish,
       _unlockTime: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
   };
 
   filters: {};
@@ -117,7 +117,7 @@ export class ILockerFactory extends BaseContract {
     createLcoker(
       _type: BigNumberish,
       _owner: string,
-      _token: string,
+      _tokenAddress: string,
       _numOfTokens: BigNumberish,
       _unlockTime: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -128,7 +128,7 @@ export class ILockerFactory extends BaseContract {
     createLcoker(
       _type: BigNumberish,
       _owner: string,
-      _token: string,
+      _tokenAddress: string,
       _numOfTokens: BigNumberish,
       _unlockTime: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }

@@ -23,11 +23,11 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface LPLokcerManagerInterface extends ethers.utils.Interface {
   functions: {
     "createLPLcoker(address,address,uint256,uint256)": FunctionFragment;
-    "getLockersListbyToken(address)": FunctionFragment;
-    "getLockersListbyUser(address)": FunctionFragment;
     "launchpadAddress()": FunctionFragment;
     "lockerCount()": FunctionFragment;
-    "lockerInfo(uint256)": FunctionFragment;
+    "lockerInfoByID(uint256)": FunctionFragment;
+    "lockerInfoByToken(address)": FunctionFragment;
+    "lockersListByUser(address,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
@@ -38,14 +38,6 @@ interface LPLokcerManagerInterface extends ethers.utils.Interface {
     values: [string, string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "getLockersListbyToken",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getLockersListbyUser",
-    values: [string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "launchpadAddress",
     values?: undefined
   ): string;
@@ -54,8 +46,16 @@ interface LPLokcerManagerInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "lockerInfo",
+    functionFragment: "lockerInfoByID",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lockerInfoByToken",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lockersListByUser",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -72,14 +72,6 @@ interface LPLokcerManagerInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getLockersListbyToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getLockersListbyUser",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "launchpadAddress",
     data: BytesLike
   ): Result;
@@ -87,7 +79,18 @@ interface LPLokcerManagerInterface extends ethers.utils.Interface {
     functionFragment: "lockerCount",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "lockerInfo", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "lockerInfoByID",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "lockerInfoByToken",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "lockersListByUser",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
@@ -173,26 +176,17 @@ export class LPLokcerManager extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    getLockersListbyToken(
-      _tokenAddress: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
-
-    getLockersListbyUser(
-      _userAddress: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
-
     launchpadAddress(overrides?: CallOverrides): Promise<[string]>;
 
     lockerCount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    lockerInfo(
+    lockerInfoByID(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, string, BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, string, string, string, BigNumber, BigNumber, BigNumber] & {
         id: BigNumber;
+        lockerAddress: string;
         owner: string;
         token: string;
         numOfTokens: BigNumber;
@@ -200,6 +194,27 @@ export class LPLokcerManager extends BaseContract {
         unlockTime: BigNumber;
       }
     >;
+
+    lockerInfoByToken(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, string, string, string, BigNumber, BigNumber, BigNumber] & {
+        id: BigNumber;
+        lockerAddress: string;
+        owner: string;
+        token: string;
+        numOfTokens: BigNumber;
+        lockTime: BigNumber;
+        unlockTime: BigNumber;
+      }
+    >;
+
+    lockersListByUser(
+      arg0: string,
+      arg1: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -221,26 +236,17 @@ export class LPLokcerManager extends BaseContract {
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  getLockersListbyToken(
-    _tokenAddress: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
-
-  getLockersListbyUser(
-    _userAddress: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
-
   launchpadAddress(overrides?: CallOverrides): Promise<string>;
 
   lockerCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-  lockerInfo(
+  lockerInfoByID(
     arg0: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, string, string, BigNumber, BigNumber, BigNumber] & {
+    [BigNumber, string, string, string, BigNumber, BigNumber, BigNumber] & {
       id: BigNumber;
+      lockerAddress: string;
       owner: string;
       token: string;
       numOfTokens: BigNumber;
@@ -248,6 +254,27 @@ export class LPLokcerManager extends BaseContract {
       unlockTime: BigNumber;
     }
   >;
+
+  lockerInfoByToken(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, string, string, string, BigNumber, BigNumber, BigNumber] & {
+      id: BigNumber;
+      lockerAddress: string;
+      owner: string;
+      token: string;
+      numOfTokens: BigNumber;
+      lockTime: BigNumber;
+      unlockTime: BigNumber;
+    }
+  >;
+
+  lockersListByUser(
+    arg0: string,
+    arg1: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -269,26 +296,17 @@ export class LPLokcerManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getLockersListbyToken(
-      _tokenAddress: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
-
-    getLockersListbyUser(
-      _userAddress: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
-
     launchpadAddress(overrides?: CallOverrides): Promise<string>;
 
     lockerCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-    lockerInfo(
+    lockerInfoByID(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, string, BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, string, string, string, BigNumber, BigNumber, BigNumber] & {
         id: BigNumber;
+        lockerAddress: string;
         owner: string;
         token: string;
         numOfTokens: BigNumber;
@@ -296,6 +314,27 @@ export class LPLokcerManager extends BaseContract {
         unlockTime: BigNumber;
       }
     >;
+
+    lockerInfoByToken(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, string, string, string, BigNumber, BigNumber, BigNumber] & {
+        id: BigNumber;
+        lockerAddress: string;
+        owner: string;
+        token: string;
+        numOfTokens: BigNumber;
+        lockTime: BigNumber;
+        unlockTime: BigNumber;
+      }
+    >;
+
+    lockersListByUser(
+      arg0: string,
+      arg1: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -368,22 +407,23 @@ export class LPLokcerManager extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    getLockersListbyToken(
-      _tokenAddress: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getLockersListbyUser(
-      _userAddress: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     launchpadAddress(overrides?: CallOverrides): Promise<BigNumber>;
 
     lockerCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-    lockerInfo(
+    lockerInfoByID(
       arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    lockerInfoByToken(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    lockersListByUser(
+      arg0: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -408,22 +448,23 @@ export class LPLokcerManager extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    getLockersListbyToken(
-      _tokenAddress: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getLockersListbyUser(
-      _userAddress: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     launchpadAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     lockerCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    lockerInfo(
+    lockerInfoByID(
       arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    lockerInfoByToken(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    lockersListByUser(
+      arg0: string,
+      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

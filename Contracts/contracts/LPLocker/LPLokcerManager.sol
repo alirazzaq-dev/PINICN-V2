@@ -5,6 +5,8 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "hardhat/console.sol";
+
 import "./LPLocker.sol";
 
 contract LPLokcerManager is Ownable {
@@ -17,12 +19,14 @@ contract LPLokcerManager is Ownable {
 
     address public launchpadAddress;
 
-    mapping(uint => LockerInfo)  public lockerInfo;
-    mapping(address => uint[])  private lockersListByTokenAddress;
-    mapping(address => uint[])  private lockersListByUserAddress;
+    mapping(uint => LockerInfo)  public lockerInfoByID;
+    mapping(address => LockerInfo)  public lockerInfoByToken;
+    mapping(address => uint[])  public lockersListByUser;
+    // mapping()
 
     struct LockerInfo {
         uint id;
+        address lockerAddress;
         address owner; 
         address token;
         uint numOfTokens;
@@ -33,6 +37,8 @@ contract LPLokcerManager is Ownable {
     event LPLocked (uint id, address owner, address token, uint numOfTokens, uint unlockTime);
 
     function createLPLcoker(address _owner, address _token, uint _numOfTokens, uint _unlockTime) payable public returns(uint){
+        
+        // console.log("Trying to create a LP locker");
 
         require(_unlockTime > 0, "The unlock time should in future");
 
@@ -40,10 +46,12 @@ contract LPLokcerManager is Ownable {
 
         LPLocker locker = new LPLocker(lockerCount, _owner, _token, _numOfTokens, _unlockTime);
 
-        IERC20(_token).transferFrom(_owner, address(locker), _numOfTokens);
+        IERC20(_token).transferFrom(msg.sender, address(locker), _numOfTokens);
 
-        lockerInfo[lockerCount] = LockerInfo(
+
+        LockerInfo memory _lockerInfo = LockerInfo(
             lockerCount,
+            address(locker),
             _owner, 
             _token,
             _numOfTokens,
@@ -51,8 +59,12 @@ contract LPLokcerManager is Ownable {
             _unlockTime
         );
 
-        lockersListByUserAddress[_owner].push(lockerCount);
-        lockersListByTokenAddress[address(_token)].push(lockerCount);
+        console.log("_token", _token);
+
+
+        lockerInfoByID[lockerCount] = _lockerInfo;
+        lockerInfoByToken[_token] = _lockerInfo;
+        lockersListByUser[_owner].push(lockerCount);
 
         emit LPLocked (lockerCount, _owner, _token, _numOfTokens, _unlockTime );
 
@@ -60,13 +72,13 @@ contract LPLokcerManager is Ownable {
         
     }
     
-    function getLockersListbyUser(address _userAddress) public view returns (uint[] memory) {
-        return lockersListByUserAddress[_userAddress];
-    }
+    // function getLockersListbyUser(address _userAddress) public view returns (uint[] memory) {
+    //     return lockersListByUserAddress[_userAddress];
+    // }
 
-    function getLockersListbyToken(address _tokenAddress) public view returns (uint[] memory) {
-        return lockersListByTokenAddress[_tokenAddress];
-    }
+    // function getLockersListbyToken(address _tokenAddress) public view returns (uint[] memory) {
+    //     return lockersListByTokenAddress[_tokenAddress];
+    // }
 
     // function updateFees(uint _lockerFee, uint _updatingFee) public onlyOwner {
     //     lockerFee = _lockerFee;

@@ -1,14 +1,13 @@
-//SPDX-License-Identifier: Unlicense
+// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 library LaunchPadLib {
 
-    enum PresaleType {open, onlyWhiteListed, onlyTokenHolders}
-    enum PreSaleStatus {pending, inProgress, succeed, failed}
-    enum Withdrawtype {burn, withdraw}
+    enum PresaleType { PUBLIC, WHITELISTED, TOKENHOLDERS }
+    enum PreSaleStatus {PENDING, INPROGRESS, SUCCEED, FAILED}
+    enum RefundType {BURN, WITHDRAW}
 
     struct InternalData {
         uint totalTokensSold;
@@ -18,8 +17,8 @@ library LaunchPadLib {
         uint poolShareBNB;
         uint devTeamShareBNB;
         uint ownersShareBNB;
-        uint totalLP;
-        uint lockerID;
+        uint totalLPLocked;
+        // uint lockerID;
     }
 
     struct Participant {
@@ -32,6 +31,7 @@ library LaunchPadLib {
         uint256 startedAt;
         uint256 expiredAt;
         uint256 lpLockupTime;
+        uint256 tokenLockupTime;
     }
 
     struct ReqestedTokens{
@@ -41,30 +41,39 @@ library LaunchPadLib {
     }
 
     struct PresalectCounts {
-        uint256 participantsCount;
+        uint256 remainingTokensForSale;
+        uint256 accumulatedBalance;
+        uint256 contributors;
         uint256 claimsCount;
     }
     
     struct PresaleInfo {
         uint id;
         PresaleType typeOfPresale;
-        IERC20 preSaleToken;
+        address preSaleToken;
         address presaleOwnerAddr;
-        uint256 price;
         uint256 tokensForSale;              // 1000
         uint256 reservedTokensPCForLP;      // 70% = 0.7   =>   1700/1.7 = 700
-        uint256 remainingTokensForSale;
-        uint256 accumulatedBalance;
-        PreSaleStatus preSaleStatus;
+        uint256 tokenForLocker;
+        // PreSaleStatus preSaleStatus;
     }
 
-    struct PresaleParticipationCriteria {
-        IERC20 criteriaToken;
+    struct ParticipationCriteria {
+        address criteriaToken;
+        uint256 price;
+        RefundType refundType;
         uint256 minTokensForParticipation;
         ReqestedTokens reqestedTokens;
         PresaleTimes presaleTimes;  
     }
 
+    struct LaunchpadAddresses {
+        address pancakeSwapFactoryAddr;
+        address pancakeSwapRouterAddr;
+        address WBNBAddr;
+        address teamAddr;
+        address devAddr;
+    }
 
 
 }

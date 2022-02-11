@@ -22,48 +22,47 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface Launchpadv2Interface extends ethers.utils.Interface {
   functions: {
-    "WBNBAddr()": FunctionFragment;
-    "count()": FunctionFragment;
-    "createPresale(uint8,address,address,uint8,uint256,uint256,uint256,(uint256,uint256,uint256),(uint256,uint256,uint256))": FunctionFragment;
+    "createPresale(uint8,address,uint256,uint8,uint256,address,uint256,uint256,(uint256,uint256,uint256,uint256),(uint256,uint256,uint256),uint8)": FunctionFragment;
     "devAddr()": FunctionFragment;
     "isUserWhitelistedToStartProject(address)": FunctionFragment;
-    "lockerFactoryAddr()": FunctionFragment;
+    "launchpadAddresses()": FunctionFragment;
     "owner()": FunctionFragment;
-    "pancakeSwapFactoryAddr()": FunctionFragment;
-    "pancakeSwapRouterAddr()": FunctionFragment;
-    "presaleRecord(uint256)": FunctionFragment;
+    "presaleCount()": FunctionFragment;
+    "presaleRecordByID(uint256)": FunctionFragment;
+    "presaleRecordByToken(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "salesFeeInPercent()": FunctionFragment;
     "teamAddr()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "updateFees(uint256,uint8)": FunctionFragment;
     "upfrontfee()": FunctionFragment;
-    "whiteListUsersToStartProject(address)": FunctionFragment;
+    "whiteListUsersToStartProject(address[])": FunctionFragment;
     "withdrawBNBs()": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "WBNBAddr", values?: undefined): string;
-  encodeFunctionData(functionFragment: "count", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "createPresale",
     values: [
       BigNumberish,
       string,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
       string,
-      BigNumberish,
-      BigNumberish,
       BigNumberish,
       BigNumberish,
       {
         startedAt: BigNumberish;
         expiredAt: BigNumberish;
         lpLockupTime: BigNumberish;
+        tokenLockupTime: BigNumberish;
       },
       {
         minTokensReq: BigNumberish;
         maxTokensReq: BigNumberish;
         softCap: BigNumberish;
-      }
+      },
+      BigNumberish
     ]
   ): string;
   encodeFunctionData(functionFragment: "devAddr", values?: undefined): string;
@@ -72,21 +71,21 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "lockerFactoryAddr",
+    functionFragment: "launchpadAddresses",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "pancakeSwapFactoryAddr",
+    functionFragment: "presaleCount",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "pancakeSwapRouterAddr",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "presaleRecord",
+    functionFragment: "presaleRecordByID",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "presaleRecordByToken",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -111,15 +110,13 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "whiteListUsersToStartProject",
-    values: [string]
+    values: [string[]]
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawBNBs",
     values?: undefined
   ): string;
 
-  decodeFunctionResult(functionFragment: "WBNBAddr", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "count", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "createPresale",
     data: BytesLike
@@ -130,20 +127,20 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "lockerFactoryAddr",
+    functionFragment: "launchpadAddresses",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "pancakeSwapFactoryAddr",
+    functionFragment: "presaleCount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "pancakeSwapRouterAddr",
+    functionFragment: "presaleRecordByID",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "presaleRecord",
+    functionFragment: "presaleRecordByToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -225,28 +222,27 @@ export class Launchpadv2 extends BaseContract {
   interface: Launchpadv2Interface;
 
   functions: {
-    WBNBAddr(overrides?: CallOverrides): Promise<[string]>;
-
-    count(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     createPresale(
       _presaleType: BigNumberish,
       _preSaleToken: string,
-      _criteriaTokenAddr: string,
-      _reservedTokensPCForLP: BigNumberish,
       _tokensForSale: BigNumberish,
+      _reservedTokensPCForLP: BigNumberish,
+      _tokensForLocker: BigNumberish,
+      _criteriaTokenAddr: string,
       _priceOfEachToken: BigNumberish,
       _minTokensForParticipation: BigNumberish,
       _presaleTimes: {
         startedAt: BigNumberish;
         expiredAt: BigNumberish;
         lpLockupTime: BigNumberish;
+        tokenLockupTime: BigNumberish;
       },
       _reqestedTokens: {
         minTokensReq: BigNumberish;
         maxTokensReq: BigNumberish;
         softCap: BigNumberish;
       },
+      _refundType: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -257,16 +253,29 @@ export class Launchpadv2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    lockerFactoryAddr(overrides?: CallOverrides): Promise<[string]>;
+    launchpadAddresses(
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, string, string, string] & {
+        pancakeSwapFactoryAddr: string;
+        pancakeSwapRouterAddr: string;
+        WBNBAddr: string;
+        teamAddr: string;
+        devAddr: string;
+      }
+    >;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    pancakeSwapFactoryAddr(overrides?: CallOverrides): Promise<[string]>;
+    presaleCount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    pancakeSwapRouterAddr(overrides?: CallOverrides): Promise<[string]>;
-
-    presaleRecord(
+    presaleRecordByID(
       arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    presaleRecordByToken(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
@@ -292,7 +301,7 @@ export class Launchpadv2 extends BaseContract {
     upfrontfee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     whiteListUsersToStartProject(
-      _address: string,
+      _addresses: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -301,28 +310,27 @@ export class Launchpadv2 extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  WBNBAddr(overrides?: CallOverrides): Promise<string>;
-
-  count(overrides?: CallOverrides): Promise<BigNumber>;
-
   createPresale(
     _presaleType: BigNumberish,
     _preSaleToken: string,
-    _criteriaTokenAddr: string,
-    _reservedTokensPCForLP: BigNumberish,
     _tokensForSale: BigNumberish,
+    _reservedTokensPCForLP: BigNumberish,
+    _tokensForLocker: BigNumberish,
+    _criteriaTokenAddr: string,
     _priceOfEachToken: BigNumberish,
     _minTokensForParticipation: BigNumberish,
     _presaleTimes: {
       startedAt: BigNumberish;
       expiredAt: BigNumberish;
       lpLockupTime: BigNumberish;
+      tokenLockupTime: BigNumberish;
     },
     _reqestedTokens: {
       minTokensReq: BigNumberish;
       maxTokensReq: BigNumberish;
       softCap: BigNumberish;
     },
+    _refundType: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -333,15 +341,31 @@ export class Launchpadv2 extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  lockerFactoryAddr(overrides?: CallOverrides): Promise<string>;
+  launchpadAddresses(
+    overrides?: CallOverrides
+  ): Promise<
+    [string, string, string, string, string] & {
+      pancakeSwapFactoryAddr: string;
+      pancakeSwapRouterAddr: string;
+      WBNBAddr: string;
+      teamAddr: string;
+      devAddr: string;
+    }
+  >;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
-  pancakeSwapFactoryAddr(overrides?: CallOverrides): Promise<string>;
+  presaleCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-  pancakeSwapRouterAddr(overrides?: CallOverrides): Promise<string>;
+  presaleRecordByID(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
-  presaleRecord(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+  presaleRecordByToken(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -365,7 +389,7 @@ export class Launchpadv2 extends BaseContract {
   upfrontfee(overrides?: CallOverrides): Promise<BigNumber>;
 
   whiteListUsersToStartProject(
-    _address: string,
+    _addresses: string[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -374,30 +398,29 @@ export class Launchpadv2 extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    WBNBAddr(overrides?: CallOverrides): Promise<string>;
-
-    count(overrides?: CallOverrides): Promise<BigNumber>;
-
     createPresale(
       _presaleType: BigNumberish,
       _preSaleToken: string,
-      _criteriaTokenAddr: string,
-      _reservedTokensPCForLP: BigNumberish,
       _tokensForSale: BigNumberish,
+      _reservedTokensPCForLP: BigNumberish,
+      _tokensForLocker: BigNumberish,
+      _criteriaTokenAddr: string,
       _priceOfEachToken: BigNumberish,
       _minTokensForParticipation: BigNumberish,
       _presaleTimes: {
         startedAt: BigNumberish;
         expiredAt: BigNumberish;
         lpLockupTime: BigNumberish;
+        tokenLockupTime: BigNumberish;
       },
       _reqestedTokens: {
         minTokensReq: BigNumberish;
         maxTokensReq: BigNumberish;
         softCap: BigNumberish;
       },
+      _refundType: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
 
     devAddr(overrides?: CallOverrides): Promise<string>;
 
@@ -406,16 +429,29 @@ export class Launchpadv2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    lockerFactoryAddr(overrides?: CallOverrides): Promise<string>;
+    launchpadAddresses(
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, string, string, string] & {
+        pancakeSwapFactoryAddr: string;
+        pancakeSwapRouterAddr: string;
+        WBNBAddr: string;
+        teamAddr: string;
+        devAddr: string;
+      }
+    >;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
-    pancakeSwapFactoryAddr(overrides?: CallOverrides): Promise<string>;
+    presaleCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-    pancakeSwapRouterAddr(overrides?: CallOverrides): Promise<string>;
-
-    presaleRecord(
+    presaleRecordByID(
       arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    presaleRecordByToken(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -439,7 +475,7 @@ export class Launchpadv2 extends BaseContract {
     upfrontfee(overrides?: CallOverrides): Promise<BigNumber>;
 
     whiteListUsersToStartProject(
-      _address: string,
+      _addresses: string[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -465,28 +501,27 @@ export class Launchpadv2 extends BaseContract {
   };
 
   estimateGas: {
-    WBNBAddr(overrides?: CallOverrides): Promise<BigNumber>;
-
-    count(overrides?: CallOverrides): Promise<BigNumber>;
-
     createPresale(
       _presaleType: BigNumberish,
       _preSaleToken: string,
-      _criteriaTokenAddr: string,
-      _reservedTokensPCForLP: BigNumberish,
       _tokensForSale: BigNumberish,
+      _reservedTokensPCForLP: BigNumberish,
+      _tokensForLocker: BigNumberish,
+      _criteriaTokenAddr: string,
       _priceOfEachToken: BigNumberish,
       _minTokensForParticipation: BigNumberish,
       _presaleTimes: {
         startedAt: BigNumberish;
         expiredAt: BigNumberish;
         lpLockupTime: BigNumberish;
+        tokenLockupTime: BigNumberish;
       },
       _reqestedTokens: {
         minTokensReq: BigNumberish;
         maxTokensReq: BigNumberish;
         softCap: BigNumberish;
       },
+      _refundType: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -497,16 +532,19 @@ export class Launchpadv2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    lockerFactoryAddr(overrides?: CallOverrides): Promise<BigNumber>;
+    launchpadAddresses(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    pancakeSwapFactoryAddr(overrides?: CallOverrides): Promise<BigNumber>;
+    presaleCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-    pancakeSwapRouterAddr(overrides?: CallOverrides): Promise<BigNumber>;
-
-    presaleRecord(
+    presaleRecordByID(
       arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    presaleRecordByToken(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -532,7 +570,7 @@ export class Launchpadv2 extends BaseContract {
     upfrontfee(overrides?: CallOverrides): Promise<BigNumber>;
 
     whiteListUsersToStartProject(
-      _address: string,
+      _addresses: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -542,28 +580,27 @@ export class Launchpadv2 extends BaseContract {
   };
 
   populateTransaction: {
-    WBNBAddr(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    count(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     createPresale(
       _presaleType: BigNumberish,
       _preSaleToken: string,
-      _criteriaTokenAddr: string,
-      _reservedTokensPCForLP: BigNumberish,
       _tokensForSale: BigNumberish,
+      _reservedTokensPCForLP: BigNumberish,
+      _tokensForLocker: BigNumberish,
+      _criteriaTokenAddr: string,
       _priceOfEachToken: BigNumberish,
       _minTokensForParticipation: BigNumberish,
       _presaleTimes: {
         startedAt: BigNumberish;
         expiredAt: BigNumberish;
         lpLockupTime: BigNumberish;
+        tokenLockupTime: BigNumberish;
       },
       _reqestedTokens: {
         minTokensReq: BigNumberish;
         maxTokensReq: BigNumberish;
         softCap: BigNumberish;
       },
+      _refundType: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -574,20 +611,21 @@ export class Launchpadv2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    lockerFactoryAddr(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    launchpadAddresses(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    pancakeSwapFactoryAddr(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    presaleCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    pancakeSwapRouterAddr(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    presaleRecord(
+    presaleRecordByID(
       arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    presaleRecordByToken(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -613,7 +651,7 @@ export class Launchpadv2 extends BaseContract {
     upfrontfee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     whiteListUsersToStartProject(
-      _address: string,
+      _addresses: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

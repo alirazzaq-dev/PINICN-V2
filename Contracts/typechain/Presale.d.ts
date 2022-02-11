@@ -22,53 +22,40 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface PresaleInterface extends ethers.utils.Interface {
   functions: {
-    "LPLockerManager()": FunctionFragment;
-    "WBNBAddr()": FunctionFragment;
-    "burnOrWithdrawTokens(uint8)": FunctionFragment;
     "buyTokensOnPresale(uint256)": FunctionFragment;
-    "chageSaleType(uint8,address)": FunctionFragment;
+    "chageSaleType(uint8,address,uint256)": FunctionFragment;
     "claimTokensOrARefund()": FunctionFragment;
-    "devAddr()": FunctionFragment;
     "finalizePresale()": FunctionFragment;
     "internalData()": FunctionFragment;
+    "launchpadAddresses()": FunctionFragment;
     "owner()": FunctionFragment;
-    "pancakeSwapFactoryAddr()": FunctionFragment;
-    "pancakeSwapRouterAddr()": FunctionFragment;
     "participant(address)": FunctionFragment;
+    "participationCriteria()": FunctionFragment;
+    "preSaleStatus()": FunctionFragment;
+    "presaleCounts()": FunctionFragment;
     "presaleInfo()": FunctionFragment;
-    "presaleParticipationCriteria()": FunctionFragment;
-    "presalectCounts()": FunctionFragment;
+    "refundType()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "salesFeeInPercent()": FunctionFragment;
-    "setAddresses(address,address,address,address,address,address)": FunctionFragment;
-    "teamAddr()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "upfrontfee()": FunctionFragment;
-    "whiteListUsersToBuyTokens(address)": FunctionFragment;
+    "unlockLPTokens()": FunctionFragment;
+    "unlockTokens()": FunctionFragment;
+    "whiteListUsers(address[])": FunctionFragment;
+    "withdrawExtraTokens()": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "LPLockerManager",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "WBNBAddr", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "burnOrWithdrawTokens",
-    values: [BigNumberish]
-  ): string;
   encodeFunctionData(
     functionFragment: "buyTokensOnPresale",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "chageSaleType",
-    values: [BigNumberish, string]
+    values: [BigNumberish, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "claimTokensOrARefund",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "devAddr", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "finalizePresale",
     values?: undefined
@@ -77,26 +64,30 @@ interface PresaleInterface extends ethers.utils.Interface {
     functionFragment: "internalData",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "launchpadAddresses",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "pancakeSwapFactoryAddr",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "pancakeSwapRouterAddr",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "participant", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "participationCriteria",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "preSaleStatus",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "presaleCounts",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "presaleInfo",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "presaleParticipationCriteria",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "presalectCounts",
+    functionFragment: "refundType",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -108,32 +99,26 @@ interface PresaleInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setAddresses",
-    values: [string, string, string, string, string, string]
-  ): string;
-  encodeFunctionData(functionFragment: "teamAddr", values?: undefined): string;
-  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "upfrontfee",
+    functionFragment: "unlockLPTokens",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "whiteListUsersToBuyTokens",
-    values: [string]
+    functionFragment: "unlockTokens",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "whiteListUsers",
+    values: [string[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawExtraTokens",
+    values?: undefined
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "LPLockerManager",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "WBNBAddr", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "burnOrWithdrawTokens",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "buyTokensOnPresale",
     data: BytesLike
@@ -146,7 +131,6 @@ interface PresaleInterface extends ethers.utils.Interface {
     functionFragment: "claimTokensOrARefund",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "devAddr", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "finalizePresale",
     data: BytesLike
@@ -155,31 +139,32 @@ interface PresaleInterface extends ethers.utils.Interface {
     functionFragment: "internalData",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "launchpadAddresses",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "pancakeSwapFactoryAddr",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "pancakeSwapRouterAddr",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "participant",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "participationCriteria",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "preSaleStatus",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "presaleCounts",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "presaleInfo",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "presaleParticipationCriteria",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "presalectCounts",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "refundType", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -189,17 +174,23 @@ interface PresaleInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setAddresses",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "teamAddr", data: BytesLike): Result;
-  decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "upfrontfee", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "whiteListUsersToBuyTokens",
+    functionFragment: "unlockLPTokens",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "unlockTokens",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "whiteListUsers",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawExtraTokens",
     data: BytesLike
   ): Result;
 
@@ -258,15 +249,6 @@ export class Presale extends BaseContract {
   interface: PresaleInterface;
 
   functions: {
-    LPLockerManager(overrides?: CallOverrides): Promise<[string]>;
-
-    WBNBAddr(overrides?: CallOverrides): Promise<[string]>;
-
-    burnOrWithdrawTokens(
-      _withdrawtype: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     buyTokensOnPresale(
       _numOfTokensRequested: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
@@ -275,14 +257,13 @@ export class Presale extends BaseContract {
     chageSaleType(
       _type: BigNumberish,
       _address: string,
+      minimumTokens: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     claimTokensOrARefund(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    devAddr(overrides?: CallOverrides): Promise<[string]>;
 
     finalizePresale(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -299,7 +280,6 @@ export class Presale extends BaseContract {
         BigNumber,
         BigNumber,
         BigNumber,
-        BigNumber,
         BigNumber
       ] & {
         totalTokensSold: BigNumber;
@@ -309,16 +289,23 @@ export class Presale extends BaseContract {
         poolShareBNB: BigNumber;
         devTeamShareBNB: BigNumber;
         ownersShareBNB: BigNumber;
-        totalLP: BigNumber;
-        lockerID: BigNumber;
+        totalLPLocked: BigNumber;
+      }
+    >;
+
+    launchpadAddresses(
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, string, string, string] & {
+        pancakeSwapFactoryAddr: string;
+        pancakeSwapRouterAddr: string;
+        WBNBAddr: string;
+        teamAddr: string;
+        devAddr: string;
       }
     >;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
-
-    pancakeSwapFactoryAddr(overrides?: CallOverrides): Promise<[string]>;
-
-    pancakeSwapRouterAddr(overrides?: CallOverrides): Promise<[string]>;
 
     participant(
       arg0: string,
@@ -331,74 +318,72 @@ export class Presale extends BaseContract {
       }
     >;
 
-    presaleInfo(
+    participationCriteria(
       overrides?: CallOverrides
     ): Promise<
       [
+        string,
         BigNumber,
         number,
-        string,
-        string,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        number
-      ] & {
-        id: BigNumber;
-        typeOfPresale: number;
-        preSaleToken: string;
-        presaleOwnerAddr: string;
-        price: BigNumber;
-        tokensForSale: BigNumber;
-        reservedTokensPCForLP: BigNumber;
-        remainingTokensForSale: BigNumber;
-        accumulatedBalance: BigNumber;
-        preSaleStatus: number;
-      }
-    >;
-
-    presaleParticipationCriteria(
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        string,
         BigNumber,
         [BigNumber, BigNumber, BigNumber] & {
           minTokensReq: BigNumber;
           maxTokensReq: BigNumber;
           softCap: BigNumber;
         },
-        [BigNumber, BigNumber, BigNumber] & {
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
           startedAt: BigNumber;
           expiredAt: BigNumber;
           lpLockupTime: BigNumber;
+          tokenLockupTime: BigNumber;
         }
       ] & {
         criteriaToken: string;
+        price: BigNumber;
+        refundType: number;
         minTokensForParticipation: BigNumber;
         reqestedTokens: [BigNumber, BigNumber, BigNumber] & {
           minTokensReq: BigNumber;
           maxTokensReq: BigNumber;
           softCap: BigNumber;
         };
-        presaleTimes: [BigNumber, BigNumber, BigNumber] & {
+        presaleTimes: [BigNumber, BigNumber, BigNumber, BigNumber] & {
           startedAt: BigNumber;
           expiredAt: BigNumber;
           lpLockupTime: BigNumber;
+          tokenLockupTime: BigNumber;
         };
       }
     >;
 
-    presalectCounts(
+    preSaleStatus(overrides?: CallOverrides): Promise<[number]>;
+
+    presaleCounts(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber] & {
-        participantsCount: BigNumber;
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        remainingTokensForSale: BigNumber;
+        accumulatedBalance: BigNumber;
+        contributors: BigNumber;
         claimsCount: BigNumber;
       }
     >;
+
+    presaleInfo(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, number, string, string, BigNumber, BigNumber, BigNumber] & {
+        id: BigNumber;
+        typeOfPresale: number;
+        preSaleToken: string;
+        presaleOwnerAddr: string;
+        tokensForSale: BigNumber;
+        reservedTokensPCForLP: BigNumber;
+        tokenForLocker: BigNumber;
+      }
+    >;
+
+    refundType(overrides?: CallOverrides): Promise<[number]>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -406,39 +391,28 @@ export class Presale extends BaseContract {
 
     salesFeeInPercent(overrides?: CallOverrides): Promise<[number]>;
 
-    setAddresses(
-      _pancakeSwapFactoryAddr: string,
-      _pancakeSwapRouterAddr: string,
-      _WBNBAddr: string,
-      _teamAddr: string,
-      _devAddr: string,
-      _lpLockerManager: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    teamAddr(overrides?: CallOverrides): Promise<[string]>;
-
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    upfrontfee(overrides?: CallOverrides): Promise<[BigNumber]>;
+    unlockLPTokens(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
-    whiteListUsersToBuyTokens(
-      _address: string,
+    unlockTokens(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    whiteListUsers(
+      _addresses: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    withdrawExtraTokens(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
-
-  LPLockerManager(overrides?: CallOverrides): Promise<string>;
-
-  WBNBAddr(overrides?: CallOverrides): Promise<string>;
-
-  burnOrWithdrawTokens(
-    _withdrawtype: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   buyTokensOnPresale(
     _numOfTokensRequested: BigNumberish,
@@ -448,14 +422,13 @@ export class Presale extends BaseContract {
   chageSaleType(
     _type: BigNumberish,
     _address: string,
+    minimumTokens: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   claimTokensOrARefund(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  devAddr(overrides?: CallOverrides): Promise<string>;
 
   finalizePresale(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -472,7 +445,6 @@ export class Presale extends BaseContract {
       BigNumber,
       BigNumber,
       BigNumber,
-      BigNumber,
       BigNumber
     ] & {
       totalTokensSold: BigNumber;
@@ -482,16 +454,23 @@ export class Presale extends BaseContract {
       poolShareBNB: BigNumber;
       devTeamShareBNB: BigNumber;
       ownersShareBNB: BigNumber;
-      totalLP: BigNumber;
-      lockerID: BigNumber;
+      totalLPLocked: BigNumber;
+    }
+  >;
+
+  launchpadAddresses(
+    overrides?: CallOverrides
+  ): Promise<
+    [string, string, string, string, string] & {
+      pancakeSwapFactoryAddr: string;
+      pancakeSwapRouterAddr: string;
+      WBNBAddr: string;
+      teamAddr: string;
+      devAddr: string;
     }
   >;
 
   owner(overrides?: CallOverrides): Promise<string>;
-
-  pancakeSwapFactoryAddr(overrides?: CallOverrides): Promise<string>;
-
-  pancakeSwapRouterAddr(overrides?: CallOverrides): Promise<string>;
 
   participant(
     arg0: string,
@@ -504,74 +483,72 @@ export class Presale extends BaseContract {
     }
   >;
 
-  presaleInfo(
+  participationCriteria(
     overrides?: CallOverrides
   ): Promise<
     [
+      string,
       BigNumber,
       number,
-      string,
-      string,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      number
-    ] & {
-      id: BigNumber;
-      typeOfPresale: number;
-      preSaleToken: string;
-      presaleOwnerAddr: string;
-      price: BigNumber;
-      tokensForSale: BigNumber;
-      reservedTokensPCForLP: BigNumber;
-      remainingTokensForSale: BigNumber;
-      accumulatedBalance: BigNumber;
-      preSaleStatus: number;
-    }
-  >;
-
-  presaleParticipationCriteria(
-    overrides?: CallOverrides
-  ): Promise<
-    [
-      string,
       BigNumber,
       [BigNumber, BigNumber, BigNumber] & {
         minTokensReq: BigNumber;
         maxTokensReq: BigNumber;
         softCap: BigNumber;
       },
-      [BigNumber, BigNumber, BigNumber] & {
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
         startedAt: BigNumber;
         expiredAt: BigNumber;
         lpLockupTime: BigNumber;
+        tokenLockupTime: BigNumber;
       }
     ] & {
       criteriaToken: string;
+      price: BigNumber;
+      refundType: number;
       minTokensForParticipation: BigNumber;
       reqestedTokens: [BigNumber, BigNumber, BigNumber] & {
         minTokensReq: BigNumber;
         maxTokensReq: BigNumber;
         softCap: BigNumber;
       };
-      presaleTimes: [BigNumber, BigNumber, BigNumber] & {
+      presaleTimes: [BigNumber, BigNumber, BigNumber, BigNumber] & {
         startedAt: BigNumber;
         expiredAt: BigNumber;
         lpLockupTime: BigNumber;
+        tokenLockupTime: BigNumber;
       };
     }
   >;
 
-  presalectCounts(
+  preSaleStatus(overrides?: CallOverrides): Promise<number>;
+
+  presaleCounts(
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, BigNumber] & {
-      participantsCount: BigNumber;
+    [BigNumber, BigNumber, BigNumber, BigNumber] & {
+      remainingTokensForSale: BigNumber;
+      accumulatedBalance: BigNumber;
+      contributors: BigNumber;
       claimsCount: BigNumber;
     }
   >;
+
+  presaleInfo(
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, number, string, string, BigNumber, BigNumber, BigNumber] & {
+      id: BigNumber;
+      typeOfPresale: number;
+      preSaleToken: string;
+      presaleOwnerAddr: string;
+      tokensForSale: BigNumber;
+      reservedTokensPCForLP: BigNumber;
+      tokenForLocker: BigNumber;
+    }
+  >;
+
+  refundType(overrides?: CallOverrides): Promise<number>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -579,40 +556,29 @@ export class Presale extends BaseContract {
 
   salesFeeInPercent(overrides?: CallOverrides): Promise<number>;
 
-  setAddresses(
-    _pancakeSwapFactoryAddr: string,
-    _pancakeSwapRouterAddr: string,
-    _WBNBAddr: string,
-    _teamAddr: string,
-    _devAddr: string,
-    _lpLockerManager: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  teamAddr(overrides?: CallOverrides): Promise<string>;
-
   transferOwnership(
     newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  upfrontfee(overrides?: CallOverrides): Promise<BigNumber>;
+  unlockLPTokens(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
-  whiteListUsersToBuyTokens(
-    _address: string,
+  unlockTokens(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  whiteListUsers(
+    _addresses: string[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  withdrawExtraTokens(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    LPLockerManager(overrides?: CallOverrides): Promise<string>;
-
-    WBNBAddr(overrides?: CallOverrides): Promise<string>;
-
-    burnOrWithdrawTokens(
-      _withdrawtype: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     buyTokensOnPresale(
       _numOfTokensRequested: BigNumberish,
       overrides?: CallOverrides
@@ -621,12 +587,11 @@ export class Presale extends BaseContract {
     chageSaleType(
       _type: BigNumberish,
       _address: string,
+      minimumTokens: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     claimTokensOrARefund(overrides?: CallOverrides): Promise<void>;
-
-    devAddr(overrides?: CallOverrides): Promise<string>;
 
     finalizePresale(overrides?: CallOverrides): Promise<void>;
 
@@ -634,7 +599,6 @@ export class Presale extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [
-        BigNumber,
         BigNumber,
         BigNumber,
         BigNumber,
@@ -651,16 +615,23 @@ export class Presale extends BaseContract {
         poolShareBNB: BigNumber;
         devTeamShareBNB: BigNumber;
         ownersShareBNB: BigNumber;
-        totalLP: BigNumber;
-        lockerID: BigNumber;
+        totalLPLocked: BigNumber;
+      }
+    >;
+
+    launchpadAddresses(
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, string, string, string] & {
+        pancakeSwapFactoryAddr: string;
+        pancakeSwapRouterAddr: string;
+        WBNBAddr: string;
+        teamAddr: string;
+        devAddr: string;
       }
     >;
 
     owner(overrides?: CallOverrides): Promise<string>;
-
-    pancakeSwapFactoryAddr(overrides?: CallOverrides): Promise<string>;
-
-    pancakeSwapRouterAddr(overrides?: CallOverrides): Promise<string>;
 
     participant(
       arg0: string,
@@ -673,102 +644,92 @@ export class Presale extends BaseContract {
       }
     >;
 
-    presaleInfo(
+    participationCriteria(
       overrides?: CallOverrides
     ): Promise<
       [
+        string,
         BigNumber,
         number,
-        string,
-        string,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        number
-      ] & {
-        id: BigNumber;
-        typeOfPresale: number;
-        preSaleToken: string;
-        presaleOwnerAddr: string;
-        price: BigNumber;
-        tokensForSale: BigNumber;
-        reservedTokensPCForLP: BigNumber;
-        remainingTokensForSale: BigNumber;
-        accumulatedBalance: BigNumber;
-        preSaleStatus: number;
-      }
-    >;
-
-    presaleParticipationCriteria(
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        string,
         BigNumber,
         [BigNumber, BigNumber, BigNumber] & {
           minTokensReq: BigNumber;
           maxTokensReq: BigNumber;
           softCap: BigNumber;
         },
-        [BigNumber, BigNumber, BigNumber] & {
+        [BigNumber, BigNumber, BigNumber, BigNumber] & {
           startedAt: BigNumber;
           expiredAt: BigNumber;
           lpLockupTime: BigNumber;
+          tokenLockupTime: BigNumber;
         }
       ] & {
         criteriaToken: string;
+        price: BigNumber;
+        refundType: number;
         minTokensForParticipation: BigNumber;
         reqestedTokens: [BigNumber, BigNumber, BigNumber] & {
           minTokensReq: BigNumber;
           maxTokensReq: BigNumber;
           softCap: BigNumber;
         };
-        presaleTimes: [BigNumber, BigNumber, BigNumber] & {
+        presaleTimes: [BigNumber, BigNumber, BigNumber, BigNumber] & {
           startedAt: BigNumber;
           expiredAt: BigNumber;
           lpLockupTime: BigNumber;
+          tokenLockupTime: BigNumber;
         };
       }
     >;
 
-    presalectCounts(
+    preSaleStatus(overrides?: CallOverrides): Promise<number>;
+
+    presaleCounts(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber] & {
-        participantsCount: BigNumber;
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        remainingTokensForSale: BigNumber;
+        accumulatedBalance: BigNumber;
+        contributors: BigNumber;
         claimsCount: BigNumber;
       }
     >;
 
+    presaleInfo(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, number, string, string, BigNumber, BigNumber, BigNumber] & {
+        id: BigNumber;
+        typeOfPresale: number;
+        preSaleToken: string;
+        presaleOwnerAddr: string;
+        tokensForSale: BigNumber;
+        reservedTokensPCForLP: BigNumber;
+        tokenForLocker: BigNumber;
+      }
+    >;
+
+    refundType(overrides?: CallOverrides): Promise<number>;
+
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     salesFeeInPercent(overrides?: CallOverrides): Promise<number>;
-
-    setAddresses(
-      _pancakeSwapFactoryAddr: string,
-      _pancakeSwapRouterAddr: string,
-      _WBNBAddr: string,
-      _teamAddr: string,
-      _devAddr: string,
-      _lpLockerManager: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    teamAddr(overrides?: CallOverrides): Promise<string>;
 
     transferOwnership(
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    upfrontfee(overrides?: CallOverrides): Promise<BigNumber>;
+    unlockLPTokens(overrides?: CallOverrides): Promise<void>;
 
-    whiteListUsersToBuyTokens(
-      _address: string,
+    unlockTokens(overrides?: CallOverrides): Promise<void>;
+
+    whiteListUsers(
+      _addresses: string[],
       overrides?: CallOverrides
     ): Promise<void>;
+
+    withdrawExtraTokens(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -790,15 +751,6 @@ export class Presale extends BaseContract {
   };
 
   estimateGas: {
-    LPLockerManager(overrides?: CallOverrides): Promise<BigNumber>;
-
-    WBNBAddr(overrides?: CallOverrides): Promise<BigNumber>;
-
-    burnOrWithdrawTokens(
-      _withdrawtype: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     buyTokensOnPresale(
       _numOfTokensRequested: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
@@ -807,14 +759,13 @@ export class Presale extends BaseContract {
     chageSaleType(
       _type: BigNumberish,
       _address: string,
+      minimumTokens: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     claimTokensOrARefund(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    devAddr(overrides?: CallOverrides): Promise<BigNumber>;
 
     finalizePresale(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -822,19 +773,21 @@ export class Presale extends BaseContract {
 
     internalData(overrides?: CallOverrides): Promise<BigNumber>;
 
+    launchpadAddresses(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    pancakeSwapFactoryAddr(overrides?: CallOverrides): Promise<BigNumber>;
-
-    pancakeSwapRouterAddr(overrides?: CallOverrides): Promise<BigNumber>;
 
     participant(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    participationCriteria(overrides?: CallOverrides): Promise<BigNumber>;
+
+    preSaleStatus(overrides?: CallOverrides): Promise<BigNumber>;
+
+    presaleCounts(overrides?: CallOverrides): Promise<BigNumber>;
+
     presaleInfo(overrides?: CallOverrides): Promise<BigNumber>;
 
-    presaleParticipationCriteria(overrides?: CallOverrides): Promise<BigNumber>;
-
-    presalectCounts(overrides?: CallOverrides): Promise<BigNumber>;
+    refundType(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -842,41 +795,30 @@ export class Presale extends BaseContract {
 
     salesFeeInPercent(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setAddresses(
-      _pancakeSwapFactoryAddr: string,
-      _pancakeSwapRouterAddr: string,
-      _WBNBAddr: string,
-      _teamAddr: string,
-      _devAddr: string,
-      _lpLockerManager: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    teamAddr(overrides?: CallOverrides): Promise<BigNumber>;
-
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    upfrontfee(overrides?: CallOverrides): Promise<BigNumber>;
+    unlockLPTokens(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
-    whiteListUsersToBuyTokens(
-      _address: string,
+    unlockTokens(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    whiteListUsers(
+      _addresses: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    withdrawExtraTokens(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    LPLockerManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    WBNBAddr(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    burnOrWithdrawTokens(
-      _withdrawtype: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     buyTokensOnPresale(
       _numOfTokensRequested: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
@@ -885,6 +827,7 @@ export class Presale extends BaseContract {
     chageSaleType(
       _type: BigNumberish,
       _address: string,
+      minimumTokens: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -892,36 +835,34 @@ export class Presale extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    devAddr(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     finalizePresale(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     internalData(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    launchpadAddresses(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    pancakeSwapFactoryAddr(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    pancakeSwapRouterAddr(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
 
     participant(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    presaleInfo(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    presaleParticipationCriteria(
+    participationCriteria(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    presalectCounts(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    preSaleStatus(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    presaleCounts(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    presaleInfo(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    refundType(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -929,27 +870,25 @@ export class Presale extends BaseContract {
 
     salesFeeInPercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    setAddresses(
-      _pancakeSwapFactoryAddr: string,
-      _pancakeSwapRouterAddr: string,
-      _WBNBAddr: string,
-      _teamAddr: string,
-      _devAddr: string,
-      _lpLockerManager: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    teamAddr(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    upfrontfee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    unlockLPTokens(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
-    whiteListUsersToBuyTokens(
-      _address: string,
+    unlockTokens(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    whiteListUsers(
+      _addresses: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawExtraTokens(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

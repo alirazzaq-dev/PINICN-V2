@@ -14,8 +14,6 @@ abstract contract ILockerFactory  {
     function createLcoker(Type _type, address _owner, IERC20 _token, uint _numOfTokens, uint _unlockTime) virtual external returns(uint);
 }
 
-
-
 contract Launchpad is Ownable, ReentrancyGuard {
 
     using SafeMath for uint256;
@@ -249,7 +247,7 @@ contract Launchpad is Ownable, ReentrancyGuard {
 
         uint reservedTokens = _tokensForSale.mul(_reservedTokensPCForLP).div(100);
 
-        require( 
+        require(
             _preSaleToken.transferFrom(msg.sender, address(this), _tokensForSale.add(reservedTokens)),
              "Unable to transfer presale tokens to the contract"
             );

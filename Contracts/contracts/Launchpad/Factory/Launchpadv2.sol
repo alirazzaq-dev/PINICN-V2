@@ -1,23 +1,18 @@
-//SPDX-License-Identifier: Unlicense
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
-import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 import "./Presale.sol";
 import "./LaunchPadLib.sol";
 
-
-contract Launchpadv2 is Ownable, ReentrancyGuard {
+contract Launchpadv2 is Ownable {
     
     using LaunchPadLib for *;
     using SafeMath for uint256;
 
-    uint public count = 0;
+    uint public presaleCount = 0;
     uint public upfrontfee = 0.2 ether;
     uint8 public salesFeeInPercent = 2;
 
@@ -25,72 +20,35 @@ contract Launchpadv2 is Ownable, ReentrancyGuard {
     address public teamAddr;
     address public devAddr;
     
-  
-
-    //# PancakeSwap on local network:
-    address public pancakeSwapFactoryAddr;
-    address public pancakeSwapRouterAddr;
-    address public WBNBAddr;
-    address public lockerFactoryAddr;
+    LaunchPadLib.LaunchpadAddresses public launchpadAddresses;
 
     ////////////////////////////// MAPPINGS ///////////////////////////////////
 
-    mapping(uint => address) public presaleRecord;
-
+    mapping(uint => address) public presaleRecordByID;
+    mapping(address => address) public presaleRecordByToken;
     mapping(address => bool) public isUserWhitelistedToStartProject;
-    // mapping(uint256 => mapping(address => Participant)) public participant;
-
-
-    ////////////////////////////// MODIFIRES //////////////////////////////
-
-    // modifier isIDValid(uint _id) {
-    //     require (address(presaleInfo[_id].preSaleToken) != address(0), "Not a valid ID");
-    //     _;
-    // }
 
 
     ////////////////////////////// FUNCTIONS ///////////////////////////////////
 
-    constructor(
-        address _pancakeSwapFactoryAddr, 
-        address _pancakeSwapRouterAddr, 
-        address _WBNBAddr,
-        address  _teamAddr,
-        address _devAddr
-        ){
-
-        pancakeSwapFactoryAddr = _pancakeSwapFactoryAddr;
-        pancakeSwapRouterAddr = _pancakeSwapRouterAddr; 
-        WBNBAddr = _WBNBAddr;
-
-        teamAddr = _teamAddr;
-        devAddr = _devAddr;
-
-    }
-
-    function whiteListUsersToStartProject(address _address) public onlyOwner {
-        isUserWhitelistedToStartProject[_address] = true;
-    }
-
-    function updateFees(uint _upfrontFee, uint8 _salesFeeInPercent) public onlyOwner {
-        upfrontfee = _upfrontFee;
-        salesFeeInPercent = _salesFeeInPercent;
+    constructor( LaunchPadLib.LaunchpadAddresses memory _launchpadAddresses ){
+        launchpadAddresses = _launchpadAddresses;
     }
 
     function validateCreateInput(
         LaunchPadLib.PresaleType _presaleType,
-        IERC20 _preSaleToken,
-        IERC20 _criteriaTokenAddr,
+        address _preSaleToken,
+        address _criteriaTokenAddr,
         uint8 _reservedTokensPCForLP,
         uint256 _tokensForSale,
         uint256 _priceOfEachToken,
         LaunchPadLib.PresaleTimes memory _presaleTimes,
         LaunchPadLib.ReqestedTokens memory _reqestedTokens
-        ) internal view {
+        ) internal view returns(bool) {
         
         require( address(_preSaleToken) != address(0), "Presale project address can't be null");
                 
-        if(_presaleType == LaunchPadLib.PresaleType.onlyTokenHolders) {
+        if(_presaleType == LaunchPadLib.PresaleType.TOKENHOLDERS) {
             require( address(_criteriaTokenAddr) != address(0), "Criteria token address can't be null");
         }
 
@@ -108,74 +66,98 @@ contract Launchpadv2 is Ownable, ReentrancyGuard {
 
         require ( _priceOfEachToken > 0, "_priceOfEachToken should be more than zero" );
 
+        return true;
     }
 
     function createPresale(
-        // Contract Info
         LaunchPadLib.PresaleType _presaleType,
-        IERC20 _preSaleToken,
-        IERC20 _criteriaTokenAddr,
-        uint8 _reservedTokensPCForLP,
+        address _preSaleToken,
         uint256 _tokensForSale,
-
-        // Participation Criteria
+        uint8 _reservedTokensPCForLP,
+        uint256 _tokensForLocker,
+        address _criteriaTokenAddr,
         uint256 _priceOfEachToken,
         uint256 _minTokensForParticipation,
         LaunchPadLib.PresaleTimes memory _presaleTimes,
-        LaunchPadLib.ReqestedTokens memory _reqestedTokens
-        ) public payable returns(uint){
+        LaunchPadLib.ReqestedTokens memory _reqestedTokens,
+        LaunchPadLib.RefundType _refundType
+        ) public payable {
 
-        bool needToPay = isUserWhitelistedToStartProject[msg.sender] || msg.sender == owner();
+        require(
+            validateCreateInput(
+                _presaleType, 
+                _preSaleToken, 
+                _criteriaTokenAddr, 
+                _reservedTokensPCForLP, 
+                _tokensForSale, 
+                _priceOfEachToken,
+                _presaleTimes,
+                _reqestedTokens
+                )
+        );
 
-        if(!needToPay) {
+        if(!(isUserWhitelistedToStartProject[msg.sender] || msg.sender == owner())) {
             require( msg.value >= upfrontfee, "Insufficient funds to start");
         }
 
-        validateCreateInput(
-            _presaleType, 
-            _preSaleToken, 
-            _criteriaTokenAddr, 
-            _reservedTokensPCForLP, 
-            _tokensForSale, 
+        presaleCount++;
+                
+        LaunchPadLib.PresaleInfo memory _presaleInfo = LaunchPadLib.PresaleInfo(
+            presaleCount,
+            _presaleType,
+            _preSaleToken,
+            msg.sender,
+            _tokensForSale,
+            _reservedTokensPCForLP,
+            _tokensForLocker
+        );
+
+        LaunchPadLib.ParticipationCriteria memory _criteria = LaunchPadLib.ParticipationCriteria(
+            _criteriaTokenAddr,
             _priceOfEachToken,
-            _presaleTimes,
-            _reqestedTokens
-            );
+            _refundType,
+            _minTokensForParticipation,
+            _reqestedTokens,
+            _presaleTimes
+        );
 
+        Presale _presale = new Presale ( salesFeeInPercent, _presaleInfo, _criteria, launchpadAddresses );
 
+        require(transferTokens(_preSaleToken, address(_presale), _tokensForSale, _reservedTokensPCForLP, _tokensForLocker));
         
-        uint reservedTokens = _tokensForSale.mul(_reservedTokensPCForLP).div(100);
+        presaleRecordByToken[_preSaleToken] = address(_presale);
+        presaleRecordByID[presaleCount] = address(_presale);
+
+
+    }
+
+    function transferTokens(address _preSaleToken, address _presale, uint _tokensForSale, uint _reservedTokensPCForLP, uint _tokensForLocker) internal returns(bool){
+        uint tokensForLP = _tokensForSale.mul(_reservedTokensPCForLP).div(100);
 
         require(
-            _preSaleToken.transferFrom(msg.sender, address(this), _tokensForSale.add(reservedTokens)),
+            IERC20(_preSaleToken).transferFrom(msg.sender, _presale, _tokensForSale.add(tokensForLP).add(_tokensForLocker)),
              "Unable to transfer presale tokens to the contract"
             );
 
-        count++;
-        
-        Presale _presale = new Presale (
-            count,
-            msg.sender,
-            _presaleType,
-            _preSaleToken,
-            _criteriaTokenAddr,
-            _reservedTokensPCForLP,
-            _tokensForSale,
-            _priceOfEachToken, 
-            _minTokensForParticipation, 
-            _presaleTimes, 
-            _reqestedTokens
-        );
+        return true;
+    }
 
-        presaleRecord[count] = address(_presale);
-        return count;
+    function whiteListUsersToStartProject(address[] memory _addresses) public onlyOwner {
+        for(uint i=0; i < _addresses.length; i++){
+            isUserWhitelistedToStartProject[_addresses[i]] = true;
+        }
+    }
+
+    function updateFees(uint _upfrontFee, uint8 _salesFeeInPercent) public onlyOwner {
+        upfrontfee = _upfrontFee;
+        salesFeeInPercent = _salesFeeInPercent;
     }
 
     function withdrawBNBs() public onlyOwner {
         uint balance = address(this).balance;
         require(balance > 0 , "nothing to withdraw");
-        bool transfer = payable(teamAddr).send(balance);
-        require(transfer, "cannot send devTeam's share");
+        payable(owner()).transfer(balance);
+        // require(transfer, "cannot send devTeam's share");
 
     }
 
@@ -183,54 +165,4 @@ contract Launchpadv2 is Ownable, ReentrancyGuard {
             // emit ValueReceived(msg.sender, msg.value);
     }
 
-
-    // function updatePresaleTime(uint _id, uint _starttime, uint _endTime) public onlyPresaleOwner(_id) isIDValid(_id){
-        
-    //     require(presaleInfo[_id].preSaleStatus == PreSaleStatus.pending, "Presale is in progress, you can't change criteria now");
-
-    //     presaleParticipationCriteria[_id].presaleTimes.startedAt = _starttime;
-    //     presaleParticipationCriteria[_id].presaleTimes.expiredAt = _endTime;
-    // }
-
-    // function updateParticipationCriteria (
-    //         uint _id, uint _priceOfEachToken, uint _minTokensReq, uint _maxTokensReq, uint _softCap
-    //     ) public onlyPresaleOwner(_id) isIDValid(_id) {
-
-    //     require(presaleInfo[_id].preSaleStatus == PreSaleStatus.pending, "Presale is in progress, you can't change criteria now");
-    //     require( _softCap >= presaleInfo[_id].tokensForSale.div(2), "softcap should be at least 50% of the total tokens offered on sale");
-        
-    //     presaleInfo[_id].priceOfEachToken = _priceOfEachToken;
-    //     presaleParticipationCriteria[_id].reqestedTokens.minTokensReq = _minTokensReq;
-    //     presaleParticipationCriteria[_id].reqestedTokens.maxTokensReq = _maxTokensReq;
-    //     presaleParticipationCriteria[_id].softCap = _softCap;
-    // }
-
-    // function updateteamAddr(address _teamAddr) public onlyOwner {
-    //     teamAddr = _teamAddr;
-    // }
-
 }
-
-    // function updateTokensForSale( uint _id, uint _tokensForSale, uint _reservedTokensPCForLP ) public onlyPresaleOwner(_id) isIDValid(_id) {
-    //     presaleInfo[_id].tokensForSale = _tokensForSale;
-    //     presaleInfo[_id].remainingTokensForSale = _tokensForSale;
-    //     presaleInfo[_id].reservedTokensPCForLP = _reservedTokensPCForLP;
-    // }
-
-    // function setCriteriaToken(
-    //     uint _id, 
-    //     address _criteriaToken, 
-    //     uint _minTokensForParticipation
-    // ) public onlyPresaleOwner(_id) {
-    //     presaleParticipationCriteria[_id].minTokensForParticipation = _minTokensForParticipation;
-    //     presaleParticipationCriteria[_id].criteriaTokenAddr = _criteriaToken;
-    // }
-
-
-    // function pausePresale(uint _id) public onlyPresaleOwner(_id) isIDValid(_id) {
-    //     presaleInfo[_id].preSaleStatus = PreSaleStatus.paused;
-    // }
-    
-    // function unpausePresale(uint _id) public onlyPresaleOwner(_id) isIDValid(_id) {
-    //     presaleInfo[_id].preSaleStatus = PreSaleStatus.inProgress;
-    // }

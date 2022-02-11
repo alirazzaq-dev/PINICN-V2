@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for Launchpad\Factory\Launchpadv2.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">Launchpad/Factory/</a> Launchpadv2.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>33/33</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">77.78% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>28/36</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>7/7</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>34/34</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">30×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">19×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">19×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+&nbsp;
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+&nbsp;
+import "./Presale.sol";
+import "./LaunchPadLib.sol";
+&nbsp;
+contract Launchpadv2 is Ownable {
+    
+    using LaunchPadLib for *;
+    using SafeMath for uint256;
+&nbsp;
+    uint public presaleCount = 0;
+    uint public upfrontfee = 0.2 ether;
+    uint8 public salesFeeInPercent = 2;
+&nbsp;
+    // Declare a set state variable    
+    address public teamAddr;
+    address public devAddr;
+    
+    LaunchPadLib.LaunchpadAddresses public launchpadAddresses;
+&nbsp;
+    ////////////////////////////// MAPPINGS ///////////////////////////////////
+&nbsp;
+    mapping(uint =&gt; address) public presaleRecordByID;
+    mapping(address =&gt; address) public presaleRecordByToken;
+    mapping(address =&gt; bool) public isUserWhitelistedToStartProject;
+&nbsp;
+&nbsp;
+    ////////////////////////////// FUNCTIONS ///////////////////////////////////
+&nbsp;
+    constructor( LaunchPadLib.LaunchpadAddresses memory _launchpadAddresses ){
+        launchpadAddresses = _launchpadAddresses;
+    }
+&nbsp;
+    function validateCreateInput(
+        LaunchPadLib.PresaleType _presaleType,
+        address _preSaleToken,
+        address _criteriaTokenAddr,
+        uint8 _reservedTokensPCForLP,
+        uint256 _tokensForSale,
+        uint256 _priceOfEachToken,
+        LaunchPadLib.PresaleTimes memory _presaleTimes,
+        LaunchPadLib.ReqestedTokens memory _reqestedTokens
+        ) internal view returns(bool) {
+        
+        require( address(_preSaleToken) != address(0), "Presale project address can't be null");
+                
+        if(_presaleType == LaunchPadLib.PresaleType.TOKENHOLDERS) {
+            <span class="missing-if-branch" title="if path not taken" >I</span>require( address(_criteriaTokenAddr) != address(0), "Criteria token address can't be null");
+        }
+&nbsp;
+        require( _reservedTokensPCForLP &gt;= 50 &amp;&amp; _reservedTokensPCForLP &lt;= 100, "liquidity should be at least 50% or more");
+        
+        require( _tokensForSale &gt; 0, "tokens for sale must be more than 0");
+&nbsp;
+        require( _reqestedTokens.minTokensReq &gt; 0, "_minTokensReq should be more than zero");
+        require( _reqestedTokens.maxTokensReq &gt; _reqestedTokens.minTokensReq, "_maxTokensReq &gt; _minTokensReq");
+        require( _reqestedTokens.softCap &gt;= _tokensForSale.div(2), "softcap should be at least 50% or more");
+&nbsp;
+        <span class="missing-if-branch" title="else path not taken" >E</span>require ( _presaleTimes.startedAt &gt;= block.timestamp + 15 minutes, "startedAt should be more than 15 minutes from now" );
+        <span class="missing-if-branch" title="else path not taken" >E</span>require ( _presaleTimes.expiredAt &gt;= block.timestamp + 1 days, "expiredAt should be more than one day from now" );
+        <span class="missing-if-branch" title="else path not taken" >E</span>require ( _presaleTimes.lpLockupTime &gt;= block.timestamp + 7 days, "Lockup period should be  7 or more days from now time" );
+&nbsp;
+        require ( _priceOfEachToken &gt; 0, "_priceOfEachToken should be more than zero" );
+&nbsp;
+        return true;
+    }
+&nbsp;
+    function createPresale(
+        LaunchPadLib.PresaleType _presaleType,
+        address _preSaleToken,
+        uint256 _tokensForSale,
+        uint8 _reservedTokensPCForLP,
+        uint256 _tokensForLocker,
+        address _criteriaTokenAddr,
+        uint256 _priceOfEachToken,
+        uint256 _minTokensForParticipation,
+        LaunchPadLib.PresaleTimes memory _presaleTimes,
+        LaunchPadLib.ReqestedTokens memory _reqestedTokens,
+        LaunchPadLib.RefundType _refundType
+        ) public payable {
+&nbsp;
+        require(
+            validateCreateInput(
+                _presaleType, 
+                _preSaleToken, 
+                _criteriaTokenAddr, 
+                _reservedTokensPCForLP, 
+                _tokensForSale, 
+                _priceOfEachToken,
+                _presaleTimes,
+                _reqestedTokens
+                )
+        );
+&nbsp;
+        if(!(isUserWhitelistedToStartProject[msg.sender] || msg.sender == owner())) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>require( msg.value &gt;= upfrontfee, "Insufficient funds to start");
+        }
+&nbsp;
+        presaleCount++;
+                
+        LaunchPadLib.PresaleInfo memory _presaleInfo = LaunchPadLib.PresaleInfo(
+            presaleCount,
+            _presaleType,
+            _preSaleToken,
+            msg.sender,
+            _tokensForSale,
+            _reservedTokensPCForLP,
+            _tokensForLocker
+        );
+&nbsp;
+        LaunchPadLib.ParticipationCriteria memory _criteria = LaunchPadLib.ParticipationCriteria(
+            _criteriaTokenAddr,
+            _priceOfEachToken,
+            _refundType,
+            _minTokensForParticipation,
+            _reqestedTokens,
+            _presaleTimes
+        );
+&nbsp;
+        Presale _presale = new Presale ( salesFeeInPercent, _presaleInfo, _criteria, launchpadAddresses );
+&nbsp;
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(transferTokens(_preSaleToken, address(_presale), _tokensForSale, _reservedTokensPCForLP, _tokensForLocker));
+        
+        presaleRecordByToken[_preSaleToken] = address(_presale);
+        presaleRecordByID[presaleCount] = address(_presale);
+&nbsp;
+&nbsp;
+    }
+&nbsp;
+    function transferTokens(address _preSaleToken, address _presale, uint _tokensForSale, uint _reservedTokensPCForLP, uint _tokensForLocker) internal returns(bool){
+        uint tokensForLP = _tokensForSale.mul(_reservedTokensPCForLP).div(100);
+&nbsp;
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(
+            IERC20(_preSaleToken).transferFrom(msg.sender, _presale, _tokensForSale.add(tokensForLP).add(_tokensForLocker)),
+             "Unable to transfer presale tokens to the contract"
+            );
+&nbsp;
+        return true;
+    }
+&nbsp;
+    function whiteListUsersToStartProject(address[] memory _addresses) public onlyOwner {
+        for(uint i=0; i &lt; _addresses.length; i++){
+            isUserWhitelistedToStartProject[_addresses[i]] = true;
+        }
+    }
+&nbsp;
+    function updateFees(uint _upfrontFee, uint8 _salesFeeInPercent) public onlyOwner {
+        upfrontfee = _upfrontFee;
+        salesFeeInPercent = _salesFeeInPercent;
+    }
+&nbsp;
+    function withdrawBNBs() public onlyOwner {
+        uint balance = address(this).balance;
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(balance &gt; 0 , "nothing to withdraw");
+        payable(owner()).transfer(balance);
+        // require(transfer, "cannot send devTeam's share");
+&nbsp;
+    }
+&nbsp;
+    receive() external payable {
+            // emit ValueReceived(msg.sender, msg.value);
+    }
+&nbsp;
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Feb 11 2022 20:56:56 GMT+0500 (Pakistan Standard Time)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>
