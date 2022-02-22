@@ -23,8 +23,8 @@ const _abi = [
         type: "address",
       },
       {
-        internalType: "address",
-        name: "_tokenAddress",
+        internalType: "contract IERC20",
+        name: "_token",
         type: "address",
       },
       {
@@ -39,7 +39,13 @@ const _abi = [
       },
     ],
     name: "createLcoker",
-    outputs: [],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "function",
   },

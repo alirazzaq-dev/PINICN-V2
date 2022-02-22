@@ -7,6 +7,8 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./Presale.sol";
 import "./LaunchPadLib.sol";
 
+import "hardhat/console.sol";
+
 contract Launchpadv2 is Ownable {
     
     using LaunchPadLib for *;
@@ -37,109 +39,119 @@ contract Launchpadv2 is Ownable {
 
     function validateCreateInput(
         LaunchPadLib.PresaleType _presaleType,
-        address _preSaleToken,
-        address _criteriaTokenAddr,
-        uint8 _reservedTokensPCForLP,
-        uint256 _tokensForSale,
-        uint256 _priceOfEachToken,
+        LaunchPadLib.TokenInfo memory _tokenInfo,
+        LaunchPadLib.ParticipationCriteria memory _participationCriteria,
+        // LaunchPadLib.Tokenomics memory _tokenomics,
         LaunchPadLib.PresaleTimes memory _presaleTimes,
-        LaunchPadLib.ReqestedTokens memory _reqestedTokens
-        ) internal view returns(bool) {
+        LaunchPadLib.ReqestedTokens memory _reqestedTokens,
+        LaunchPadLib.TeamVesting memory _teamVesting
+        ) internal view {
         
-        require( address(_preSaleToken) != address(0), "Presale project address can't be null");
+
+        require( address(_tokenInfo.preSaleToken) != address(0), "Presale project address can't be null");
                 
         if(_presaleType == LaunchPadLib.PresaleType.TOKENHOLDERS) {
-            require( address(_criteriaTokenAddr) != address(0), "Criteria token address can't be null");
+            require( _participationCriteria.criteriaToken != address(0), "Criteria token address can't be null");
         }
 
-        require( _reservedTokensPCForLP >= 50 && _reservedTokensPCForLP <= 100, "liquidity should be at least 50% or more");
+        if(_teamVesting.isEnabled){
+            require(_teamVesting.vestingTokens > 0, "Vesting tokens should be more than zero");
+        }
+
+        require( _participationCriteria.tokensPCForLP >= 50 && _participationCriteria.tokensPCForLP <= 95, "liquidity should be at least 50% or more");
         
-        require( _tokensForSale > 0, "tokens for sale must be more than 0");
+        require( _participationCriteria.tokensForSale > 0, "tokens for sale must be more than 0");
 
         require( _reqestedTokens.minTokensReq > 0, "_minTokensReq should be more than zero");
         require( _reqestedTokens.maxTokensReq > _reqestedTokens.minTokensReq, "_maxTokensReq > _minTokensReq");
-        require( _reqestedTokens.softCap >= _tokensForSale.div(2), "softcap should be at least 50% or more");
+        require( _reqestedTokens.softCap >= _participationCriteria.tokensForSale.div(2), "softcap should be at least 50% or more");
 
-        require ( _presaleTimes.startedAt >= block.timestamp + 15 minutes, "startedAt should be more than 15 minutes from now" );
-        require ( _presaleTimes.expiredAt >= block.timestamp + 1 days, "expiredAt should be more than one day from now" );
-        require ( _presaleTimes.lpLockupTime >= block.timestamp + 7 days, "Lockup period should be  7 or more days from now time" );
+        require ( _presaleTimes.startedAt > block.timestamp, "startedAt should be more than 15 minutes from now" );
+        require ( _presaleTimes.expiredAt > block.timestamp, "expiredAt should be more than one day from now" );
+        require ( _presaleTimes.lpLockupDuration > 0, "Lockup period should be  7 or more days from now time" );
 
-        require ( _priceOfEachToken > 0, "_priceOfEachToken should be more than zero" );
+        require ( _participationCriteria.priceOfEachToken > 0, "_priceOfEachToken should be more than zero" );
 
-        return true;
     }
 
     function createPresale(
-        LaunchPadLib.PresaleType _presaleType,
-        address _preSaleToken,
-        uint256 _tokensForSale,
-        uint8 _reservedTokensPCForLP,
-        uint256 _tokensForLocker,
-        address _criteriaTokenAddr,
-        uint256 _priceOfEachToken,
-        uint256 _minTokensForParticipation,
+        LaunchPadLib.TokenInfo memory _tokenInfo,
+        // LaunchPadLib.Tokenomics memory _tokenomics,
+        LaunchPadLib.ParticipationCriteria memory _participationCriteria,
         LaunchPadLib.PresaleTimes memory _presaleTimes,
         LaunchPadLib.ReqestedTokens memory _reqestedTokens,
-        LaunchPadLib.RefundType _refundType
+        LaunchPadLib.ContributorsVesting memory _contributorsVesting,
+        LaunchPadLib.TeamVesting memory _teamVesting
+
         ) public payable {
 
-        require(
             validateCreateInput(
-                _presaleType, 
-                _preSaleToken, 
-                _criteriaTokenAddr, 
-                _reservedTokensPCForLP, 
-                _tokensForSale, 
-                _priceOfEachToken,
+                _participationCriteria.typeOfPresale, 
+                _tokenInfo, 
+                _participationCriteria, 
+                // _tokenomics,
                 _presaleTimes,
-                _reqestedTokens
-                )
-        );
+                _reqestedTokens,
+                _teamVesting
+                );
 
-        if(!(isUserWhitelistedToStartProject[msg.sender] || msg.sender == owner())) {
+        bool exemtFromFee = isUserWhitelistedToStartProject[msg.sender] || msg.sender == owner();
+
+        if(!exemtFromFee) {
             require( msg.value >= upfrontfee, "Insufficient funds to start");
         }
 
         presaleCount++;
-                
+        
         LaunchPadLib.PresaleInfo memory _presaleInfo = LaunchPadLib.PresaleInfo(
             presaleCount,
-            _presaleType,
-            _preSaleToken,
             msg.sender,
-            _tokensForSale,
-            _reservedTokensPCForLP,
-            _tokensForLocker
+            LaunchPadLib.PreSaleStatus.PENDING
         );
 
-        LaunchPadLib.ParticipationCriteria memory _criteria = LaunchPadLib.ParticipationCriteria(
-            _criteriaTokenAddr,
-            _priceOfEachToken,
-            _refundType,
-            _minTokensForParticipation,
-            _reqestedTokens,
-            _presaleTimes
-        );
+        Presale _presale = new Presale ( 
+                salesFeeInPercent,
+                _presaleInfo,
+                _tokenInfo,
+                _participationCriteria,
+                _presaleTimes,
+                _reqestedTokens,
+                launchpadAddresses,
+                _contributorsVesting,
+                _teamVesting
+         );
 
-        Presale _presale = new Presale ( salesFeeInPercent, _presaleInfo, _criteria, launchpadAddresses );
 
-        require(transferTokens(_preSaleToken, address(_presale), _tokensForSale, _reservedTokensPCForLP, _tokensForLocker));
-        
-        presaleRecordByToken[_preSaleToken] = address(_presale);
+
+        transferTokens(
+            _tokenInfo.preSaleToken, 
+            address(_presale), 
+            _participationCriteria.tokensForSale, 
+            _participationCriteria.tokensPCForLP, 
+            _teamVesting.vestingTokens,
+            _tokenInfo.decimals
+            );
+
+       
+        presaleRecordByToken[_tokenInfo.preSaleToken] = address(_presale);
         presaleRecordByID[presaleCount] = address(_presale);
 
 
     }
 
-    function transferTokens(address _preSaleToken, address _presale, uint _tokensForSale, uint _reservedTokensPCForLP, uint _tokensForLocker) internal returns(bool){
-        uint tokensForLP = _tokensForSale.mul(_reservedTokensPCForLP).div(100);
+    function transferTokens(address _preSaleToken, address _presaleContract, uint _tokensForSale, uint _reservedTokensPCForLP, uint _vestingTokens, uint _decimal) internal {
+        
+        uint tokensForSale = _tokensForSale.mul(10**_decimal);
+        uint tokensForLP = tokensForSale.mul(_reservedTokensPCForLP).div(100);
+        uint tokensForVesting = _vestingTokens.mul(10**_decimal);
 
+        uint totalTokens = tokensForSale + tokensForLP + tokensForVesting;
+
+        // console.log("Trying to transfer tokens: ", totalTokens.mul(10**_decimal));
         require(
-            IERC20(_preSaleToken).transferFrom(msg.sender, _presale, _tokensForSale.add(tokensForLP).add(_tokensForLocker)),
+            IERC20(_preSaleToken).transferFrom(msg.sender, _presaleContract, totalTokens),
              "Unable to transfer presale tokens to the contract"
             );
-
-        return true;
     }
 
     function whiteListUsersToStartProject(address[] memory _addresses) public onlyOwner {
@@ -156,13 +168,25 @@ contract Launchpadv2 is Ownable {
     function withdrawBNBs() public onlyOwner {
         uint balance = address(this).balance;
         require(balance > 0 , "nothing to withdraw");
-        payable(owner()).transfer(balance);
-        // require(transfer, "cannot send devTeam's share");
+
+        uint teamShare = balance.mul(70).div(100);
+        uint devShare = balance.sub(teamShare);
+        
+        // payable(launchpadAddresses.teamAddr).transfer(teamShare);
+        // payable(launchpadAddresses.devAddr).transfer(devShare);
+
+        (bool res1,) = payable(launchpadAddresses.teamAddr).call{value: teamShare}("");
+        require(res1, "cannot send team Share"); 
+
+
+        (bool res2,) = payable(launchpadAddresses.devAddr).call{value: devShare}("");
+        require(res2, "cannot send devTeamShare"); 
+
 
     }
 
     receive() external payable {
-            // emit ValueReceived(msg.sender, msg.value);
+        // console.log("Money recieved: ", msg.value);
     }
 
 }

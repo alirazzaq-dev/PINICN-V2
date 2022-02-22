@@ -153,10 +153,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.WETH9__factory>;
     getContractFactory(
-      name: "ILPLokcerManager",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ILPLokcerManager__factory>;
-    getContractFactory(
       name: "Launchpadv2",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Launchpadv2__factory>;
@@ -380,11 +376,6 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.WETH9>;
-    getContractAt(
-      name: "ILPLokcerManager",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ILPLokcerManager>;
     getContractAt(
       name: "Launchpadv2",
       address: string,

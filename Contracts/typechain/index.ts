@@ -34,7 +34,6 @@ export type { UniswapV2FactoryClone } from "./UniswapV2FactoryClone";
 export type { UniswapV2PairClone } from "./UniswapV2PairClone";
 export type { UniswapV2Router02Clone } from "./UniswapV2Router02Clone";
 export type { WETH9 } from "./WETH9";
-export type { ILPLokcerManager } from "./ILPLokcerManager";
 export type { Launchpadv2 } from "./Launchpadv2";
 export type { Presale } from "./Presale";
 export type { ILockerFactory } from "./ILockerFactory";
@@ -80,7 +79,6 @@ export { UniswapV2FactoryClone__factory } from "./factories/UniswapV2FactoryClon
 export { UniswapV2PairClone__factory } from "./factories/UniswapV2PairClone__factory";
 export { UniswapV2Router02Clone__factory } from "./factories/UniswapV2Router02Clone__factory";
 export { WETH9__factory } from "./factories/WETH9__factory";
-export { ILPLokcerManager__factory } from "./factories/ILPLokcerManager__factory";
 export { Launchpadv2__factory } from "./factories/Launchpadv2__factory";
 export { Presale__factory } from "./factories/Presale__factory";
 export { ILockerFactory__factory } from "./factories/ILockerFactory__factory";

@@ -3,6 +3,7 @@
 pragma solidity ^0.8.0;
 
 
+
 library LaunchPadLib {
 
     enum PresaleType { PUBLIC, WHITELISTED, TOKENHOLDERS }
@@ -17,21 +18,21 @@ library LaunchPadLib {
         uint poolShareBNB;
         uint devTeamShareBNB;
         uint ownersShareBNB;
-        uint totalLPLocked;
+        // uint totalLPLocked;
         // uint lockerID;
     }
 
     struct Participant {
         uint256 value;
         uint256 tokens;
-        bool isWhiteListed;
+        // bool isWhiteListed;
     }
     
     struct PresaleTimes{
         uint256 startedAt;
         uint256 expiredAt;
-        uint256 lpLockupTime;
-        uint256 tokenLockupTime;
+        uint256 lpLockupDuration;
+        // uint256 tokenLockupTime;
     }
 
     struct ReqestedTokens{
@@ -49,22 +50,18 @@ library LaunchPadLib {
     
     struct PresaleInfo {
         uint id;
-        PresaleType typeOfPresale;
-        address preSaleToken;
-        address presaleOwnerAddr;
-        uint256 tokensForSale;              // 1000
-        uint256 reservedTokensPCForLP;      // 70% = 0.7   =>   1700/1.7 = 700
-        uint256 tokenForLocker;
-        // PreSaleStatus preSaleStatus;
+        address presaleOwner;
+        PreSaleStatus preSaleStatus;
     }
 
     struct ParticipationCriteria {
+        uint256 tokensForSale;              // 1000
+        uint256 tokensPCForLP;              // 70% = 0.7   =>   1700/1.7 = 700
+        PresaleType typeOfPresale;
+        uint256 priceOfEachToken;
         address criteriaToken;
-        uint256 price;
-        RefundType refundType;
         uint256 minTokensForParticipation;
-        ReqestedTokens reqestedTokens;
-        PresaleTimes presaleTimes;  
+        RefundType refundType;
     }
 
     struct LaunchpadAddresses {
@@ -75,5 +72,33 @@ library LaunchPadLib {
         address devAddr;
     }
 
+    struct TokenInfo {
+        address preSaleToken;
+        string name;
+        string symbol;
+        uint decimals;
+    }
+
+    struct Tokenomics {
+        uint256 tokensForSale;              // 1000
+        uint256 tokensPCForLP;              // 70% = 0.7   =>   1700/1.7 = 700
+        uint256 tokensForLocker;
+    }
+
+    struct ContributorsVesting {
+        bool isEnabled;
+        uint firstReleasePC;
+        uint vestingPeriodOfEachCycle;
+        uint tokensReleaseEachCyclePC;
+    }
+
+    struct TeamVesting {
+        bool isEnabled;
+        uint vestingTokens;
+        uint firstReleaseTime;
+        uint firstReleasePC;
+        uint vestingPeriodOfEachCycle;
+        uint tokensReleaseEachCyclePC;
+    }
 
 }

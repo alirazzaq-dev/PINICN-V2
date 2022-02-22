@@ -7,7 +7,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber } from "ethers";
 import { network } from "hardhat";
 import { Locker, Locker__factory, LokcerFactory, LokcerFactory__factory, TestCoin, TestCoin__factory } from "../typechain";
-import { PICNICLockerFactory } from "../typechain/PICNICLockerFactory";
+// import { PICNICLockerFactory } from "../typechain/PICNICLockerFactory";
 
 let deployer: SignerWithAddress, user1: SignerWithAddress, user2: SignerWithAddress;
 let lockerFactory: LokcerFactory, locker: Locker;

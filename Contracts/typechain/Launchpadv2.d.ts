@@ -22,7 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface Launchpadv2Interface extends ethers.utils.Interface {
   functions: {
-    "createPresale(uint8,address,uint256,uint8,uint256,address,uint256,uint256,(uint256,uint256,uint256,uint256),(uint256,uint256,uint256),uint8)": FunctionFragment;
+    "createPresale((address,string,string,uint256),(uint256,uint256,uint8,uint256,address,uint256,uint8),(uint256,uint256,uint256),(uint256,uint256,uint256),(bool,uint256,uint256,uint256),(bool,uint256,uint256,uint256,uint256,uint256))": FunctionFragment;
     "devAddr()": FunctionFragment;
     "isUserWhitelistedToStartProject(address)": FunctionFragment;
     "launchpadAddresses()": FunctionFragment;
@@ -43,26 +43,45 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "createPresale",
     values: [
-      BigNumberish,
-      string,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      string,
-      BigNumberish,
-      BigNumberish,
+      {
+        preSaleToken: string;
+        name: string;
+        symbol: string;
+        decimals: BigNumberish;
+      },
+      {
+        tokensForSale: BigNumberish;
+        tokensPCForLP: BigNumberish;
+        typeOfPresale: BigNumberish;
+        priceOfEachToken: BigNumberish;
+        criteriaToken: string;
+        minTokensForParticipation: BigNumberish;
+        refundType: BigNumberish;
+      },
       {
         startedAt: BigNumberish;
         expiredAt: BigNumberish;
-        lpLockupTime: BigNumberish;
-        tokenLockupTime: BigNumberish;
+        lpLockupDuration: BigNumberish;
       },
       {
         minTokensReq: BigNumberish;
         maxTokensReq: BigNumberish;
         softCap: BigNumberish;
       },
-      BigNumberish
+      {
+        isEnabled: boolean;
+        firstReleasePC: BigNumberish;
+        vestingPeriodOfEachCycle: BigNumberish;
+        tokensReleaseEachCyclePC: BigNumberish;
+      },
+      {
+        isEnabled: boolean;
+        vestingTokens: BigNumberish;
+        firstReleaseTime: BigNumberish;
+        firstReleasePC: BigNumberish;
+        vestingPeriodOfEachCycle: BigNumberish;
+        tokensReleaseEachCyclePC: BigNumberish;
+      }
     ]
   ): string;
   encodeFunctionData(functionFragment: "devAddr", values?: undefined): string;
@@ -223,26 +242,45 @@ export class Launchpadv2 extends BaseContract {
 
   functions: {
     createPresale(
-      _presaleType: BigNumberish,
-      _preSaleToken: string,
-      _tokensForSale: BigNumberish,
-      _reservedTokensPCForLP: BigNumberish,
-      _tokensForLocker: BigNumberish,
-      _criteriaTokenAddr: string,
-      _priceOfEachToken: BigNumberish,
-      _minTokensForParticipation: BigNumberish,
+      _tokenInfo: {
+        preSaleToken: string;
+        name: string;
+        symbol: string;
+        decimals: BigNumberish;
+      },
+      _participationCriteria: {
+        tokensForSale: BigNumberish;
+        tokensPCForLP: BigNumberish;
+        typeOfPresale: BigNumberish;
+        priceOfEachToken: BigNumberish;
+        criteriaToken: string;
+        minTokensForParticipation: BigNumberish;
+        refundType: BigNumberish;
+      },
       _presaleTimes: {
         startedAt: BigNumberish;
         expiredAt: BigNumberish;
-        lpLockupTime: BigNumberish;
-        tokenLockupTime: BigNumberish;
+        lpLockupDuration: BigNumberish;
       },
       _reqestedTokens: {
         minTokensReq: BigNumberish;
         maxTokensReq: BigNumberish;
         softCap: BigNumberish;
       },
-      _refundType: BigNumberish,
+      _contributorsVesting: {
+        isEnabled: boolean;
+        firstReleasePC: BigNumberish;
+        vestingPeriodOfEachCycle: BigNumberish;
+        tokensReleaseEachCyclePC: BigNumberish;
+      },
+      _teamVesting: {
+        isEnabled: boolean;
+        vestingTokens: BigNumberish;
+        firstReleaseTime: BigNumberish;
+        firstReleasePC: BigNumberish;
+        vestingPeriodOfEachCycle: BigNumberish;
+        tokensReleaseEachCyclePC: BigNumberish;
+      },
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -311,26 +349,45 @@ export class Launchpadv2 extends BaseContract {
   };
 
   createPresale(
-    _presaleType: BigNumberish,
-    _preSaleToken: string,
-    _tokensForSale: BigNumberish,
-    _reservedTokensPCForLP: BigNumberish,
-    _tokensForLocker: BigNumberish,
-    _criteriaTokenAddr: string,
-    _priceOfEachToken: BigNumberish,
-    _minTokensForParticipation: BigNumberish,
+    _tokenInfo: {
+      preSaleToken: string;
+      name: string;
+      symbol: string;
+      decimals: BigNumberish;
+    },
+    _participationCriteria: {
+      tokensForSale: BigNumberish;
+      tokensPCForLP: BigNumberish;
+      typeOfPresale: BigNumberish;
+      priceOfEachToken: BigNumberish;
+      criteriaToken: string;
+      minTokensForParticipation: BigNumberish;
+      refundType: BigNumberish;
+    },
     _presaleTimes: {
       startedAt: BigNumberish;
       expiredAt: BigNumberish;
-      lpLockupTime: BigNumberish;
-      tokenLockupTime: BigNumberish;
+      lpLockupDuration: BigNumberish;
     },
     _reqestedTokens: {
       minTokensReq: BigNumberish;
       maxTokensReq: BigNumberish;
       softCap: BigNumberish;
     },
-    _refundType: BigNumberish,
+    _contributorsVesting: {
+      isEnabled: boolean;
+      firstReleasePC: BigNumberish;
+      vestingPeriodOfEachCycle: BigNumberish;
+      tokensReleaseEachCyclePC: BigNumberish;
+    },
+    _teamVesting: {
+      isEnabled: boolean;
+      vestingTokens: BigNumberish;
+      firstReleaseTime: BigNumberish;
+      firstReleasePC: BigNumberish;
+      vestingPeriodOfEachCycle: BigNumberish;
+      tokensReleaseEachCyclePC: BigNumberish;
+    },
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -399,26 +456,45 @@ export class Launchpadv2 extends BaseContract {
 
   callStatic: {
     createPresale(
-      _presaleType: BigNumberish,
-      _preSaleToken: string,
-      _tokensForSale: BigNumberish,
-      _reservedTokensPCForLP: BigNumberish,
-      _tokensForLocker: BigNumberish,
-      _criteriaTokenAddr: string,
-      _priceOfEachToken: BigNumberish,
-      _minTokensForParticipation: BigNumberish,
+      _tokenInfo: {
+        preSaleToken: string;
+        name: string;
+        symbol: string;
+        decimals: BigNumberish;
+      },
+      _participationCriteria: {
+        tokensForSale: BigNumberish;
+        tokensPCForLP: BigNumberish;
+        typeOfPresale: BigNumberish;
+        priceOfEachToken: BigNumberish;
+        criteriaToken: string;
+        minTokensForParticipation: BigNumberish;
+        refundType: BigNumberish;
+      },
       _presaleTimes: {
         startedAt: BigNumberish;
         expiredAt: BigNumberish;
-        lpLockupTime: BigNumberish;
-        tokenLockupTime: BigNumberish;
+        lpLockupDuration: BigNumberish;
       },
       _reqestedTokens: {
         minTokensReq: BigNumberish;
         maxTokensReq: BigNumberish;
         softCap: BigNumberish;
       },
-      _refundType: BigNumberish,
+      _contributorsVesting: {
+        isEnabled: boolean;
+        firstReleasePC: BigNumberish;
+        vestingPeriodOfEachCycle: BigNumberish;
+        tokensReleaseEachCyclePC: BigNumberish;
+      },
+      _teamVesting: {
+        isEnabled: boolean;
+        vestingTokens: BigNumberish;
+        firstReleaseTime: BigNumberish;
+        firstReleasePC: BigNumberish;
+        vestingPeriodOfEachCycle: BigNumberish;
+        tokensReleaseEachCyclePC: BigNumberish;
+      },
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -502,26 +578,45 @@ export class Launchpadv2 extends BaseContract {
 
   estimateGas: {
     createPresale(
-      _presaleType: BigNumberish,
-      _preSaleToken: string,
-      _tokensForSale: BigNumberish,
-      _reservedTokensPCForLP: BigNumberish,
-      _tokensForLocker: BigNumberish,
-      _criteriaTokenAddr: string,
-      _priceOfEachToken: BigNumberish,
-      _minTokensForParticipation: BigNumberish,
+      _tokenInfo: {
+        preSaleToken: string;
+        name: string;
+        symbol: string;
+        decimals: BigNumberish;
+      },
+      _participationCriteria: {
+        tokensForSale: BigNumberish;
+        tokensPCForLP: BigNumberish;
+        typeOfPresale: BigNumberish;
+        priceOfEachToken: BigNumberish;
+        criteriaToken: string;
+        minTokensForParticipation: BigNumberish;
+        refundType: BigNumberish;
+      },
       _presaleTimes: {
         startedAt: BigNumberish;
         expiredAt: BigNumberish;
-        lpLockupTime: BigNumberish;
-        tokenLockupTime: BigNumberish;
+        lpLockupDuration: BigNumberish;
       },
       _reqestedTokens: {
         minTokensReq: BigNumberish;
         maxTokensReq: BigNumberish;
         softCap: BigNumberish;
       },
-      _refundType: BigNumberish,
+      _contributorsVesting: {
+        isEnabled: boolean;
+        firstReleasePC: BigNumberish;
+        vestingPeriodOfEachCycle: BigNumberish;
+        tokensReleaseEachCyclePC: BigNumberish;
+      },
+      _teamVesting: {
+        isEnabled: boolean;
+        vestingTokens: BigNumberish;
+        firstReleaseTime: BigNumberish;
+        firstReleasePC: BigNumberish;
+        vestingPeriodOfEachCycle: BigNumberish;
+        tokensReleaseEachCyclePC: BigNumberish;
+      },
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -581,26 +676,45 @@ export class Launchpadv2 extends BaseContract {
 
   populateTransaction: {
     createPresale(
-      _presaleType: BigNumberish,
-      _preSaleToken: string,
-      _tokensForSale: BigNumberish,
-      _reservedTokensPCForLP: BigNumberish,
-      _tokensForLocker: BigNumberish,
-      _criteriaTokenAddr: string,
-      _priceOfEachToken: BigNumberish,
-      _minTokensForParticipation: BigNumberish,
+      _tokenInfo: {
+        preSaleToken: string;
+        name: string;
+        symbol: string;
+        decimals: BigNumberish;
+      },
+      _participationCriteria: {
+        tokensForSale: BigNumberish;
+        tokensPCForLP: BigNumberish;
+        typeOfPresale: BigNumberish;
+        priceOfEachToken: BigNumberish;
+        criteriaToken: string;
+        minTokensForParticipation: BigNumberish;
+        refundType: BigNumberish;
+      },
       _presaleTimes: {
         startedAt: BigNumberish;
         expiredAt: BigNumberish;
-        lpLockupTime: BigNumberish;
-        tokenLockupTime: BigNumberish;
+        lpLockupDuration: BigNumberish;
       },
       _reqestedTokens: {
         minTokensReq: BigNumberish;
         maxTokensReq: BigNumberish;
         softCap: BigNumberish;
       },
-      _refundType: BigNumberish,
+      _contributorsVesting: {
+        isEnabled: boolean;
+        firstReleasePC: BigNumberish;
+        vestingPeriodOfEachCycle: BigNumberish;
+        tokensReleaseEachCyclePC: BigNumberish;
+      },
+      _teamVesting: {
+        isEnabled: boolean;
+        vestingTokens: BigNumberish;
+        firstReleaseTime: BigNumberish;
+        firstReleasePC: BigNumberish;
+        vestingPeriodOfEachCycle: BigNumberish;
+        tokensReleaseEachCyclePC: BigNumberish;
+      },
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
