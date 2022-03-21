@@ -299,49 +299,6 @@
         "UniswapV2FactoryClone"
       ]
     },
-    "D:\\Fiverr\\picnic-v2\\Contracts\\node_modules\\@uniswap\\v2-periphery\\contracts\\UniswapV2Router02.sol": {
-      "lastModificationDate": 1642801978156,
-      "contentHash": "12a8c57909541a65738ecced73a40885",
-      "sourceName": "@uniswap/v2-periphery/contracts/UniswapV2Router02.sol",
-      "solcConfig": {
-        "version": "0.6.6",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol",
-        "@uniswap/lib/contracts/libraries/TransferHelper.sol",
-        "./interfaces/IUniswapV2Router02.sol",
-        "./libraries/UniswapV2Library.sol",
-        "./libraries/SafeMath.sol",
-        "./interfaces/IERC20.sol",
-        "./interfaces/IWETH.sol"
-      ],
-      "versionPragmas": [
-        "=0.6.6"
-      ],
-      "artifacts": [
-        "UniswapV2Router02"
-      ]
-    },
     "D:\\Fiverr\\picnic-v2\\Contracts\\node_modules\\@uniswap\\v2-periphery\\contracts\\libraries\\UniswapV2Library.sol": {
       "lastModificationDate": 1643715260087,
       "contentHash": "287c4489aa5a6653ad471d6b58a07c17",
@@ -414,6 +371,49 @@
       ],
       "artifacts": [
         "SafeMath"
+      ]
+    },
+    "D:\\Fiverr\\picnic-v2\\Contracts\\node_modules\\@uniswap\\v2-periphery\\contracts\\UniswapV2Router02.sol": {
+      "lastModificationDate": 1642801978156,
+      "contentHash": "12a8c57909541a65738ecced73a40885",
+      "sourceName": "@uniswap/v2-periphery/contracts/UniswapV2Router02.sol",
+      "solcConfig": {
+        "version": "0.6.6",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol",
+        "@uniswap/lib/contracts/libraries/TransferHelper.sol",
+        "./interfaces/IUniswapV2Router02.sol",
+        "./libraries/UniswapV2Library.sol",
+        "./libraries/SafeMath.sol",
+        "./interfaces/IERC20.sol",
+        "./interfaces/IWETH.sol"
+      ],
+      "versionPragmas": [
+        "=0.6.6"
+      ],
+      "artifacts": [
+        "UniswapV2Router02"
       ]
     },
     "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\helpers\\UniswapV2Router02Clone.sol": {
@@ -1570,10 +1570,10 @@
         "IPLock"
       ]
     },
-    "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\Launchpad.sol": {
-      "lastModificationDate": 1644415753631,
-      "contentHash": "f88658bd58050cc175a7454ab4c4b9d5",
-      "sourceName": "contracts/Launchpad/Launchpad.sol",
+    "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\Presale.sol": {
+      "lastModificationDate": 1647868094725,
+      "contentHash": "677fd7881d44b1b142cee4b9470eb1b4",
+      "sourceName": "contracts/Launchpad/Presale.sol",
       "solcConfig": {
         "version": "0.8.4",
         "settings": {
@@ -1602,15 +1602,14 @@
         "@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol",
         "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol",
-        "@openzeppelin/contracts/utils/math/SafeMath.sol",
-        "@openzeppelin/contracts/security/ReentrancyGuard.sol"
+        "@openzeppelin/contracts/utils/structs/EnumerableSet.sol",
+        "./LaunchPadLib.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "ILockerFactory",
-        "Launchpad"
+        "Presale"
       ]
     },
     "D:\\Fiverr\\picnic-v2\\Contracts\\node_modules\\@uniswap\\v2-periphery\\contracts\\interfaces\\IUniswapV2Router02.sol": {
@@ -1685,10 +1684,10 @@
         "IUniswapV2Factory"
       ]
     },
-    "D:\\Fiverr\\picnic-v2\\Contracts\\node_modules\\@openzeppelin\\contracts\\security\\ReentrancyGuard.sol": {
-      "lastModificationDate": 1642680265097,
-      "contentHash": "92f9448b23a90ea3bb932ee55cc3ccce",
-      "sourceName": "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+    "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\LaunchPadLib.sol": {
+      "lastModificationDate": 1647234888945,
+      "contentHash": "f6af8c75ffc5cf9ac2beae59587bec79",
+      "sourceName": "contracts/Launchpad/LaunchPadLib.sol",
       "solcConfig": {
         "version": "0.8.4",
         "settings": {
@@ -1717,7 +1716,7 @@
         "^0.8.0"
       ],
       "artifacts": [
-        "ReentrancyGuard"
+        "LaunchPadLib"
       ]
     },
     "D:\\Fiverr\\picnic-v2\\Contracts\\node_modules\\@uniswap\\v2-periphery\\contracts\\interfaces\\IUniswapV2Router01.sol": {
@@ -1755,10 +1754,10 @@
         "IUniswapV2Router01"
       ]
     },
-    "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\Factory\\Presale.sol": {
-      "lastModificationDate": 1645527000719,
-      "contentHash": "9fedbb04770e8e1d008af42a7e2f9e44",
-      "sourceName": "contracts/Launchpad/Factory/Presale.sol",
+    "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\Launchpadv2.sol": {
+      "lastModificationDate": 1647737480133,
+      "contentHash": "9dbb4ca8b61a5e6a4a6cebd8b30adac6",
+      "sourceName": "contracts/Launchpad/Launchpadv2.sol",
       "solcConfig": {
         "version": "0.8.4",
         "settings": {
@@ -1784,131 +1783,14 @@
       },
       "imports": [
         "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol",
-        "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol",
-        "@openzeppelin/contracts/utils/structs/EnumerableSet.sol",
-        "hardhat/console.sol",
+        "./Presale.sol",
         "./LaunchPadLib.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "Presale"
-      ]
-    },
-    "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\Factory\\LaunchPadLib.sol": {
-      "lastModificationDate": 1645456725988,
-      "contentHash": "08e5eddd983b0079190edc07b1ab0109",
-      "sourceName": "contracts/Launchpad/Factory/LaunchPadLib.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "LaunchPadLib"
-      ]
-    },
-    "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\Factory\\Launchpadv2.sol": {
-      "lastModificationDate": 1645443149237,
-      "contentHash": "33ff3ceb173228b1450a45f945ee381b",
-      "sourceName": "contracts/Launchpad/Factory/Launchpadv2.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/utils/math/SafeMath.sol",
-        "./Presale.sol",
-        "./LaunchPadLib.sol",
-        "hardhat/console.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
         "Launchpadv2"
-      ]
-    },
-    "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\SalesTracker.sol": {
-      "lastModificationDate": 1643489871455,
-      "contentHash": "a61c2f5e68016ae92d965f8fc3d8f4b0",
-      "sourceName": "contracts/Launchpad/SalesTracker.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/utils/structs/EnumerableSet.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "SalesTracker"
       ]
     },
     "D:\\Fiverr\\picnic-v2\\Contracts\\node_modules\\@uniswap\\v2-periphery\\contracts\\interfaces\\IWETH.sol": {
@@ -1979,6 +1861,41 @@
       ],
       "artifacts": [
         "IERC20"
+      ]
+    },
+    "D:\\Fiverr\\picnic-v2\\Contracts\\node_modules\\@uniswap\\lib\\contracts\\libraries\\TransferHelper.sol": {
+      "lastModificationDate": 1642799718946,
+      "contentHash": "7fad4038612c5f040ebd746a3e58e0db",
+      "sourceName": "@uniswap/lib/contracts/libraries/TransferHelper.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.6.0"
+      ],
+      "artifacts": [
+        "TransferHelper"
       ]
     },
     "D:\\Fiverr\\picnic-v2\\Contracts\\node_modules\\@uniswap\\v2-core\\contracts\\interfaces\\IUniswapV2Pair.sol": {
@@ -2121,10 +2038,10 @@
         "IUniswapV2ERC20"
       ]
     },
-    "D:\\Fiverr\\picnic-v2\\Contracts\\node_modules\\@uniswap\\lib\\contracts\\libraries\\TransferHelper.sol": {
-      "lastModificationDate": 1642799718946,
-      "contentHash": "7fad4038612c5f040ebd746a3e58e0db",
-      "sourceName": "@uniswap/lib/contracts/libraries/TransferHelper.sol",
+    "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\extra.sol": {
+      "lastModificationDate": 1646341109456,
+      "contentHash": "6710eec52db11a781692e705b1abd003",
+      "sourceName": "contracts/extra.sol",
       "solcConfig": {
         "version": "0.8.4",
         "settings": {
@@ -2150,45 +2067,36 @@
       },
       "imports": [],
       "versionPragmas": [
-        ">=0.6.0"
+        ">=0.7.5",
+        ">=0.7.5",
+        ">=0.7.5",
+        ">=0.7.5",
+        ">=0.7.5",
+        ">=0.7.5",
+        ">=0.7.5",
+        ">=0.7.5",
+        ">=0.7.5",
+        ">=0.7.5",
+        ">=0.7.5"
       ],
       "artifacts": [
-        "TransferHelper"
-      ]
-    },
-    "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\ILockerFactory.sol": {
-      "lastModificationDate": 1643789404841,
-      "contentHash": "fbb754d12012d7b05263f43682665191",
-      "sourceName": "contracts/Launchpad/ILockerFactory.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "ILockerFactory"
+        "Context",
+        "Counters",
+        "ECDSA",
+        "EIP712",
+        "ERC20",
+        "ERC20Permit",
+        "IERC20",
+        "IERC20Permit",
+        "IUniswapV2Factory",
+        "IUniswapV2Pair",
+        "IUniswapV2Router01",
+        "IUniswapV2Router02",
+        "Ownable",
+        "SafeMath",
+        "SafeMathInt",
+        "SafeMathUint",
+        "SinsERC20Token"
       ]
     }
   }

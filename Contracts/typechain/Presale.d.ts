@@ -23,6 +23,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface PresaleInterface extends ethers.utils.Interface {
   functions: {
     "buyTokensOnPresale(uint256)": FunctionFragment;
+    "cancelSale()": FunctionFragment;
     "chageSaleType(uint8,address,uint256)": FunctionFragment;
     "claimTokensOrARefund()": FunctionFragment;
     "contributorCycles()": FunctionFragment;
@@ -30,11 +31,11 @@ interface PresaleInterface extends ethers.utils.Interface {
     "contributorsVesting()": FunctionFragment;
     "emergencyWithdraw()": FunctionFragment;
     "finalizePresale()": FunctionFragment;
+    "getContributorReleaseStatus(uint256,address)": FunctionFragment;
     "getContributorsList()": FunctionFragment;
     "getWhiteListUsers()": FunctionFragment;
     "internalData()": FunctionFragment;
     "isWhiteListed(address)": FunctionFragment;
-    "launchpadAddresses()": FunctionFragment;
     "master()": FunctionFragment;
     "owner()": FunctionFragment;
     "participant(address)": FunctionFragment;
@@ -50,8 +51,8 @@ interface PresaleInterface extends ethers.utils.Interface {
     "teamVestingRecord(uint256)": FunctionFragment;
     "temaVestingCycles()": FunctionFragment;
     "tokenInfo()": FunctionFragment;
-    "tokenomics()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "uniswapV2Router02()": FunctionFragment;
     "unlockLPTokens()": FunctionFragment;
     "unlockTokens()": FunctionFragment;
     "whiteListUsers(address[])": FunctionFragment;
@@ -60,6 +61,10 @@ interface PresaleInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "buyTokensOnPresale",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "cancelSale",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "chageSaleType",
@@ -90,6 +95,10 @@ interface PresaleInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "getContributorReleaseStatus",
+    values: [BigNumberish, string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getContributorsList",
     values?: undefined
   ): string;
@@ -104,10 +113,6 @@ interface PresaleInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "isWhiteListed",
     values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "launchpadAddresses",
-    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "master", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -158,12 +163,12 @@ interface PresaleInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "tokenInfo", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "tokenomics",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "uniswapV2Router02",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "unlockLPTokens",
@@ -182,6 +187,7 @@ interface PresaleInterface extends ethers.utils.Interface {
     functionFragment: "buyTokensOnPresale",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "cancelSale", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "chageSaleType",
     data: BytesLike
@@ -211,6 +217,10 @@ interface PresaleInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getContributorReleaseStatus",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getContributorsList",
     data: BytesLike
   ): Result;
@@ -224,10 +234,6 @@ interface PresaleInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "isWhiteListed",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "launchpadAddresses",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "master", data: BytesLike): Result;
@@ -281,9 +287,12 @@ interface PresaleInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "tokenInfo", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "tokenomics", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "uniswapV2Router02",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -359,6 +368,10 @@ export class Presale extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    cancelSale(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     chageSaleType(
       _type: BigNumberish,
       _address: string,
@@ -403,6 +416,12 @@ export class Presale extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    getContributorReleaseStatus(
+      time: BigNumberish,
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
     getContributorsList(overrides?: CallOverrides): Promise<[string[]]>;
 
     getWhiteListUsers(overrides?: CallOverrides): Promise<[string[]]>;
@@ -433,18 +452,6 @@ export class Presale extends BaseContract {
       _address: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
-
-    launchpadAddresses(
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, string, string, string] & {
-        pancakeSwapFactoryAddr: string;
-        pancakeSwapRouterAddr: string;
-        WBNBAddr: string;
-        teamAddr: string;
-        devAddr: string;
-      }
-    >;
 
     master(overrides?: CallOverrides): Promise<[string]>;
 
@@ -562,20 +569,12 @@ export class Presale extends BaseContract {
       }
     >;
 
-    tokenomics(
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        tokensForSale: BigNumber;
-        tokensPCForLP: BigNumber;
-        tokensForLocker: BigNumber;
-      }
-    >;
-
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    uniswapV2Router02(overrides?: CallOverrides): Promise<[string]>;
 
     unlockLPTokens(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -594,6 +593,10 @@ export class Presale extends BaseContract {
   buyTokensOnPresale(
     numOfTokensRequested: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  cancelSale(
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   chageSaleType(
@@ -640,6 +643,12 @@ export class Presale extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  getContributorReleaseStatus(
+    time: BigNumberish,
+    _address: string,
+    overrides?: CallOverrides
+  ): Promise<number>;
+
   getContributorsList(overrides?: CallOverrides): Promise<string[]>;
 
   getWhiteListUsers(overrides?: CallOverrides): Promise<string[]>;
@@ -667,18 +676,6 @@ export class Presale extends BaseContract {
   >;
 
   isWhiteListed(_address: string, overrides?: CallOverrides): Promise<boolean>;
-
-  launchpadAddresses(
-    overrides?: CallOverrides
-  ): Promise<
-    [string, string, string, string, string] & {
-      pancakeSwapFactoryAddr: string;
-      pancakeSwapRouterAddr: string;
-      WBNBAddr: string;
-      teamAddr: string;
-      devAddr: string;
-    }
-  >;
 
   master(overrides?: CallOverrides): Promise<string>;
 
@@ -794,20 +791,12 @@ export class Presale extends BaseContract {
     }
   >;
 
-  tokenomics(
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
-      tokensForSale: BigNumber;
-      tokensPCForLP: BigNumber;
-      tokensForLocker: BigNumber;
-    }
-  >;
-
   transferOwnership(
     newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  uniswapV2Router02(overrides?: CallOverrides): Promise<string>;
 
   unlockLPTokens(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -827,6 +816,8 @@ export class Presale extends BaseContract {
       numOfTokensRequested: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    cancelSale(overrides?: CallOverrides): Promise<void>;
 
     chageSaleType(
       _type: BigNumberish,
@@ -866,6 +857,12 @@ export class Presale extends BaseContract {
 
     finalizePresale(overrides?: CallOverrides): Promise<void>;
 
+    getContributorReleaseStatus(
+      time: BigNumberish,
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<number>;
+
     getContributorsList(overrides?: CallOverrides): Promise<string[]>;
 
     getWhiteListUsers(overrides?: CallOverrides): Promise<string[]>;
@@ -896,18 +893,6 @@ export class Presale extends BaseContract {
       _address: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
-
-    launchpadAddresses(
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, string, string, string] & {
-        pancakeSwapFactoryAddr: string;
-        pancakeSwapRouterAddr: string;
-        WBNBAddr: string;
-        teamAddr: string;
-        devAddr: string;
-      }
-    >;
 
     master(overrides?: CallOverrides): Promise<string>;
 
@@ -1023,20 +1008,12 @@ export class Presale extends BaseContract {
       }
     >;
 
-    tokenomics(
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        tokensForSale: BigNumber;
-        tokensPCForLP: BigNumber;
-        tokensForLocker: BigNumber;
-      }
-    >;
-
     transferOwnership(
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    uniswapV2Router02(overrides?: CallOverrides): Promise<string>;
 
     unlockLPTokens(overrides?: CallOverrides): Promise<void>;
 
@@ -1072,6 +1049,10 @@ export class Presale extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    cancelSale(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     chageSaleType(
       _type: BigNumberish,
       _address: string,
@@ -1100,6 +1081,12 @@ export class Presale extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    getContributorReleaseStatus(
+      time: BigNumberish,
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getContributorsList(overrides?: CallOverrides): Promise<BigNumber>;
 
     getWhiteListUsers(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1110,8 +1097,6 @@ export class Presale extends BaseContract {
       _address: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    launchpadAddresses(overrides?: CallOverrides): Promise<BigNumber>;
 
     master(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1151,12 +1136,12 @@ export class Presale extends BaseContract {
 
     tokenInfo(overrides?: CallOverrides): Promise<BigNumber>;
 
-    tokenomics(overrides?: CallOverrides): Promise<BigNumber>;
-
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    uniswapV2Router02(overrides?: CallOverrides): Promise<BigNumber>;
 
     unlockLPTokens(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1176,6 +1161,10 @@ export class Presale extends BaseContract {
     buyTokensOnPresale(
       numOfTokensRequested: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    cancelSale(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     chageSaleType(
@@ -1208,6 +1197,12 @@ export class Presale extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    getContributorReleaseStatus(
+      time: BigNumberish,
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getContributorsList(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1218,10 +1213,6 @@ export class Presale extends BaseContract {
 
     isWhiteListed(
       _address: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    launchpadAddresses(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1268,12 +1259,12 @@ export class Presale extends BaseContract {
 
     tokenInfo(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    tokenomics(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    uniswapV2Router02(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     unlockLPTokens(
       overrides?: Overrides & { from?: string | Promise<string> }
