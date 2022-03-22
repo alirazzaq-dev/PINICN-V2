@@ -282,8 +282,8 @@ contract Presale is Ownable {
 
             presaleInfo.preSaleStatus = LaunchPadLib.PreSaleStatus.FAILED;
             internalData.extraTokens = IERC20(tokenInfo.preSaleToken).balanceOf(address(this));
-            participationCriteria.tokensForSale = 0;
-            participationCriteria.tokensPCForLP = 0;
+            // participationCriteria.tokensForSale = 0;
+            // participationCriteria.tokensPCForLP = 0;
             withdrawExtraTokens();
 
         }        

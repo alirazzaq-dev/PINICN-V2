@@ -1571,8 +1571,8 @@
       ]
     },
     "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\Presale.sol": {
-      "lastModificationDate": 1647868094725,
-      "contentHash": "677fd7881d44b1b142cee4b9470eb1b4",
+      "lastModificationDate": 1647950700422,
+      "contentHash": "018259b1a0d852dfd743060a89b006de",
       "sourceName": "contracts/Launchpad/Presale.sol",
       "solcConfig": {
         "version": "0.8.4",
