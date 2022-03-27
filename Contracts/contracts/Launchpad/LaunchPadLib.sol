@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
-
+pragma solidity 0.8.7;
 
 
 library LaunchPadLib {
@@ -9,7 +8,6 @@ library LaunchPadLib {
     enum PresaleType { PUBLIC, WHITELISTED, TOKENHOLDERS }
     enum PreSaleStatus {PENDING, INPROGRESS, SUCCEED, FAILED, CANCELED}
     enum RefundType {BURN, WITHDRAW}
-
 
     struct InternalData {
         uint totalTokensSold;
@@ -30,7 +28,6 @@ library LaunchPadLib {
         uint256 startedAt;
         uint256 expiredAt;
         uint256 lpLockupDuration;
-        // uint256 tokenLockupTime;
     }
 
     struct ReqestedTokens{
@@ -72,12 +69,6 @@ library LaunchPadLib {
         string symbol;
         uint decimals;
     }
-
-    // struct Tokenomics {
-    //     uint256 tokensForSale;              // 1000
-    //     uint256 tokensPCForLP;              // 70% = 0.7   =>   1700/1.7 = 700
-    //     uint256 tokensForLocker;
-    // }
 
     struct ContributorsVesting {
         bool isEnabled;

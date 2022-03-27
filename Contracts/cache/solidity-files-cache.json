@@ -493,7 +493,7 @@
       "contentHash": "384ca74b3f06fec0509d6bfe11e5ff73",
       "sourceName": "contracts/helpers/BEP20.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -530,7 +530,7 @@
       "contentHash": "ca4552dfca9db18a959c6766f7053420",
       "sourceName": "@openzeppelin/contracts/token/ERC20/presets/ERC20PresetMinterPauser.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -571,7 +571,7 @@
       "contentHash": "f48de0eaae9544072b8766e2eac528a7",
       "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -610,7 +610,7 @@
       "contentHash": "9f43a2bc39b89ae302f1727697f9c420",
       "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -648,7 +648,7 @@
       "contentHash": "ab4babe7912604097ae769a62fa08506",
       "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -686,7 +686,7 @@
       "contentHash": "ed8cb66146e00c05d3435beedacd0a9f",
       "sourceName": "@openzeppelin/contracts/access/AccessControlEnumerable.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -725,7 +725,7 @@
       "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -760,7 +760,7 @@
       "contentHash": "302d9755e46bc69d7058b0cbe7185e37",
       "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -795,7 +795,7 @@
       "contentHash": "909ab67fc5c25033fe6cd364f8c056f9",
       "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -832,7 +832,7 @@
       "contentHash": "9c2dccab8e3a43a18c41e358763fe4d8",
       "sourceName": "@openzeppelin/contracts/security/Pausable.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -869,7 +869,7 @@
       "contentHash": "4e71cc90682e109e999ce2bd329f6572",
       "sourceName": "@openzeppelin/contracts/access/IAccessControlEnumerable.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -906,7 +906,7 @@
       "contentHash": "79af4d35ce7918696f13f0cb6653ec99",
       "sourceName": "@openzeppelin/contracts/access/AccessControl.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -946,7 +946,7 @@
       "contentHash": "b8070bbbb327a49a4d37f5c590b38238",
       "sourceName": "@openzeppelin/contracts/utils/structs/EnumerableSet.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -981,7 +981,7 @@
       "contentHash": "57c84298234411cea19c7c284d86be8b",
       "sourceName": "@openzeppelin/contracts/access/IAccessControl.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1016,7 +1016,7 @@
       "contentHash": "9c54c6c065d9e590fdcdd72c451425b9",
       "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1051,7 +1051,7 @@
       "contentHash": "0e7db055ce108f9da7bb6686a00287c0",
       "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1088,7 +1088,7 @@
       "contentHash": "03e6768535ac4da0e9756f1d8a4a018a",
       "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1123,7 +1123,7 @@
       "contentHash": "8bbea02cd803d556729538197b2bc08c",
       "sourceName": "contracts/helpers/TestCoin.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1160,7 +1160,7 @@
       "contentHash": "a3490a4f9112c7f9698cfcf0bc5f4735",
       "sourceName": "contracts/helpers/PresaleToken.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1197,7 +1197,7 @@
       "contentHash": "354424e6d584d7f691c94129bcfe308f",
       "sourceName": "contracts/helpers/PICNICToken.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1234,7 +1234,7 @@
       "contentHash": "8398972af73b4e9e5ff3b31cad86234f",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1271,7 +1271,7 @@
       "contentHash": "00e3bd3e0a5a625949bc7e9d6b7083f8",
       "sourceName": "contracts/LPLocker/LPLokcerManager.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1312,7 +1312,7 @@
       "contentHash": "a6a9d6c1f662e922b82c1ba4d81cdd48",
       "sourceName": "@openzeppelin/contracts/utils/math/SafeMath.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1347,7 +1347,7 @@
       "contentHash": "cc4777addd464ea56fa35b1c45df0591",
       "sourceName": "hardhat/console.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1382,7 +1382,7 @@
       "contentHash": "7351b7f88f7c8a8d852631f2f3e21978",
       "sourceName": "contracts/LPLocker/LPLocker.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1421,7 +1421,7 @@
       "contentHash": "fdd762d17c842edd3dda24fb88092ae6",
       "sourceName": "contracts/Locker/PICNICLocker.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1460,7 +1460,7 @@
       "contentHash": "5cb46fd4abcc3f127e46a787e015a5d2",
       "sourceName": "contracts/Locker/LokcerFactory.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1501,7 +1501,7 @@
       "contentHash": "d99b1dee3e124d783cd4fa25e93df2cf",
       "sourceName": "contracts/Locker/Locker.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1540,7 +1540,7 @@
       "contentHash": "1cae2f00d26a6b58329dacedab55edb1",
       "sourceName": "contracts/Locker/ILocker.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1571,11 +1571,11 @@
       ]
     },
     "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\Presale.sol": {
-      "lastModificationDate": 1647950700422,
-      "contentHash": "018259b1a0d852dfd743060a89b006de",
+      "lastModificationDate": 1648308229454,
+      "contentHash": "74ecc7dd31b89411d78cabb8ae915d02",
       "sourceName": "contracts/Launchpad/Presale.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1606,7 +1606,7 @@
         "./LaunchPadLib.sol"
       ],
       "versionPragmas": [
-        "^0.8.0"
+        "0.8.7"
       ],
       "artifacts": [
         "Presale"
@@ -1617,7 +1617,7 @@
       "contentHash": "3fd36426274a5b35f7e702f87ba08a8e",
       "sourceName": "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1654,7 +1654,7 @@
       "contentHash": "ec39b5372f4f4d52101b4da561e2aee6",
       "sourceName": "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1685,11 +1685,11 @@
       ]
     },
     "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\LaunchPadLib.sol": {
-      "lastModificationDate": 1647234888945,
-      "contentHash": "f6af8c75ffc5cf9ac2beae59587bec79",
+      "lastModificationDate": 1648308345473,
+      "contentHash": "34bdffa39bd4519c91769f491f4df6ca",
       "sourceName": "contracts/Launchpad/LaunchPadLib.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1713,7 +1713,7 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.8.0"
+        "0.8.7"
       ],
       "artifacts": [
         "LaunchPadLib"
@@ -1724,7 +1724,7 @@
       "contentHash": "95d8729b2c698dc663322167b3c085fe",
       "sourceName": "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router01.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1755,11 +1755,11 @@
       ]
     },
     "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\Launchpadv2.sol": {
-      "lastModificationDate": 1647737480133,
-      "contentHash": "9dbb4ca8b61a5e6a4a6cebd8b30adac6",
+      "lastModificationDate": 1648308234798,
+      "contentHash": "90d225ef574c52cb03a24fbbe815c42b",
       "sourceName": "contracts/Launchpad/Launchpadv2.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1787,7 +1787,7 @@
         "./LaunchPadLib.sol"
       ],
       "versionPragmas": [
-        "^0.8.0"
+        "0.8.7"
       ],
       "artifacts": [
         "Launchpadv2"
@@ -1798,7 +1798,7 @@
       "contentHash": "270f2c1a1f22475259d5a2f6a524f72e",
       "sourceName": "@uniswap/v2-periphery/contracts/interfaces/IWETH.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1833,7 +1833,7 @@
       "contentHash": "3d2b948a9266ee66b6e739de97c7e6e9",
       "sourceName": "@uniswap/v2-periphery/contracts/interfaces/IERC20.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1868,7 +1868,7 @@
       "contentHash": "7fad4038612c5f040ebd746a3e58e0db",
       "sourceName": "@uniswap/lib/contracts/libraries/TransferHelper.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1903,7 +1903,7 @@
       "contentHash": "3fa31c3860f2b9585c3a98c64850829e",
       "sourceName": "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1938,7 +1938,7 @@
       "contentHash": "30a4aed15b3fa3ce5588118b7cecfa7f",
       "sourceName": "@uniswap/v2-core/contracts/interfaces/IUniswapV2Callee.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -1973,7 +1973,7 @@
       "contentHash": "3d2b948a9266ee66b6e739de97c7e6e9",
       "sourceName": "@uniswap/v2-core/contracts/interfaces/IERC20.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -2008,7 +2008,7 @@
       "contentHash": "752c725168e1a5b73a8209897f18c5b9",
       "sourceName": "@uniswap/v2-core/contracts/interfaces/IUniswapV2ERC20.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -2043,7 +2043,7 @@
       "contentHash": "6710eec52db11a781692e705b1abd003",
       "sourceName": "contracts/extra.sol",
       "solcConfig": {
-        "version": "0.8.4",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": true,

@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.7;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-// import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "./Presale.sol";
 import "./LaunchPadLib.sol";
@@ -12,26 +11,22 @@ import "./LaunchPadLib.sol";
 contract Launchpadv2 is Ownable {
     
     using LaunchPadLib for *;
-    // using SafeMath for uint256;
-
 
     uint public presaleCount = 0;
     uint public upfrontfee = 0.2 ether;
     uint8 public salesFeeInPercent = 2;
 
     // Declare a set state variable    
+    address public uniswapV2Router02;
+    
     address public teamAddr;
     address public devAddr;
-    
-    // LaunchPadLib.LaunchpadAddresses public launchpadAddresses;
-    address public uniswapV2Router02;
 
     ////////////////////////////// MAPPINGS ///////////////////////////////////
 
     mapping(uint => address) public presaleRecordByID;
     mapping(address => address[]) private presaleRecordByToken;
     mapping(address => bool) public isUserWhitelistedToStartProject;
-
 
     ////////////////////////////// FUNCTIONS ///////////////////////////////////
 
