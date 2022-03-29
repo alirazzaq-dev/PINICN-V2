@@ -30,31 +30,27 @@ interface PresaleInterface extends ethers.utils.Interface {
     "contributorVestingRecord(uint256)": FunctionFragment;
     "contributorsVesting()": FunctionFragment;
     "emergencyWithdraw()": FunctionFragment;
+    "extraTokens()": FunctionFragment;
     "finalizePresale()": FunctionFragment;
+    "generalInfo()": FunctionFragment;
     "getContributorReleaseStatus(uint256,address)": FunctionFragment;
-    "getContributorsList()": FunctionFragment;
     "getWhiteListUsers()": FunctionFragment;
-    "internalData()": FunctionFragment;
-    "isWhiteListed(address)": FunctionFragment;
     "master()": FunctionFragment;
-    "owner()": FunctionFragment;
     "participant(address)": FunctionFragment;
     "participationCriteria()": FunctionFragment;
     "presaleCounts()": FunctionFragment;
     "presaleInfo()": FunctionFragment;
     "presaleTimes()": FunctionFragment;
     "removeWhiteListUsers(address[])": FunctionFragment;
-    "renounceOwnership()": FunctionFragment;
     "reqestedTokens()": FunctionFragment;
     "salesFeeInPercent()": FunctionFragment;
     "teamVesting()": FunctionFragment;
     "teamVestingRecord(uint256)": FunctionFragment;
     "temaVestingCycles()": FunctionFragment;
-    "tokenInfo()": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
     "uniswapV2Router02()": FunctionFragment;
     "unlockLPTokens()": FunctionFragment;
     "unlockTokens()": FunctionFragment;
+    "updateGeneralInfo((string,string,string,string,string,string))": FunctionFragment;
     "whiteListUsers(address[])": FunctionFragment;
   };
 
@@ -91,7 +87,15 @@ interface PresaleInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "extraTokens",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "finalizePresale",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "generalInfo",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -99,23 +103,10 @@ interface PresaleInterface extends ethers.utils.Interface {
     values: [BigNumberish, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "getContributorsList",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "getWhiteListUsers",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "internalData",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "isWhiteListed",
-    values: [string]
-  ): string;
   encodeFunctionData(functionFragment: "master", values?: undefined): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "participant", values: [string]): string;
   encodeFunctionData(
     functionFragment: "participationCriteria",
@@ -138,10 +129,6 @@ interface PresaleInterface extends ethers.utils.Interface {
     values: [string[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "renounceOwnership",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "reqestedTokens",
     values?: undefined
   ): string;
@@ -161,11 +148,6 @@ interface PresaleInterface extends ethers.utils.Interface {
     functionFragment: "temaVestingCycles",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "tokenInfo", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "transferOwnership",
-    values: [string]
-  ): string;
   encodeFunctionData(
     functionFragment: "uniswapV2Router02",
     values?: undefined
@@ -177,6 +159,19 @@ interface PresaleInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "unlockTokens",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateGeneralInfo",
+    values: [
+      {
+        logoURL: string;
+        websiteURL: string;
+        twitterURL: string;
+        telegramURL: string;
+        discordURL: string;
+        description: string;
+      }
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "whiteListUsers",
@@ -213,7 +208,15 @@ interface PresaleInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "extraTokens",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "finalizePresale",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "generalInfo",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -221,23 +224,10 @@ interface PresaleInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getContributorsList",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "getWhiteListUsers",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "internalData",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "isWhiteListed",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "master", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "participant",
     data: BytesLike
@@ -263,10 +253,6 @@ interface PresaleInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "reqestedTokens",
     data: BytesLike
   ): Result;
@@ -286,11 +272,6 @@ interface PresaleInterface extends ethers.utils.Interface {
     functionFragment: "temaVestingCycles",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "tokenInfo", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "transferOwnership",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "uniswapV2Router02",
     data: BytesLike
@@ -304,20 +285,16 @@ interface PresaleInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "updateGeneralInfo",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "whiteListUsers",
     data: BytesLike
   ): Result;
 
-  events: {
-    "OwnershipTransferred(address,address)": EventFragment;
-  };
-
-  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  events: {};
 }
-
-export type OwnershipTransferredEvent = TypedEvent<
-  [string, string] & { previousOwner: string; newOwner: string }
->;
 
 export class Presale extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -412,50 +389,34 @@ export class Presale extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    extraTokens(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     finalizePresale(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    generalInfo(
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, string, string, string, string] & {
+        logoURL: string;
+        websiteURL: string;
+        twitterURL: string;
+        telegramURL: string;
+        discordURL: string;
+        description: string;
+      }
+    >;
+
     getContributorReleaseStatus(
-      time: BigNumberish,
+      _time: BigNumberish,
       _address: string,
       overrides?: CallOverrides
     ): Promise<[number]>;
 
-    getContributorsList(overrides?: CallOverrides): Promise<[string[]]>;
-
     getWhiteListUsers(overrides?: CallOverrides): Promise<[string[]]>;
 
-    internalData(
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ] & {
-        totalTokensSold: BigNumber;
-        revenueFromPresale: BigNumber;
-        tokensAddedToLiquidity: BigNumber;
-        extraTokens: BigNumber;
-        poolShareBNB: BigNumber;
-        devTeamShareBNB: BigNumber;
-        ownersShareBNB: BigNumber;
-      }
-    >;
-
-    isWhiteListed(
-      _address: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
     master(overrides?: CallOverrides): Promise<[string]>;
-
-    owner(overrides?: CallOverrides): Promise<[string]>;
 
     participant(
       arg0: string,
@@ -492,10 +453,12 @@ export class Presale extends BaseContract {
     presaleInfo(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, number] & {
+      [BigNumber, string, number, string, BigNumber] & {
         id: BigNumber;
         presaleOwner: string;
         preSaleStatus: number;
+        preSaleToken: string;
+        decimals: BigNumber;
       }
     >;
 
@@ -511,10 +474,6 @@ export class Presale extends BaseContract {
 
     removeWhiteListUsers(
       _addresses: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -558,22 +517,6 @@ export class Presale extends BaseContract {
 
     temaVestingCycles(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    tokenInfo(
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, string, BigNumber] & {
-        preSaleToken: string;
-        name: string;
-        symbol: string;
-        decimals: BigNumber;
-      }
-    >;
-
-    transferOwnership(
-      newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     uniswapV2Router02(overrides?: CallOverrides): Promise<[string]>;
 
     unlockLPTokens(
@@ -581,6 +524,18 @@ export class Presale extends BaseContract {
     ): Promise<ContractTransaction>;
 
     unlockTokens(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    updateGeneralInfo(
+      _generalInfo: {
+        logoURL: string;
+        websiteURL: string;
+        twitterURL: string;
+        telegramURL: string;
+        discordURL: string;
+        description: string;
+      },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -639,47 +594,34 @@ export class Presale extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  extraTokens(overrides?: CallOverrides): Promise<BigNumber>;
+
   finalizePresale(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  generalInfo(
+    overrides?: CallOverrides
+  ): Promise<
+    [string, string, string, string, string, string] & {
+      logoURL: string;
+      websiteURL: string;
+      twitterURL: string;
+      telegramURL: string;
+      discordURL: string;
+      description: string;
+    }
+  >;
+
   getContributorReleaseStatus(
-    time: BigNumberish,
+    _time: BigNumberish,
     _address: string,
     overrides?: CallOverrides
   ): Promise<number>;
 
-  getContributorsList(overrides?: CallOverrides): Promise<string[]>;
-
   getWhiteListUsers(overrides?: CallOverrides): Promise<string[]>;
 
-  internalData(
-    overrides?: CallOverrides
-  ): Promise<
-    [
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber
-    ] & {
-      totalTokensSold: BigNumber;
-      revenueFromPresale: BigNumber;
-      tokensAddedToLiquidity: BigNumber;
-      extraTokens: BigNumber;
-      poolShareBNB: BigNumber;
-      devTeamShareBNB: BigNumber;
-      ownersShareBNB: BigNumber;
-    }
-  >;
-
-  isWhiteListed(_address: string, overrides?: CallOverrides): Promise<boolean>;
-
   master(overrides?: CallOverrides): Promise<string>;
-
-  owner(overrides?: CallOverrides): Promise<string>;
 
   participant(
     arg0: string,
@@ -714,10 +656,12 @@ export class Presale extends BaseContract {
   presaleInfo(
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, string, number] & {
+    [BigNumber, string, number, string, BigNumber] & {
       id: BigNumber;
       presaleOwner: string;
       preSaleStatus: number;
+      preSaleToken: string;
+      decimals: BigNumber;
     }
   >;
 
@@ -733,10 +677,6 @@ export class Presale extends BaseContract {
 
   removeWhiteListUsers(
     _addresses: string[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -780,22 +720,6 @@ export class Presale extends BaseContract {
 
   temaVestingCycles(overrides?: CallOverrides): Promise<BigNumber>;
 
-  tokenInfo(
-    overrides?: CallOverrides
-  ): Promise<
-    [string, string, string, BigNumber] & {
-      preSaleToken: string;
-      name: string;
-      symbol: string;
-      decimals: BigNumber;
-    }
-  >;
-
-  transferOwnership(
-    newOwner: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   uniswapV2Router02(overrides?: CallOverrides): Promise<string>;
 
   unlockLPTokens(
@@ -803,6 +727,18 @@ export class Presale extends BaseContract {
   ): Promise<ContractTransaction>;
 
   unlockTokens(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  updateGeneralInfo(
+    _generalInfo: {
+      logoURL: string;
+      websiteURL: string;
+      twitterURL: string;
+      telegramURL: string;
+      discordURL: string;
+      description: string;
+    },
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -855,48 +791,32 @@ export class Presale extends BaseContract {
 
     emergencyWithdraw(overrides?: CallOverrides): Promise<void>;
 
+    extraTokens(overrides?: CallOverrides): Promise<BigNumber>;
+
     finalizePresale(overrides?: CallOverrides): Promise<void>;
 
+    generalInfo(
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, string, string, string, string] & {
+        logoURL: string;
+        websiteURL: string;
+        twitterURL: string;
+        telegramURL: string;
+        discordURL: string;
+        description: string;
+      }
+    >;
+
     getContributorReleaseStatus(
-      time: BigNumberish,
+      _time: BigNumberish,
       _address: string,
       overrides?: CallOverrides
     ): Promise<number>;
 
-    getContributorsList(overrides?: CallOverrides): Promise<string[]>;
-
     getWhiteListUsers(overrides?: CallOverrides): Promise<string[]>;
 
-    internalData(
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber
-      ] & {
-        totalTokensSold: BigNumber;
-        revenueFromPresale: BigNumber;
-        tokensAddedToLiquidity: BigNumber;
-        extraTokens: BigNumber;
-        poolShareBNB: BigNumber;
-        devTeamShareBNB: BigNumber;
-        ownersShareBNB: BigNumber;
-      }
-    >;
-
-    isWhiteListed(
-      _address: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     master(overrides?: CallOverrides): Promise<string>;
-
-    owner(overrides?: CallOverrides): Promise<string>;
 
     participant(
       arg0: string,
@@ -933,10 +853,12 @@ export class Presale extends BaseContract {
     presaleInfo(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, number] & {
+      [BigNumber, string, number, string, BigNumber] & {
         id: BigNumber;
         presaleOwner: string;
         preSaleStatus: number;
+        preSaleToken: string;
+        decimals: BigNumber;
       }
     >;
 
@@ -954,8 +876,6 @@ export class Presale extends BaseContract {
       _addresses: string[],
       overrides?: CallOverrides
     ): Promise<void>;
-
-    renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     reqestedTokens(
       overrides?: CallOverrides
@@ -997,27 +917,23 @@ export class Presale extends BaseContract {
 
     temaVestingCycles(overrides?: CallOverrides): Promise<BigNumber>;
 
-    tokenInfo(
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, string, BigNumber] & {
-        preSaleToken: string;
-        name: string;
-        symbol: string;
-        decimals: BigNumber;
-      }
-    >;
-
-    transferOwnership(
-      newOwner: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     uniswapV2Router02(overrides?: CallOverrides): Promise<string>;
 
     unlockLPTokens(overrides?: CallOverrides): Promise<void>;
 
     unlockTokens(overrides?: CallOverrides): Promise<void>;
+
+    updateGeneralInfo(
+      _generalInfo: {
+        logoURL: string;
+        websiteURL: string;
+        twitterURL: string;
+        telegramURL: string;
+        discordURL: string;
+        description: string;
+      },
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     whiteListUsers(
       _addresses: string[],
@@ -1025,23 +941,7 @@ export class Presale extends BaseContract {
     ): Promise<void>;
   };
 
-  filters: {
-    "OwnershipTransferred(address,address)"(
-      previousOwner?: string | null,
-      newOwner?: string | null
-    ): TypedEventFilter<
-      [string, string],
-      { previousOwner: string; newOwner: string }
-    >;
-
-    OwnershipTransferred(
-      previousOwner?: string | null,
-      newOwner?: string | null
-    ): TypedEventFilter<
-      [string, string],
-      { previousOwner: string; newOwner: string }
-    >;
-  };
+  filters: {};
 
   estimateGas: {
     buyTokensOnPresale(
@@ -1077,30 +977,23 @@ export class Presale extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    extraTokens(overrides?: CallOverrides): Promise<BigNumber>;
+
     finalizePresale(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    generalInfo(overrides?: CallOverrides): Promise<BigNumber>;
+
     getContributorReleaseStatus(
-      time: BigNumberish,
+      _time: BigNumberish,
       _address: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    getContributorsList(overrides?: CallOverrides): Promise<BigNumber>;
 
     getWhiteListUsers(overrides?: CallOverrides): Promise<BigNumber>;
 
-    internalData(overrides?: CallOverrides): Promise<BigNumber>;
-
-    isWhiteListed(
-      _address: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     master(overrides?: CallOverrides): Promise<BigNumber>;
-
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     participant(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1117,10 +1010,6 @@ export class Presale extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     reqestedTokens(overrides?: CallOverrides): Promise<BigNumber>;
 
     salesFeeInPercent(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1134,13 +1023,6 @@ export class Presale extends BaseContract {
 
     temaVestingCycles(overrides?: CallOverrides): Promise<BigNumber>;
 
-    tokenInfo(overrides?: CallOverrides): Promise<BigNumber>;
-
-    transferOwnership(
-      newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     uniswapV2Router02(overrides?: CallOverrides): Promise<BigNumber>;
 
     unlockLPTokens(
@@ -1148,6 +1030,18 @@ export class Presale extends BaseContract {
     ): Promise<BigNumber>;
 
     unlockTokens(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    updateGeneralInfo(
+      _generalInfo: {
+        logoURL: string;
+        websiteURL: string;
+        twitterURL: string;
+        telegramURL: string;
+        discordURL: string;
+        description: string;
+      },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1193,32 +1087,23 @@ export class Presale extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    extraTokens(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     finalizePresale(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    getContributorReleaseStatus(
-      time: BigNumberish,
-      _address: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    generalInfo(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getContributorsList(
+    getContributorReleaseStatus(
+      _time: BigNumberish,
+      _address: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getWhiteListUsers(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    internalData(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    isWhiteListed(
-      _address: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     master(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     participant(
       arg0: string,
@@ -1240,10 +1125,6 @@ export class Presale extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     reqestedTokens(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     salesFeeInPercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1257,13 +1138,6 @@ export class Presale extends BaseContract {
 
     temaVestingCycles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    tokenInfo(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    transferOwnership(
-      newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     uniswapV2Router02(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     unlockLPTokens(
@@ -1271,6 +1145,18 @@ export class Presale extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     unlockTokens(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateGeneralInfo(
+      _generalInfo: {
+        logoURL: string;
+        websiteURL: string;
+        twitterURL: string;
+        telegramURL: string;
+        discordURL: string;
+        description: string;
+      },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

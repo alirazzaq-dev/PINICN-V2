@@ -22,10 +22,9 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface Launchpadv2Interface extends ethers.utils.Interface {
   functions: {
-    "createPresale((address,string,string,uint256),(uint256,uint256,uint8,uint256,address,uint256,uint8),(uint256,uint256,uint256),(uint256,uint256,uint256),(bool,uint256,uint256,uint256),(bool,uint256,uint256,uint256,uint256,uint256))": FunctionFragment;
+    "createPresale((uint256,address,uint8,address,uint256),(uint256,uint256,uint8,uint256,address,uint256,uint8),(uint256,uint256,uint256),(uint256,uint256,uint256),(bool,uint256,uint256,uint256),(bool,uint256,uint256,uint256,uint256,uint256),(string,string,string,string,string,string))": FunctionFragment;
     "devAddr()": FunctionFragment;
     "getPresaleRecordsByToken(address)": FunctionFragment;
-    "isUserWhitelistedToStartProject(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "presaleCount()": FunctionFragment;
     "presaleRecordByID(uint256)": FunctionFragment;
@@ -36,7 +35,6 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
     "uniswapV2Router02()": FunctionFragment;
     "updateFees(uint256,uint8)": FunctionFragment;
     "upfrontfee()": FunctionFragment;
-    "whiteListUsersToStartProject(address[])": FunctionFragment;
     "withdrawBNBs()": FunctionFragment;
   };
 
@@ -44,9 +42,10 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
     functionFragment: "createPresale",
     values: [
       {
+        id: BigNumberish;
+        presaleOwner: string;
+        preSaleStatus: BigNumberish;
         preSaleToken: string;
-        name: string;
-        symbol: string;
         decimals: BigNumberish;
       },
       {
@@ -81,16 +80,20 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
         firstReleasePC: BigNumberish;
         vestingPeriodOfEachCycle: BigNumberish;
         tokensReleaseEachCyclePC: BigNumberish;
+      },
+      {
+        logoURL: string;
+        websiteURL: string;
+        twitterURL: string;
+        telegramURL: string;
+        discordURL: string;
+        description: string;
       }
     ]
   ): string;
   encodeFunctionData(functionFragment: "devAddr", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getPresaleRecordsByToken",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "isUserWhitelistedToStartProject",
     values: [string]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -128,10 +131,6 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "whiteListUsersToStartProject",
-    values: [string[]]
-  ): string;
-  encodeFunctionData(
     functionFragment: "withdrawBNBs",
     values?: undefined
   ): string;
@@ -143,10 +142,6 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "devAddr", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getPresaleRecordsByToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "isUserWhitelistedToStartProject",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
@@ -177,10 +172,6 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "updateFees", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "upfrontfee", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "whiteListUsersToStartProject",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "withdrawBNBs",
     data: BytesLike
@@ -242,10 +233,11 @@ export class Launchpadv2 extends BaseContract {
 
   functions: {
     createPresale(
-      _tokenInfo: {
+      _presaleInfo: {
+        id: BigNumberish;
+        presaleOwner: string;
+        preSaleStatus: BigNumberish;
         preSaleToken: string;
-        name: string;
-        symbol: string;
         decimals: BigNumberish;
       },
       _participationCriteria: {
@@ -281,6 +273,14 @@ export class Launchpadv2 extends BaseContract {
         vestingPeriodOfEachCycle: BigNumberish;
         tokensReleaseEachCyclePC: BigNumberish;
       },
+      _generalInfo: {
+        logoURL: string;
+        websiteURL: string;
+        twitterURL: string;
+        telegramURL: string;
+        discordURL: string;
+        description: string;
+      },
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -290,11 +290,6 @@ export class Launchpadv2 extends BaseContract {
       _address: string,
       overrides?: CallOverrides
     ): Promise<[string[]]>;
-
-    isUserWhitelistedToStartProject(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -328,21 +323,17 @@ export class Launchpadv2 extends BaseContract {
 
     upfrontfee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    whiteListUsersToStartProject(
-      _addresses: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     withdrawBNBs(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
   createPresale(
-    _tokenInfo: {
+    _presaleInfo: {
+      id: BigNumberish;
+      presaleOwner: string;
+      preSaleStatus: BigNumberish;
       preSaleToken: string;
-      name: string;
-      symbol: string;
       decimals: BigNumberish;
     },
     _participationCriteria: {
@@ -378,6 +369,14 @@ export class Launchpadv2 extends BaseContract {
       vestingPeriodOfEachCycle: BigNumberish;
       tokensReleaseEachCyclePC: BigNumberish;
     },
+    _generalInfo: {
+      logoURL: string;
+      websiteURL: string;
+      twitterURL: string;
+      telegramURL: string;
+      discordURL: string;
+      description: string;
+    },
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -387,11 +386,6 @@ export class Launchpadv2 extends BaseContract {
     _address: string,
     overrides?: CallOverrides
   ): Promise<string[]>;
-
-  isUserWhitelistedToStartProject(
-    arg0: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -425,21 +419,17 @@ export class Launchpadv2 extends BaseContract {
 
   upfrontfee(overrides?: CallOverrides): Promise<BigNumber>;
 
-  whiteListUsersToStartProject(
-    _addresses: string[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   withdrawBNBs(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
     createPresale(
-      _tokenInfo: {
+      _presaleInfo: {
+        id: BigNumberish;
+        presaleOwner: string;
+        preSaleStatus: BigNumberish;
         preSaleToken: string;
-        name: string;
-        symbol: string;
         decimals: BigNumberish;
       },
       _participationCriteria: {
@@ -475,6 +465,14 @@ export class Launchpadv2 extends BaseContract {
         vestingPeriodOfEachCycle: BigNumberish;
         tokensReleaseEachCyclePC: BigNumberish;
       },
+      _generalInfo: {
+        logoURL: string;
+        websiteURL: string;
+        twitterURL: string;
+        telegramURL: string;
+        discordURL: string;
+        description: string;
+      },
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -484,11 +482,6 @@ export class Launchpadv2 extends BaseContract {
       _address: string,
       overrides?: CallOverrides
     ): Promise<string[]>;
-
-    isUserWhitelistedToStartProject(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -520,11 +513,6 @@ export class Launchpadv2 extends BaseContract {
 
     upfrontfee(overrides?: CallOverrides): Promise<BigNumber>;
 
-    whiteListUsersToStartProject(
-      _addresses: string[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     withdrawBNBs(overrides?: CallOverrides): Promise<void>;
   };
 
@@ -548,10 +536,11 @@ export class Launchpadv2 extends BaseContract {
 
   estimateGas: {
     createPresale(
-      _tokenInfo: {
+      _presaleInfo: {
+        id: BigNumberish;
+        presaleOwner: string;
+        preSaleStatus: BigNumberish;
         preSaleToken: string;
-        name: string;
-        symbol: string;
         decimals: BigNumberish;
       },
       _participationCriteria: {
@@ -587,6 +576,14 @@ export class Launchpadv2 extends BaseContract {
         vestingPeriodOfEachCycle: BigNumberish;
         tokensReleaseEachCyclePC: BigNumberish;
       },
+      _generalInfo: {
+        logoURL: string;
+        websiteURL: string;
+        twitterURL: string;
+        telegramURL: string;
+        discordURL: string;
+        description: string;
+      },
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -594,11 +591,6 @@ export class Launchpadv2 extends BaseContract {
 
     getPresaleRecordsByToken(
       _address: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    isUserWhitelistedToStartProject(
-      arg0: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -634,11 +626,6 @@ export class Launchpadv2 extends BaseContract {
 
     upfrontfee(overrides?: CallOverrides): Promise<BigNumber>;
 
-    whiteListUsersToStartProject(
-      _addresses: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     withdrawBNBs(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -646,10 +633,11 @@ export class Launchpadv2 extends BaseContract {
 
   populateTransaction: {
     createPresale(
-      _tokenInfo: {
+      _presaleInfo: {
+        id: BigNumberish;
+        presaleOwner: string;
+        preSaleStatus: BigNumberish;
         preSaleToken: string;
-        name: string;
-        symbol: string;
         decimals: BigNumberish;
       },
       _participationCriteria: {
@@ -685,6 +673,14 @@ export class Launchpadv2 extends BaseContract {
         vestingPeriodOfEachCycle: BigNumberish;
         tokensReleaseEachCyclePC: BigNumberish;
       },
+      _generalInfo: {
+        logoURL: string;
+        websiteURL: string;
+        twitterURL: string;
+        telegramURL: string;
+        discordURL: string;
+        description: string;
+      },
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -692,11 +688,6 @@ export class Launchpadv2 extends BaseContract {
 
     getPresaleRecordsByToken(
       _address: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    isUserWhitelistedToStartProject(
-      arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -731,11 +722,6 @@ export class Launchpadv2 extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     upfrontfee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    whiteListUsersToStartProject(
-      _addresses: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
 
     withdrawBNBs(
       overrides?: Overrides & { from?: string | Promise<string> }

@@ -21,19 +21,30 @@ interface LaunchPadLibInterface extends ethers.utils.Interface {
   functions: {};
 
   events: {
-    "PresaleCreated(address,uint256,uint256,uint256)": EventFragment;
+    "Bought(uint256,uint256,address)": EventFragment;
+    "Claimed(uint256,address)": EventFragment;
+    "Withdrawed(uint256,address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "PresaleCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Bought"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Claimed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Withdrawed"): EventFragment;
 }
 
-export type PresaleCreatedEvent = TypedEvent<
-  [string, BigNumber, BigNumber, BigNumber] & {
-    owner: string;
-    tokensForSale: BigNumber;
-    startedAt: BigNumber;
-    expiredAt: BigNumber;
+export type BoughtEvent = TypedEvent<
+  [BigNumber, BigNumber, string] & {
+    tokens: BigNumber;
+    amount: BigNumber;
+    user: string;
   }
+>;
+
+export type ClaimedEvent = TypedEvent<
+  [BigNumber, string] & { amount: BigNumber; user: string }
+>;
+
+export type WithdrawedEvent = TypedEvent<
+  [BigNumber, string] & { amount: BigNumber; user: string }
 >;
 
 export class LaunchPadLib extends BaseContract {
@@ -84,34 +95,54 @@ export class LaunchPadLib extends BaseContract {
   callStatic: {};
 
   filters: {
-    "PresaleCreated(address,uint256,uint256,uint256)"(
-      owner?: null,
-      tokensForSale?: null,
-      startedAt?: null,
-      expiredAt?: null
+    "Bought(uint256,uint256,address)"(
+      tokens?: null,
+      amount?: null,
+      user?: null
     ): TypedEventFilter<
-      [string, BigNumber, BigNumber, BigNumber],
-      {
-        owner: string;
-        tokensForSale: BigNumber;
-        startedAt: BigNumber;
-        expiredAt: BigNumber;
-      }
+      [BigNumber, BigNumber, string],
+      { tokens: BigNumber; amount: BigNumber; user: string }
     >;
 
-    PresaleCreated(
-      owner?: null,
-      tokensForSale?: null,
-      startedAt?: null,
-      expiredAt?: null
+    Bought(
+      tokens?: null,
+      amount?: null,
+      user?: null
     ): TypedEventFilter<
-      [string, BigNumber, BigNumber, BigNumber],
-      {
-        owner: string;
-        tokensForSale: BigNumber;
-        startedAt: BigNumber;
-        expiredAt: BigNumber;
-      }
+      [BigNumber, BigNumber, string],
+      { tokens: BigNumber; amount: BigNumber; user: string }
+    >;
+
+    "Claimed(uint256,address)"(
+      amount?: null,
+      user?: null
+    ): TypedEventFilter<
+      [BigNumber, string],
+      { amount: BigNumber; user: string }
+    >;
+
+    Claimed(
+      amount?: null,
+      user?: null
+    ): TypedEventFilter<
+      [BigNumber, string],
+      { amount: BigNumber; user: string }
+    >;
+
+    "Withdrawed(uint256,address)"(
+      amount?: null,
+      user?: null
+    ): TypedEventFilter<
+      [BigNumber, string],
+      { amount: BigNumber; user: string }
+    >;
+
+    Withdrawed(
+      amount?: null,
+      user?: null
+    ): TypedEventFilter<
+      [BigNumber, string],
+      { amount: BigNumber; user: string }
     >;
   };
 

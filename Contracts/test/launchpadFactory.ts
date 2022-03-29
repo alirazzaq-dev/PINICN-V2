@@ -205,9 +205,10 @@ describe("PICNIC Launchpad Stack", () => {
 
     await launchpad.connect(user1).createPresale(
       {
+        id: 0,
+        presaleOwner: user1.address,
+        preSaleStatus: 0,
         preSaleToken: presaleToken.address,
-        name: "ALI COIN",
-        symbol: "ALI",
         decimals: 18
       },
       {
@@ -243,6 +244,14 @@ describe("PICNIC Launchpad Stack", () => {
         vestingPeriodOfEachCycle: 100,
         tokensReleaseEachCyclePC: 10
       },
+      {
+        logoURL: "",
+        websiteURL: "",
+        twitterURL: "",
+        telegramURL: "",
+        discordURL: "",
+        description: ""
+      },
       { value: ethers.utils.parseEther("0.20") }
 
     )
@@ -271,12 +280,12 @@ describe("PICNIC Launchpad Stack", () => {
       await presaleToken.connect(user1).approve(launchpad.address, ethers.utils.parseEther(String(100 * 1.7)));
 
       await expect(launchpad.withdrawBNBs()).to.be.reverted;
-
       await launchpad.connect(user1).createPresale(
         {
+          id: 0,
+          presaleOwner: user1.address,
+          preSaleStatus: 0,
           preSaleToken: presaleToken.address,
-          name: "ALI COIN",
-          symbol: "ALI",
           decimals: 18
         },
         {
@@ -311,6 +320,14 @@ describe("PICNIC Launchpad Stack", () => {
           firstReleasePC: 0,
           vestingPeriodOfEachCycle: 0,
           tokensReleaseEachCyclePC: 0
+        },
+        {
+          logoURL: "",
+          websiteURL: "",
+          twitterURL: "",
+          telegramURL: "",
+          discordURL: "",
+          description: ""
         },
         { value: ethers.utils.parseEther("0.20") }
 
@@ -478,9 +495,7 @@ describe("PICNIC Launchpad Stack", () => {
         await expect(presale.connect(user2).claimTokensOrARefund()).to.be.reverted;
         await expect(presale.connect(user3).claimTokensOrARefund()).to.be.reverted;
         await expect(presale.connect(user4).claimTokensOrARefund()).to.be.reverted;
-
       }
-
 
       const pairaddress = await factory.getPair(presaleToken.address, WBNBAddr.address);
       const UniswapV2Pair: UniswapV2Pair__factory = await ethers.getContractFactory('UniswapV2Pair');
@@ -502,9 +517,10 @@ describe("PICNIC Launchpad Stack", () => {
 
       await launchpad.connect(user1).createPresale(
         {
+          id: 0,
+          presaleOwner: user1.address,
+          preSaleStatus: 0,
           preSaleToken: presaleToken.address,
-          name: "ALI COIN",
-          symbol: "ALI",
           decimals: 18
         },
         {
@@ -539,6 +555,14 @@ describe("PICNIC Launchpad Stack", () => {
           firstReleasePC: 50,
           vestingPeriodOfEachCycle: 100,
           tokensReleaseEachCyclePC: 10
+        },
+        {
+          logoURL: "",
+          websiteURL: "",
+          twitterURL: "",
+          telegramURL: "",
+          discordURL: "",
+          description: ""
         },
         { value: ethers.utils.parseEther("0.20") }
 
@@ -731,9 +755,10 @@ describe("PICNIC Launchpad Stack", () => {
 
       await launchpad.connect(user1).createPresale(
         {
+          id: 0,
+          presaleOwner: user1.address,
+          preSaleStatus: 0,
           preSaleToken: presaleToken.address,
-          name: "ALI COIN",
-          symbol: "ALI",
           decimals: 18
         },
         {
@@ -768,6 +793,14 @@ describe("PICNIC Launchpad Stack", () => {
           firstReleasePC: 50,
           vestingPeriodOfEachCycle: 100,
           tokensReleaseEachCyclePC: 10
+        },
+        {
+          logoURL: "",
+          websiteURL: "",
+          twitterURL: "",
+          telegramURL: "",
+          discordURL: "",
+          description: ""
         },
         { value: ethers.utils.parseEther("0.20") }
 
@@ -870,9 +903,10 @@ describe("PICNIC Launchpad Stack", () => {
 
       await launchpad.connect(user1).createPresale(
         {
+          id: 0,
+          presaleOwner: user1.address,
+          preSaleStatus: 0,
           preSaleToken: presaleToken.address,
-          name: "ALI COIN",
-          symbol: "ALI",
           decimals: 18
         },
         {
@@ -907,6 +941,14 @@ describe("PICNIC Launchpad Stack", () => {
           firstReleasePC: 50,
           vestingPeriodOfEachCycle: 100,
           tokensReleaseEachCyclePC: 10
+        },
+        {
+          logoURL: "",
+          websiteURL: "",
+          twitterURL: "",
+          telegramURL: "",
+          discordURL: "",
+          description: ""
         },
         { value: ethers.utils.parseEther("0.20") }
 
@@ -1004,9 +1046,10 @@ describe("PICNIC Launchpad Stack", () => {
 
       await launchpad.connect(user1).createPresale(
         {
+          id: 0,
+          presaleOwner: user1.address,
+          preSaleStatus: 0,
           preSaleToken: presaleToken.address,
-          name: "ALI COIN",
-          symbol: "ALI",
           decimals: 18
         },
         {
@@ -1041,6 +1084,14 @@ describe("PICNIC Launchpad Stack", () => {
           firstReleasePC: 100,
           vestingPeriodOfEachCycle: 0,
           tokensReleaseEachCyclePC: 0
+        },
+        {
+          logoURL: "",
+          websiteURL: "",
+          twitterURL: "",
+          telegramURL: "",
+          discordURL: "",
+          description: ""
         },
         { value: ethers.utils.parseEther("0.20") }
 
@@ -1213,9 +1264,10 @@ describe("PICNIC Launchpad Stack", () => {
 
       await launchpad.connect(user1).createPresale(
         {
+          id: 0,
+          presaleOwner: user1.address,
+          preSaleStatus: 0,
           preSaleToken: presaleToken.address,
-          name: "ALI COIN",
-          symbol: "ALI",
           decimals: 18
         },
         {
@@ -1250,6 +1302,14 @@ describe("PICNIC Launchpad Stack", () => {
           firstReleasePC: 50,
           vestingPeriodOfEachCycle: 10,
           tokensReleaseEachCyclePC: 5
+        },
+        {
+          logoURL: "",
+          websiteURL: "",
+          twitterURL: "",
+          telegramURL: "",
+          discordURL: "",
+          description: ""
         },
         { value: ethers.utils.parseEther("0.20") }
 
@@ -1465,9 +1525,10 @@ describe("PICNIC Launchpad Stack", () => {
       await expect(
         launchpad.connect(user1).createPresale(
           {
+            id: 0,
+            presaleOwner: user1.address,
+            preSaleStatus: 0,
             preSaleToken: zeroAddress,
-            name: "ALI COIN",
-            symbol: "ALI",
             decimals: 18
           },
           {
@@ -1503,6 +1564,14 @@ describe("PICNIC Launchpad Stack", () => {
             vestingPeriodOfEachCycle: 100,
             tokensReleaseEachCyclePC: 10
           },
+          {
+            logoURL: "",
+            websiteURL: "",
+            twitterURL: "",
+            telegramURL: "",
+            discordURL: "",
+            description: ""
+          },    
           { value: ethers.utils.parseEther("0.20") }
     
         )
@@ -1512,9 +1581,10 @@ describe("PICNIC Launchpad Stack", () => {
       await expect(
         launchpad.connect(user1).createPresale(
           {
-            preSaleToken: presaleToken.address,
-            name: "ALI COIN",
-            symbol: "ALI",
+            id: 0,
+            presaleOwner: user1.address,
+            preSaleStatus: 0,
+            preSaleToken: zeroAddress,
             decimals: 18
           },
           {
@@ -1550,6 +1620,14 @@ describe("PICNIC Launchpad Stack", () => {
             vestingPeriodOfEachCycle: 100,
             tokensReleaseEachCyclePC: 10
           },
+          {
+            logoURL: "",
+            websiteURL: "",
+            twitterURL: "",
+            telegramURL: "",
+            discordURL: "",
+            description: ""
+          },  
           { value: ethers.utils.parseEther("0.20") }
     
         )
@@ -1559,9 +1637,10 @@ describe("PICNIC Launchpad Stack", () => {
       await expect(
         launchpad.connect(user1).createPresale(
           {
-            preSaleToken: presaleToken.address,
-            name: "ALI COIN",
-            symbol: "ALI",
+            id: 0,
+            presaleOwner: user1.address,
+            preSaleStatus: 0,
+            preSaleToken: zeroAddress,
             decimals: 18
           },
           {
@@ -1597,6 +1676,14 @@ describe("PICNIC Launchpad Stack", () => {
             vestingPeriodOfEachCycle: 100,
             tokensReleaseEachCyclePC: 10
           },
+          {
+            logoURL: "",
+            websiteURL: "",
+            twitterURL: "",
+            telegramURL: "",
+            discordURL: "",
+            description: ""
+          },  
           { value: ethers.utils.parseEther("0.20") }
     
         )
@@ -1606,9 +1693,10 @@ describe("PICNIC Launchpad Stack", () => {
       await expect(
         launchpad.connect(user1).createPresale(
           {
-            preSaleToken: presaleToken.address,
-            name: "ALI COIN",
-            symbol: "ALI",
+            id: 0,
+            presaleOwner: user1.address,
+            preSaleStatus: 0,
+            preSaleToken: zeroAddress,
             decimals: 18
           },
           {
@@ -1644,6 +1732,14 @@ describe("PICNIC Launchpad Stack", () => {
             vestingPeriodOfEachCycle: 100,
             tokensReleaseEachCyclePC: 10
           },
+          {
+            logoURL: "",
+            websiteURL: "",
+            twitterURL: "",
+            telegramURL: "",
+            discordURL: "",
+            description: ""
+          },  
           { value: ethers.utils.parseEther("0.20") }
     
         )
@@ -1653,9 +1749,10 @@ describe("PICNIC Launchpad Stack", () => {
       await expect(
         launchpad.connect(user1).createPresale(
           {
-            preSaleToken: presaleToken.address,
-            name: "ALI COIN",
-            symbol: "ALI",
+            id: 0,
+            presaleOwner: user1.address,
+            preSaleStatus: 0,
+            preSaleToken: zeroAddress,
             decimals: 18
           },
           {
@@ -1691,6 +1788,14 @@ describe("PICNIC Launchpad Stack", () => {
             vestingPeriodOfEachCycle: 100,
             tokensReleaseEachCyclePC: 10
           },
+          {
+            logoURL: "",
+            websiteURL: "",
+            twitterURL: "",
+            telegramURL: "",
+            discordURL: "",
+            description: ""
+          },  
           { value: ethers.utils.parseEther("0.20") }
     
         )
@@ -1700,9 +1805,10 @@ describe("PICNIC Launchpad Stack", () => {
       await expect(
         launchpad.connect(user1).createPresale(
           {
-            preSaleToken: presaleToken.address,
-            name: "ALI COIN",
-            symbol: "ALI",
+            id: 0,
+            presaleOwner: user1.address,
+            preSaleStatus: 0,
+            preSaleToken: zeroAddress,
             decimals: 18
           },
           {
@@ -1738,6 +1844,14 @@ describe("PICNIC Launchpad Stack", () => {
             vestingPeriodOfEachCycle: 100,
             tokensReleaseEachCyclePC: 10
           },
+          {
+            logoURL: "",
+            websiteURL: "",
+            twitterURL: "",
+            telegramURL: "",
+            discordURL: "",
+            description: ""
+          },  
           { value: ethers.utils.parseEther("0.20") }
     
         )
@@ -1747,9 +1861,10 @@ describe("PICNIC Launchpad Stack", () => {
       await expect(
         launchpad.connect(user1).createPresale(
           {
-            preSaleToken: presaleToken.address,
-            name: "ALI COIN",
-            symbol: "ALI",
+            id: 0,
+            presaleOwner: user1.address,
+            preSaleStatus: 0,
+            preSaleToken: zeroAddress,
             decimals: 18
           },
           {
@@ -1785,6 +1900,14 @@ describe("PICNIC Launchpad Stack", () => {
             vestingPeriodOfEachCycle: 100,
             tokensReleaseEachCyclePC: 10
           },
+          {
+            logoURL: "",
+            websiteURL: "",
+            twitterURL: "",
+            telegramURL: "",
+            discordURL: "",
+            description: ""
+          },  
           { value: ethers.utils.parseEther("0.20") }
     
         )
@@ -1795,9 +1918,10 @@ describe("PICNIC Launchpad Stack", () => {
       await expect(
         launchpad.connect(user1).createPresale(
           {
-            preSaleToken: presaleToken.address,
-            name: "ALI COIN",
-            symbol: "ALI",
+            id: 0,
+            presaleOwner: user1.address,
+            preSaleStatus: 0,
+            preSaleToken: zeroAddress,
             decimals: 18
           },
           {
@@ -1833,6 +1957,14 @@ describe("PICNIC Launchpad Stack", () => {
             vestingPeriodOfEachCycle: 100,
             tokensReleaseEachCyclePC: 10
           },
+          {
+            logoURL: "",
+            websiteURL: "",
+            twitterURL: "",
+            telegramURL: "",
+            discordURL: "",
+            description: ""
+          },  
           { value: ethers.utils.parseEther("0.20") }
     
         )
@@ -1842,9 +1974,10 @@ describe("PICNIC Launchpad Stack", () => {
       await expect(
         launchpad.connect(user1).createPresale(
           {
-            preSaleToken: presaleToken.address,
-            name: "ALI COIN",
-            symbol: "ALI",
+            id: 0,
+            presaleOwner: user1.address,
+            preSaleStatus: 0,
+            preSaleToken: zeroAddress,
             decimals: 18
           },
           {
@@ -1880,6 +2013,14 @@ describe("PICNIC Launchpad Stack", () => {
             vestingPeriodOfEachCycle: 100,
             tokensReleaseEachCyclePC: 10
           },
+          {
+            logoURL: "",
+            websiteURL: "",
+            twitterURL: "",
+            telegramURL: "",
+            discordURL: "",
+            description: ""
+          },  
           { value: ethers.utils.parseEther("0.20") }
     
         )
@@ -1889,9 +2030,10 @@ describe("PICNIC Launchpad Stack", () => {
       await expect(
         launchpad.connect(user1).createPresale(
           {
-            preSaleToken: presaleToken.address,
-            name: "ALI COIN",
-            symbol: "ALI",
+            id: 0,
+            presaleOwner: user1.address,
+            preSaleStatus: 0,
+            preSaleToken: zeroAddress,
             decimals: 18
           },
           {
@@ -1927,6 +2069,14 @@ describe("PICNIC Launchpad Stack", () => {
             vestingPeriodOfEachCycle: 100,
             tokensReleaseEachCyclePC: 10
           },
+          {
+            logoURL: "",
+            websiteURL: "",
+            twitterURL: "",
+            telegramURL: "",
+            discordURL: "",
+            description: ""
+          },  
           { value: ethers.utils.parseEther("0.20") }
     
         )
@@ -1936,9 +2086,10 @@ describe("PICNIC Launchpad Stack", () => {
       await expect(
         launchpad.connect(user1).createPresale(
           {
-            preSaleToken: presaleToken.address,
-            name: "ALI COIN",
-            symbol: "ALI",
+            id: 0,
+            presaleOwner: user1.address,
+            preSaleStatus: 0,
+            preSaleToken: zeroAddress,
             decimals: 18
           },
           {
@@ -1974,6 +2125,14 @@ describe("PICNIC Launchpad Stack", () => {
             vestingPeriodOfEachCycle: 100,
             tokensReleaseEachCyclePC: 10
           },
+          {
+            logoURL: "",
+            websiteURL: "",
+            twitterURL: "",
+            telegramURL: "",
+            discordURL: "",
+            description: ""
+          },  
           { value: ethers.utils.parseEther("0.19") }
     
         )
@@ -2068,9 +2227,9 @@ describe("PICNIC Launchpad Stack", () => {
       expect((await presale.presaleInfo()).preSaleStatus).to.be.equal(1);
 
 
-      await expect(() => presale.connect(user2).emergencyWithdraw()).to.changeEtherBalance(user2, ethers.utils.parseEther(String(0.001 * 20 * 0.98)))
-      await expect(() => presale.connect(user3).emergencyWithdraw()).to.changeEtherBalance(user3, ethers.utils.parseEther(String(0.001 * 20 * 0.98)))
-      await expect(() => presale.connect(user4).emergencyWithdraw()).to.changeEtherBalance(user4, ethers.utils.parseEther(String(0.001 * 10 * 0.98)))
+      await expect(() => presale.connect(user2).emergencyWithdraw()).to.changeEtherBalance(user2, ethers.utils.parseEther(String(0.001 * 20 * 0.95)))
+      await expect(() => presale.connect(user3).emergencyWithdraw()).to.changeEtherBalance(user3, ethers.utils.parseEther(String(0.001 * 20 * 0.95)))
+      await expect(() => presale.connect(user4).emergencyWithdraw()).to.changeEtherBalance(user4, ethers.utils.parseEther(String(0.001 * 10 * 0.95)))
 
 
       expect((await presale.presaleCounts()).contributors).to.be.equal(0);
@@ -2104,9 +2263,10 @@ describe("PICNIC Launchpad Stack", () => {
   
       await launchpad.connect(user1).createPresale(
         {
+          id: 0,
+          presaleOwner: user1.address,
+          preSaleStatus: 0,
           preSaleToken: presaleToken.address,
-          name: "ALI COIN",
-          symbol: "ALI",
           decimals: 18
         },
         {
@@ -2142,6 +2302,14 @@ describe("PICNIC Launchpad Stack", () => {
           vestingPeriodOfEachCycle: 10,
           tokensReleaseEachCyclePC: 10
         },
+        {
+          logoURL: "",
+          websiteURL: "",
+          twitterURL: "",
+          telegramURL: "",
+          discordURL: "",
+          description: ""
+        },  
         { value: ethers.utils.parseEther("0.20") }
   
       )
@@ -2189,8 +2357,8 @@ describe("PICNIC Launchpad Stack", () => {
         [presale, launchpad, user2],
         [
           ethers.utils.parseEther(String(-0.0001 * 200_000 * 1)),
-          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.02)),
-          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.98)),
+          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.05)),
+          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.95)),
         ]
       )
 
@@ -2198,8 +2366,8 @@ describe("PICNIC Launchpad Stack", () => {
         [presale, launchpad, user3],
         [
           ethers.utils.parseEther(String(-0.0001 * 200_000 * 1)),
-          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.02)),
-          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.98)),
+          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.05)),
+          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.95)),
         ]
       )
 
@@ -2207,8 +2375,8 @@ describe("PICNIC Launchpad Stack", () => {
         [presale, launchpad, user4],
         [
           ethers.utils.parseEther(String(-0.0001 * 200_000 * 1)),
-          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.02)),
-          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.98)),
+          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.05)),
+          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.95)),
         ]
       )
       
@@ -2374,9 +2542,10 @@ describe("PICNIC Launchpad Stack", () => {
   
       await launchpad.connect(user1).createPresale(
         {
+          id: 0,
+          presaleOwner: user1.address,
+          preSaleStatus: 0,
           preSaleToken: presaleToken.address,
-          name: "ALI COIN",
-          symbol: "ALI",
           decimals: 18
         },
         {
@@ -2412,6 +2581,14 @@ describe("PICNIC Launchpad Stack", () => {
           vestingPeriodOfEachCycle: 10,
           tokensReleaseEachCyclePC: 10
         },
+        {
+          logoURL: "",
+          websiteURL: "",
+          twitterURL: "",
+          telegramURL: "",
+          discordURL: "",
+          description: ""
+        },  
         { value: ethers.utils.parseEther("0.20") }
   
       )
@@ -2569,274 +2746,299 @@ describe("PICNIC Launchpad Stack", () => {
 
     });
 
-    // it("Successful presale", async () => {
 
-    //   let latestBlock = await ethers.provider.getBlock("latest");
-    //   const OneMinute = Number(await time.duration.minutes(1));
-    //   const OneDay = Number(await time.duration.days(1));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    it("Successful presale", async () => {
+
+      let latestBlock = await ethers.provider.getBlock("latest");
+      const OneMinute = Number(await time.duration.minutes(1));
+      const OneDay = Number(await time.duration.days(1));
   
-    //   await presaleToken.mint(user1.address, ethers.utils.parseEther(String(500_000 + 2_000_000 * 1.7)));
-    //   await presaleToken.connect(user1).approve(launchpad.address, ethers.utils.parseEther(String(500_000 + 2_000_000 * 1.7)));
+      await presaleToken.mint(user1.address, ethers.utils.parseEther(String(500_000 + 2_000_000 * 1.7)));
+      await presaleToken.connect(user1).approve(launchpad.address, ethers.utils.parseEther(String(500_000 + 2_000_000 * 1.7)));
   
-    //   await expect(launchpad.withdrawBNBs()).to.be.reverted;
+      await expect(launchpad.withdrawBNBs()).to.be.reverted;
   
-    //   await launchpad.connect(user1).createPresale(
-    //     {
-    //       preSaleToken: presaleToken.address,
-    //       name: "ALI COIN",
-    //       symbol: "ALI",
-    //       decimals: 18
-    //     },
-    //     {
-    //       tokensForSale: 2_000_000,                                          // 1000
-    //       tokensPCForLP: 70,                                           // 70% = 0.7   =>   1700/1.7 = 700
-    //       typeOfPresale: PresaleType.PUBLIC,
-    //       priceOfEachToken: ethers.utils.parseEther("0.0001"),
-    //       criteriaToken: zeroAddress,
-    //       minTokensForParticipation: ethers.utils.parseEther("0"),
-    //       refundType: RefundType.WITHDRAW
-    //     },
-    //     {
-    //       startedAt: latestBlock.timestamp + 15 * OneMinute,
-    //       expiredAt: latestBlock.timestamp + 1 * OneDay,
-    //       lpLockupDuration: 10 * OneMinute,
-    //     },
-    //     {
-    //       minTokensReq: 100_000,
-    //       maxTokensReq: 200_000,
-    //       softCap: 1_000_000
-    //     },
-    //     {
-    //       isEnabled: false,
-    //       firstReleasePC: 20,
-    //       vestingPeriodOfEachCycle: 10,
-    //       tokensReleaseEachCyclePC: 10
-    //     },
-    //     {
-    //       isEnabled: true,
-    //       vestingTokens: 500_000,
-    //       firstReleaseTime: 10,
-    //       firstReleasePC: 50,
-    //       vestingPeriodOfEachCycle: 10,
-    //       tokensReleaseEachCyclePC: 10
-    //     },
-    //     { value: ethers.utils.parseEther("0.20") }
+      await launchpad.connect(user1).createPresale(
+        {
+          id: 0,
+          presaleOwner: user1.address,
+          preSaleStatus: 0,
+          preSaleToken: presaleToken.address,
+          decimals: 18
+        },
+        {
+          tokensForSale: 2_000_000,                                          // 1000
+          tokensPCForLP: 70,                                           // 70% = 0.7   =>   1700/1.7 = 700
+          typeOfPresale: PresaleType.PUBLIC,
+          priceOfEachToken: ethers.utils.parseEther("0.0001"),
+          criteriaToken: zeroAddress,
+          minTokensForParticipation: ethers.utils.parseEther("0"),
+          refundType: RefundType.WITHDRAW
+        },
+        {
+          startedAt: latestBlock.timestamp + 15 * OneMinute,
+          expiredAt: latestBlock.timestamp + 1 * OneDay,
+          lpLockupDuration: 10 * OneMinute,
+        },
+        {
+          minTokensReq: 100_000,
+          maxTokensReq: 200_000,
+          softCap: 1_000_000
+        },
+        {
+          isEnabled: false,
+          firstReleasePC: 20,
+          vestingPeriodOfEachCycle: 10,
+          tokensReleaseEachCyclePC: 10
+        },
+        {
+          isEnabled: true,
+          vestingTokens: 500_000,
+          firstReleaseTime: 10,
+          firstReleasePC: 50,
+          vestingPeriodOfEachCycle: 10,
+          tokensReleaseEachCyclePC: 10
+        },
+        {
+          logoURL: "",
+          websiteURL: "",
+          twitterURL: "",
+          telegramURL: "",
+          discordURL: "",
+          description: ""
+        },  
+
+        { value: ethers.utils.parseEther("0.20") }
   
-    //   )
+      )
   
-    //   await expect(() => launchpad.withdrawBNBs()).to.changeEtherBalance(launchpad, `-${ethers.utils.parseEther("0.20")}`)
+      await expect(() => launchpad.withdrawBNBs()).to.changeEtherBalance(launchpad, `-${ethers.utils.parseEther("0.20")}`)
   
-    //   const presaleCount = await launchpad.presaleCount();
-    //   const pressaleAddress = await launchpad.presaleRecordByID(presaleCount);
-    //   const presale_factory = await ethers.getContractFactory("Presale");
-    //   presale = await presale_factory.attach(pressaleAddress);
+      const presaleCount = await launchpad.presaleCount();
+      const pressaleAddress = await launchpad.presaleRecordByID(presaleCount);
+      const presale_factory = await ethers.getContractFactory("Presale");
+      presale = await presale_factory.attach(pressaleAddress);
 
-    //   await network.provider.send("evm_increaseTime", [15*OneMinute]);
-    //   await network.provider.send("evm_mine")
+      await network.provider.send("evm_increaseTime", [15*OneMinute]);
+      await network.provider.send("evm_mine")
 
-    //   // user2, user3, user4 are buying 200_000 tokens each
-    //   await presale.connect(user2).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
-    //   await presale.connect(user3).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
-    //   await presale.connect(user4).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
+      // user2, user3, user4 are buying 200_000 tokens each
+      await presale.connect(user2).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
+      await presale.connect(user3).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
+      await presale.connect(user4).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
 
-    //   expect((await presale.presaleCounts()).accumulatedBalance).to.be.equal(ethers.utils.parseEther(String(0.0001 * 300_000)))
-    //   expect((await presale.presaleCounts()).remainingTokensForSale).to.be.equal(2_000_000 - 300_000)
-    //   expect((await presale.presaleCounts()).contributors).to.be.equal(3)
+      expect((await presale.presaleCounts()).accumulatedBalance).to.be.equal(ethers.utils.parseEther(String(0.0001 * 300_000)))
+      expect((await presale.presaleCounts()).remainingTokensForSale).to.be.equal(2_000_000 - 300_000)
+      expect((await presale.presaleCounts()).contributors).to.be.equal(3)
 
-    //   // user2, user3, user4 are buying 200_000 tokens each again
-    //   await presale.connect(user2).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
-    //   await presale.connect(user3).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
-    //   await presale.connect(user4).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
+      // user2, user3, user4 are buying 200_000 tokens each again
+      await presale.connect(user2).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
+      await presale.connect(user3).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
+      await presale.connect(user4).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
 
-    //   expect((await presale.presaleCounts()).accumulatedBalance).to.be.equal(ethers.utils.parseEther(String(0.0001 * 600_000)))
-    //   expect((await presale.presaleCounts()).remainingTokensForSale).to.be.equal(2_000_000 - 600_000)
-    //   expect((await presale.presaleCounts()).contributors).to.be.equal(3)
+      expect((await presale.presaleCounts()).accumulatedBalance).to.be.equal(ethers.utils.parseEther(String(0.0001 * 600_000)))
+      expect((await presale.presaleCounts()).remainingTokensForSale).to.be.equal(2_000_000 - 600_000)
+      expect((await presale.presaleCounts()).contributors).to.be.equal(3)
 
-    //   // user5, user6, user7 are buying 200_000 tokens each
-    //   await presale.connect(user5).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
-    //   await presale.connect(user6).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
-    //   await presale.connect(user7).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
+      // user5, user6, user7 are buying 200_000 tokens each
+      await presale.connect(user5).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
+      await presale.connect(user6).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
+      await presale.connect(user7).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
 
-    //   expect((await presale.presaleCounts()).accumulatedBalance).to.be.equal(ethers.utils.parseEther(String(0.0001 * 900_000)))
-    //   expect((await presale.presaleCounts()).remainingTokensForSale).to.be.equal(2_000_000 - 900_000)
-    //   expect((await presale.presaleCounts()).contributors).to.be.equal(6)
+      expect((await presale.presaleCounts()).accumulatedBalance).to.be.equal(ethers.utils.parseEther(String(0.0001 * 900_000)))
+      expect((await presale.presaleCounts()).remainingTokensForSale).to.be.equal(2_000_000 - 900_000)
+      expect((await presale.presaleCounts()).contributors).to.be.equal(6)
 
 
-    //   // user2, user3 are withdrwaing their funds
-    //   await expect(() => presale.connect(user2).emergencyWithdraw()).to.be.changeEtherBalances(
-    //     [presale, launchpad, user2],
-    //     [
-    //       ethers.utils.parseEther(String(-0.0001 * 200_000 * 1)),
-    //       ethers.utils.parseEther(String(0.0001 * 200_000 * 0.02)),
-    //       ethers.utils.parseEther(String(0.0001 * 200_000 * 0.98)),
-    //     ]
-    //   )
+      // user2, user3 are withdrwaing their funds
+      await expect(() => presale.connect(user2).emergencyWithdraw()).to.be.changeEtherBalances(
+        [presale, launchpad, user2],
+        [
+          ethers.utils.parseEther(String(-0.0001 * 200_000 * 1)),
+          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.05)),
+          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.95)),
+        ]
+      )
 
-    //   await expect(() => presale.connect(user3).emergencyWithdraw()).to.be.changeEtherBalances(
-    //     [presale, launchpad, user3],
-    //     [
-    //       ethers.utils.parseEther(String(-0.0001 * 200_000 * 1)),
-    //       ethers.utils.parseEther(String(0.0001 * 200_000 * 0.02)),
-    //       ethers.utils.parseEther(String(0.0001 * 200_000 * 0.98)),
-    //     ]
-    //   )
+      await expect(() => presale.connect(user3).emergencyWithdraw()).to.be.changeEtherBalances(
+        [presale, launchpad, user3],
+        [
+          ethers.utils.parseEther(String(-0.0001 * 200_000 * 1)),
+          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.05)),
+          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.95)),
+        ]
+      )
 
-    //   await expect(() => presale.connect(user4).emergencyWithdraw()).to.be.changeEtherBalances(
-    //     [presale, launchpad, user4],
-    //     [
-    //       ethers.utils.parseEther(String(-0.0001 * 200_000 * 1)),
-    //       ethers.utils.parseEther(String(0.0001 * 200_000 * 0.02)),
-    //       ethers.utils.parseEther(String(0.0001 * 200_000 * 0.98)),
-    //     ]
-    //   )
+      await expect(() => presale.connect(user4).emergencyWithdraw()).to.be.changeEtherBalances(
+        [presale, launchpad, user4],
+        [
+          ethers.utils.parseEther(String(-0.0001 * 200_000 * 1)),
+          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.05)),
+          ethers.utils.parseEther(String(0.0001 * 200_000 * 0.95)),
+        ]
+      )
       
-    //   expect((await presale.presaleCounts()).accumulatedBalance).to.be.equal(ethers.utils.parseEther(String(0.0001 * 300_000)))
-    //   expect((await presale.presaleCounts()).remainingTokensForSale).to.be.equal(2_000_000 - 300_000)
-    //   expect((await presale.presaleCounts()).contributors).to.be.equal(3)
+      expect((await presale.presaleCounts()).accumulatedBalance).to.be.equal(ethers.utils.parseEther(String(0.0001 * 300_000)))
+      expect((await presale.presaleCounts()).remainingTokensForSale).to.be.equal(2_000_000 - 300_000)
+      expect((await presale.presaleCounts()).contributors).to.be.equal(3)
 
 
-    //   // user2, user3, user4, user5, user6, are buying 200_000 tokens each again
-    //   await presale.connect(user2).buyTokensOnPresale(200_000, { value: ethers.utils.parseEther(String(0.0001 * 200_000)) });
-    //   await presale.connect(user3).buyTokensOnPresale(200_000, { value: ethers.utils.parseEther(String(0.0001 * 200_000)) });
-    //   await presale.connect(user4).buyTokensOnPresale(200_000, { value: ethers.utils.parseEther(String(0.0001 * 200_000)) });
+      // user2, user3, user4, user5, user6, are buying 200_000 tokens each again
+      await presale.connect(user2).buyTokensOnPresale(200_000, { value: ethers.utils.parseEther(String(0.0001 * 200_000)) });
+      await presale.connect(user3).buyTokensOnPresale(200_000, { value: ethers.utils.parseEther(String(0.0001 * 200_000)) });
+      await presale.connect(user4).buyTokensOnPresale(200_000, { value: ethers.utils.parseEther(String(0.0001 * 200_000)) });
 
-    //   expect((await presale.presaleCounts()).accumulatedBalance).to.be.equal(ethers.utils.parseEther(String(0.0001 * 900_000)))
-    //   expect((await presale.presaleCounts()).remainingTokensForSale).to.be.equal(2_000_000 - 900_000)
-    //   expect((await presale.presaleCounts()).contributors).to.be.equal(6)
-
-
-    //   await presale.connect(user5).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
-    //   await presale.connect(user6).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
-    //   await presale.connect(user7).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
-
-    //   expect((await presale.presaleCounts()).accumulatedBalance).to.be.equal(ethers.utils.parseEther(String(0.0001 * 1_200_000)))
-    //   expect((await presale.presaleCounts()).remainingTokensForSale).to.be.equal(2_000_000 - 1_200_000)
-    //   expect((await presale.presaleCounts()).contributors).to.be.equal(6)
-
-    //   const p2 = await presale.participant(user2.address);
-    //   expect(p2.tokens).to.be.equal(200_000)
-    //   expect(p2.value).to.be.equal(ethers.utils.parseEther(String(0.0001 * 200_000)))
-
-    //   const p3 = await presale.participant(user3.address);
-    //   expect(p3.tokens).to.be.equal(200_000)
-    //   expect(p3.value).to.be.equal(ethers.utils.parseEther(String(0.0001 * 200_000)))
-
-    //   const p4 = await presale.participant(user4.address);
-    //   expect(p4.tokens).to.be.equal(200_000)
-    //   expect(p4.value).to.be.equal(ethers.utils.parseEther(String(0.0001 * 200_000)))
-
-    //   const p5 = await presale.participant(user5.address);
-    //   expect(p5.tokens).to.be.equal(200_000)
-    //   expect(p5.value).to.be.equal(ethers.utils.parseEther(String(0.0001 * 200_000)))
-
-    //   const p6 = await presale.participant(user6.address);
-    //   expect(p6.tokens).to.be.equal(200_000)
-    //   expect(p6.value).to.be.equal(ethers.utils.parseEther(String(0.0001 * 200_000)))
-
-    //   let p7 = await presale.participant(user7.address);
-    //   expect(p7.tokens).to.be.equal(200_000)
-    //   expect(p7.value).to.be.equal(ethers.utils.parseEther(String(0.0001 * 200_000)))
+      expect((await presale.presaleCounts()).accumulatedBalance).to.be.equal(ethers.utils.parseEther(String(0.0001 * 900_000)))
+      expect((await presale.presaleCounts()).remainingTokensForSale).to.be.equal(2_000_000 - 900_000)
+      expect((await presale.presaleCounts()).contributors).to.be.equal(6)
 
 
-    //   expect((await presale.presaleCounts()).accumulatedBalance).to.be.equal(ethers.utils.parseEther(String(0.0001 * 1_200_000)))
-    //   expect((await presale.presaleCounts()).remainingTokensForSale).to.be.equal(2_000_000 - 1_200_000)
-    //   expect((await presale.presaleCounts()).contributors).to.be.equal(6)
+      await presale.connect(user5).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
+      await presale.connect(user6).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
+      await presale.connect(user7).buyTokensOnPresale(100_000, { value: ethers.utils.parseEther(String(0.0001 * 100_000)) });
 
-    //   expect((await presale.presaleInfo()).preSaleStatus).to.be.equal(1);
+      expect((await presale.presaleCounts()).accumulatedBalance).to.be.equal(ethers.utils.parseEther(String(0.0001 * 1_200_000)))
+      expect((await presale.presaleCounts()).remainingTokensForSale).to.be.equal(2_000_000 - 1_200_000)
+      expect((await presale.presaleCounts()).contributors).to.be.equal(6)
 
-    //   await expect(presale.connect(user7).buyTokensOnPresale(200_000, { value: ethers.utils.parseEther(String(0.0001 * 200_000)) })).to.be.reverted;
+      const p2 = await presale.participant(user2.address);
+      expect(p2.tokens).to.be.equal(200_000)
+      expect(p2.value).to.be.equal(ethers.utils.parseEther(String(0.0001 * 200_000)))
 
-    //   await network.provider.send("evm_increaseTime", [OneDay - 15*OneMinute])
-    //   await network.provider.send("evm_mine")
+      const p3 = await presale.participant(user3.address);
+      expect(p3.tokens).to.be.equal(200_000)
+      expect(p3.value).to.be.equal(ethers.utils.parseEther(String(0.0001 * 200_000)))
 
+      const p4 = await presale.participant(user4.address);
+      expect(p4.tokens).to.be.equal(200_000)
+      expect(p4.value).to.be.equal(ethers.utils.parseEther(String(0.0001 * 200_000)))
 
-    //   await expect(presale.connect(user2).finalizePresale()).to.be.reverted;
-    //   await expect(() => presale.connect(user1).finalizePresale()).to.changeEtherBalances(
-    //     [presale, user1, launchpad],
-    //     [
-    //       ethers.utils.parseEther(String(-0.0001 * 1_200_000 * 1)),
-    //       ethers.utils.parseEther(String(0.0001 * 1_200_000 * 0.28)),
-    //       ethers.utils.parseEther(String(0.0001 * 1_200_000 * 0.02))
-    //     ]
-    //   )
-    //   expect((await presale.presaleInfo()).preSaleStatus).to.be.equal(2);
-    //   expect(await provider.getBalance(presale.address)).to.be.equal(ethers.utils.parseEther("0"));
-    //   expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String( (2_000_000 - 1_200_000) * 1.7 )))
-    //   // console.log(Number(await presaleToken.balanceOf(user1.address)));
+      const p5 = await presale.participant(user5.address);
+      expect(p5.tokens).to.be.equal(200_000)
+      expect(p5.value).to.be.equal(ethers.utils.parseEther(String(0.0001 * 200_000)))
 
-    //   expect(await presaleToken.balanceOf(user2.address)).to.be.equal(ethers.utils.parseEther("0"));
-    //   await presale.connect(user2).claimTokensOrARefund();
-    //   await expect(presale.connect(user2).claimTokensOrARefund()).to.be.reverted;
-    //   expect(await presaleToken.balanceOf(user2.address)).to.be.equal(ethers.utils.parseEther("200000"));
+      const p6 = await presale.participant(user6.address);
+      expect(p6.tokens).to.be.equal(200_000)
+      expect(p6.value).to.be.equal(ethers.utils.parseEther(String(0.0001 * 200_000)))
 
-    //   expect(await presaleToken.balanceOf(user3.address)).to.be.equal(ethers.utils.parseEther("0"))
-    //   await presale.connect(user3).claimTokensOrARefund();
-    //   await expect(presale.connect(user3).claimTokensOrARefund()).to.be.reverted;
-    //   expect(await presaleToken.balanceOf(user3.address)).to.be.equal(ethers.utils.parseEther("200000"))
-
-    //   expect(await presaleToken.balanceOf(user4.address)).to.be.equal(ethers.utils.parseEther("0"))
-    //   await presale.connect(user4).claimTokensOrARefund();
-    //   await expect(presale.connect(user4).claimTokensOrARefund()).to.be.reverted;
-    //   expect(await presaleToken.balanceOf(user4.address)).to.be.equal(ethers.utils.parseEther("200000"))
-
-    //   expect(await presaleToken.balanceOf(user5.address)).to.be.equal(ethers.utils.parseEther("0"));
-    //   await presale.connect(user5).claimTokensOrARefund();
-    //   await expect(presale.connect(user5).claimTokensOrARefund()).to.be.reverted;
-    //   expect(await presaleToken.balanceOf(user5.address)).to.be.equal(ethers.utils.parseEther("200000"));
-
-    //   expect(await presaleToken.balanceOf(user6.address)).to.be.equal(ethers.utils.parseEther("0"))
-    //   await presale.connect(user6).claimTokensOrARefund();
-    //   await expect(presale.connect(user6).claimTokensOrARefund()).to.be.reverted;
-    //   expect(await presaleToken.balanceOf(user6.address)).to.be.equal(ethers.utils.parseEther("200000"))
-
-    //   expect(await presaleToken.balanceOf(user7.address)).to.be.equal(ethers.utils.parseEther("0"))
-    //   await presale.connect(user7).claimTokensOrARefund();
-    //   await expect(presale.connect(user7).claimTokensOrARefund()).to.be.reverted;
-    //   expect(await presaleToken.balanceOf(user7.address)).to.be.equal(ethers.utils.parseEther("200000"))
+      let p7 = await presale.participant(user7.address);
+      expect(p7.tokens).to.be.equal(200_000)
+      expect(p7.value).to.be.equal(ethers.utils.parseEther(String(0.0001 * 200_000)))
 
 
-    //   expect((await presale.presaleCounts()).claimsCount).to.be.equal(6);
+      expect((await presale.presaleCounts()).accumulatedBalance).to.be.equal(ethers.utils.parseEther(String(0.0001 * 1_200_000)))
+      expect((await presale.presaleCounts()).remainingTokensForSale).to.be.equal(2_000_000 - 1_200_000)
+      expect((await presale.presaleCounts()).contributors).to.be.equal(6)
 
-    //   const pairaddress = await factory.getPair(presaleToken.address, WBNBAddr.address);
-    //   const UniswapV2Pair: UniswapV2Pair__factory = await ethers.getContractFactory('UniswapV2Pair');
-    //   uniswapV2Pair = await UniswapV2Pair.attach(pairaddress);
+      expect((await presale.presaleInfo()).preSaleStatus).to.be.equal(1);
 
-    //   expect(await uniswapV2Pair.balanceOf(presale.address)).not.to.be.equal("0")
-    //   expect(await uniswapV2Pair.balanceOf(user1.address)).to.be.equal("0")
-    //   expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String( (2_000_000 - 1_200_000) * 1.7)))
+      await expect(presale.connect(user7).buyTokensOnPresale(200_000, { value: ethers.utils.parseEther(String(0.0001 * 200_000)) })).to.be.reverted;
+
+      await network.provider.send("evm_increaseTime", [OneDay - 15*OneMinute])
+      await network.provider.send("evm_mine")
+
+
+      await expect(presale.connect(user2).finalizePresale()).to.be.reverted;
+      await expect(() => presale.connect(user1).finalizePresale()).to.changeEtherBalances(
+        [presale, user1, launchpad],
+        [
+          ethers.utils.parseEther(String(-0.0001 * 1_200_000 * 1)),
+          ethers.utils.parseEther(String(0.0001 * 1_200_000 * 0.28)),
+          ethers.utils.parseEther(String(0.0001 * 1_200_000 * 0.02))
+        ]
+      )
+      expect((await presale.presaleInfo()).preSaleStatus).to.be.equal(2);
+      expect(await provider.getBalance(presale.address)).to.be.equal(ethers.utils.parseEther("0"));
+      expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String( (2_000_000 - 1_200_000) * 1.7 )))
+      // console.log(Number(await presaleToken.balanceOf(user1.address)));
+
+      expect(await presaleToken.balanceOf(user2.address)).to.be.equal(ethers.utils.parseEther("0"));
+      await presale.connect(user2).claimTokensOrARefund();
+      await expect(presale.connect(user2).claimTokensOrARefund()).to.be.reverted;
+      expect(await presaleToken.balanceOf(user2.address)).to.be.equal(ethers.utils.parseEther("200000"));
+
+      expect(await presaleToken.balanceOf(user3.address)).to.be.equal(ethers.utils.parseEther("0"))
+      await presale.connect(user3).claimTokensOrARefund();
+      await expect(presale.connect(user3).claimTokensOrARefund()).to.be.reverted;
+      expect(await presaleToken.balanceOf(user3.address)).to.be.equal(ethers.utils.parseEther("200000"))
+
+      expect(await presaleToken.balanceOf(user4.address)).to.be.equal(ethers.utils.parseEther("0"))
+      await presale.connect(user4).claimTokensOrARefund();
+      await expect(presale.connect(user4).claimTokensOrARefund()).to.be.reverted;
+      expect(await presaleToken.balanceOf(user4.address)).to.be.equal(ethers.utils.parseEther("200000"))
+
+      expect(await presaleToken.balanceOf(user5.address)).to.be.equal(ethers.utils.parseEther("0"));
+      await presale.connect(user5).claimTokensOrARefund();
+      await expect(presale.connect(user5).claimTokensOrARefund()).to.be.reverted;
+      expect(await presaleToken.balanceOf(user5.address)).to.be.equal(ethers.utils.parseEther("200000"));
+
+      expect(await presaleToken.balanceOf(user6.address)).to.be.equal(ethers.utils.parseEther("0"))
+      await presale.connect(user6).claimTokensOrARefund();
+      await expect(presale.connect(user6).claimTokensOrARefund()).to.be.reverted;
+      expect(await presaleToken.balanceOf(user6.address)).to.be.equal(ethers.utils.parseEther("200000"))
+
+      expect(await presaleToken.balanceOf(user7.address)).to.be.equal(ethers.utils.parseEther("0"))
+      await presale.connect(user7).claimTokensOrARefund();
+      await expect(presale.connect(user7).claimTokensOrARefund()).to.be.reverted;
+      expect(await presaleToken.balanceOf(user7.address)).to.be.equal(ethers.utils.parseEther("200000"))
+
+
+      expect((await presale.presaleCounts()).claimsCount).to.be.equal(6);
+
+      const pairaddress = await factory.getPair(presaleToken.address, WBNBAddr.address);
+      const UniswapV2Pair: UniswapV2Pair__factory = await ethers.getContractFactory('UniswapV2Pair');
+      uniswapV2Pair = await UniswapV2Pair.attach(pairaddress);
+
+      expect(await uniswapV2Pair.balanceOf(presale.address)).not.to.be.equal("0")
+      expect(await uniswapV2Pair.balanceOf(user1.address)).to.be.equal("0")
+      expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String( (2_000_000 - 1_200_000) * 1.7)))
       
-    //   await expect(presale.connect(user1).unlockLPTokens()).to.be.reverted;
-    //   await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
+      await expect(presale.connect(user1).unlockLPTokens()).to.be.reverted;
+      await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
       
-    //   await network.provider.send("evm_increaseTime", [10*OneMinute]);
-    //   await network.provider.send("evm_mine")
+      await network.provider.send("evm_increaseTime", [10*OneMinute]);
+      await network.provider.send("evm_mine")
       
-    //   await presale.connect(user1).unlockLPTokens();
-    //   await expect(presale.connect(user1).unlockLPTokens()).to.be.reverted;
+      await presale.connect(user1).unlockLPTokens();
+      await expect(presale.connect(user1).unlockLPTokens()).to.be.reverted;
       
-    //   await presale.connect(user1).unlockTokens();
-    //   await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
+      await presale.connect(user1).unlockTokens();
+      await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
       
-    //   expect(await uniswapV2Pair.balanceOf(user1.address)).not.to.be.equal("0")
-    //   expect(await uniswapV2Pair.balanceOf(presale.address)).to.be.equal("0")
-    //   expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String( (2_000_000 - 1_200_000) * 1.7 + 500_000*0.5 )))
+      expect(await uniswapV2Pair.balanceOf(user1.address)).not.to.be.equal("0")
+      expect(await uniswapV2Pair.balanceOf(presale.address)).to.be.equal("0")
+      expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String( (2_000_000 - 1_200_000) * 1.7 + 500_000*0.5 )))
 
 
-    //   await network.provider.send("evm_increaseTime", [10*OneMinute]);
-    //   await network.provider.send("evm_mine")
-    //   await presale.connect(user1).unlockTokens();
-    //   await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
-    //   expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String( (2_000_000 - 1_200_000) * 1.7 + 500_000*0.55 )))
+      await network.provider.send("evm_increaseTime", [10*OneMinute]);
+      await network.provider.send("evm_mine")
+      await presale.connect(user1).unlockTokens();
+      await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
+      expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String( (2_000_000 - 1_200_000) * 1.7 + 500_000*0.55 )))
 
-    //   await network.provider.send("evm_increaseTime", [90*OneMinute]);
-    //   await network.provider.send("evm_mine")
-    //   await presale.connect(user1).unlockTokens();
-    //   await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
-    //   expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String( (2_000_000 - 1_200_000) * 1.7 + 500_000*1 )))
+      await network.provider.send("evm_increaseTime", [90*OneMinute]);
+      await network.provider.send("evm_mine")
+      await presale.connect(user1).unlockTokens();
+      await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
+      expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String( (2_000_000 - 1_200_000) * 1.7 + 500_000*1 )))
 
-    //   // Project completed
+      // Project completed
 
-    // });
+    });
   
   });
 

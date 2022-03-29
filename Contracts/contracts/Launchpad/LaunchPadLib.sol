@@ -1,22 +1,20 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity 0.8.7;
 
 
 library LaunchPadLib {
 
-    enum PresaleType { PUBLIC, WHITELISTED, TOKENHOLDERS }
+    enum PresaleType {PUBLIC, WHITELISTED, TOKENHOLDERS}
     enum PreSaleStatus {PENDING, INPROGRESS, SUCCEED, FAILED, CANCELED}
     enum RefundType {BURN, WITHDRAW}
 
-    struct InternalData {
-        uint totalTokensSold;
-        uint revenueFromPresale;
-        uint tokensAddedToLiquidity;
-        uint extraTokens;
-        uint poolShareBNB;
-        uint devTeamShareBNB;
-        uint ownersShareBNB;
+    struct GeneralInfo {
+        string logoURL;
+        string websiteURL;
+        string twitterURL;
+        string telegramURL;
+        string discordURL;
+        string description;
     }
 
     struct Participant {
@@ -24,13 +22,13 @@ library LaunchPadLib {
         uint256 tokens;
     }
     
-    struct PresaleTimes{
+    struct PresaleTimes {
         uint256 startedAt;
         uint256 expiredAt;
         uint256 lpLockupDuration;
     }
 
-    struct ReqestedTokens{
+    struct ReqestedTokens {
         uint256 minTokensReq;
         uint256 maxTokensReq;
         uint256 softCap;
@@ -47,27 +45,18 @@ library LaunchPadLib {
         uint id;
         address presaleOwner;
         PreSaleStatus preSaleStatus;
+        address preSaleToken;
+        uint decimals;
     }
 
     struct ParticipationCriteria {
-        uint256 tokensForSale;              // 1000
-        uint256 tokensPCForLP;              // 70% = 0.7   =>   1700/1.7 = 700
+        uint256 tokensForSale;             
+        uint256 tokensPCForLP;
         PresaleType typeOfPresale;
         uint256 priceOfEachToken;
         address criteriaToken;
         uint256 minTokensForParticipation;
         RefundType refundType;
-    }
-
-    // struct LaunchpadAddresses {
-    //     address pancakeSwapRouterAddr;
-    // }
-
-    struct TokenInfo {
-        address preSaleToken;
-        string name;
-        string symbol;
-        uint decimals;
     }
 
     struct ContributorsVesting {
