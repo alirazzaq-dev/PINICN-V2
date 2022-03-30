@@ -231,7 +231,7 @@ describe("PICNIC Launchpad Stack", () => {
         softCap: 50
       },
       {
-        isEnabled: true,
+        isEnabled: false,
         firstReleasePC: 20,
         vestingPeriodOfEachCycle: 10,
         tokensReleaseEachCyclePC: 10
@@ -268,6 +268,321 @@ describe("PICNIC Launchpad Stack", () => {
   }
 
   describe("As a user ", async () => {
+
+    it("Final Test", async () => {
+
+
+      let latestBlock = await ethers.provider.getBlock("latest");
+      const OneMinute = Number(await time.duration.minutes(1));
+      const OneDay = Number(await time.duration.days(1));
+
+      await presaleToken.mint(user1.address, ethers.utils.parseEther(String(1000000 * 2.7)));
+      await presaleToken.connect(user1).approve(launchpad.address, ethers.utils.parseEther(String(1000000 * 2.7)));
+
+      await expect(launchpad.withdrawBNBs()).to.be.reverted;
+      await launchpad.connect(user1).createPresale(
+        {
+          id: 0,
+          presaleOwner: user1.address,
+          preSaleStatus: 0,
+          preSaleToken: presaleToken.address,
+          decimals: 18
+        },
+        {
+          tokensForSale: 1000000,                                          // 1000
+          tokensPCForLP: 70,                                           // 70% = 0.7   =>   1700/1.7 = 700
+          typeOfPresale: PresaleType.PUBLIC,
+          priceOfEachToken: ethers.utils.parseEther("0.001"),
+          criteriaToken: zeroAddress,
+          minTokensForParticipation: ethers.utils.parseEther("0"),
+          refundType: RefundType.BURN
+        },
+        {
+          startedAt: latestBlock.timestamp + 15 * OneMinute,
+          expiredAt: latestBlock.timestamp + 1 * OneDay,
+          lpLockupDuration: 10 * OneMinute,
+        },
+        {
+          minTokensReq: 1,
+          maxTokensReq: 400000,
+          softCap: 600000
+        },
+        {
+          isEnabled: true,
+          firstReleasePC: 20,
+          vestingPeriodOfEachCycle: 10,
+          tokensReleaseEachCyclePC: 10
+        },
+        {
+          isEnabled: true,
+          vestingTokens: 1000000,
+          firstReleaseTime: 10,
+          firstReleasePC: 50,
+          vestingPeriodOfEachCycle: 10,
+          tokensReleaseEachCyclePC: 10
+        },
+        {
+          logoURL: "",
+          websiteURL: "",
+          twitterURL: "",
+          telegramURL: "",
+          discordURL: "",
+          description: ""
+        },
+        { value: ethers.utils.parseEther("0.20") }
+
+      )
+
+      await expect(() => launchpad.withdrawBNBs()).to.changeEtherBalance(launchpad, `-${ethers.utils.parseEther("0.20")}`)
+
+      const presaleCount = await launchpad.presaleCount();
+      expect(presaleCount).to.be.equal(1);
+
+      const pressaleAddress = await launchpad.presaleRecordByID(presaleCount);
+      const pressaleAddress2 = await launchpad.getPresaleRecordsByToken(presaleToken.address);
+
+      expect(pressaleAddress).to.be.equal(pressaleAddress2[0]);
+
+      const presale_factory = await ethers.getContractFactory("Presale");
+      presale = await presale_factory.attach(pressaleAddress);
+
+      // expect(await presale.owner()).to.be.equal(user1.address);
+      expect((await presale.presaleInfo()).preSaleStatus).to.be.equal(0);
+
+      await network.provider.send("evm_increaseTime", [15 * OneMinute])
+      await network.provider.send("evm_mine");
+
+      expect((await presale.presaleInfo()).preSaleStatus).to.be.equal(0);
+
+      await presale.connect(user2).buyTokensOnPresale(400000, { value: ethers.utils.parseEther(String(0.001 * 400000)) });
+      await presale.connect(user3).buyTokensOnPresale(400000, { value: ethers.utils.parseEther(String(0.001 * 400000)) });
+      await presale.connect(user4).buyTokensOnPresale(200000, { value: ethers.utils.parseEther(String(0.001 * 200000)) });
+
+      const p2 = await presale.participant(user2.address);
+      expect(p2.tokens).to.be.equal("400000")
+      expect(p2.value).to.be.equal(ethers.utils.parseEther(String(0.001 * 400000)))
+
+      const p3 = await presale.participant(user3.address);
+      expect(p3.tokens).to.be.equal("400000")
+      expect(p3.value).to.be.equal(ethers.utils.parseEther(String(0.001 * 400000)))
+
+      const p4 = await presale.participant(user4.address);
+      expect(p4.tokens).to.be.equal("200000")
+      expect(p4.value).to.be.equal(ethers.utils.parseEther(String(0.001 * 200000)))
+
+      expect((await presale.presaleInfo()).preSaleStatus).to.be.equal(1);
+
+      // Sold out
+      await expect(presale.connect(user4).buyTokensOnPresale(200000, { value: ethers.utils.parseEther(String(0.001 * 200000)) })).to.be.reverted;
+
+      await expect(presale.connect(user2).claimTokensOrARefund()).to.be.reverted;
+      await expect(presale.connect(user3).claimTokensOrARefund()).to.be.reverted;
+      await expect(presale.connect(user4).claimTokensOrARefund()).to.be.reverted;
+
+      await presale.connect(user1).finalizePresale();
+      expect((await presale.presaleInfo()).preSaleStatus).to.be.equal(2);
+
+      expect((await presale.presaleCounts()).contributors).to.be.equal(3);
+      expect((await presale.presaleCounts()).claimsCount).to.be.equal(0);
+
+
+      // console.log("finalizing time ", Number(await presale.finalizingTime()));
+      // console.log("extraTokens ", Number(await presale.extraTokens()));
+      // console.log("remianing tokens ", Number((await presale.presaleCounts()).remainingTokensForSale ) );
+
+
+      {
+
+        expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther("0"));
+        await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
+        await expect(presale.connect(user1).unlockLPTokens()).to.be.reverted;
+ 
+        expect(await presaleToken.balanceOf(user2.address)).to.be.equal(ethers.utils.parseEther("0"));
+        await presale.connect(user2).claimTokensOrARefund();
+        await expect(presale.connect(user2).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user2.address)).to.be.equal(ethers.utils.parseEther(String(400000 * 0.2)));
+
+        expect(await presaleToken.balanceOf(user3.address)).to.be.equal(ethers.utils.parseEther("0"));
+        await presale.connect(user3).claimTokensOrARefund();
+        await expect(presale.connect(user3).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user3.address)).to.be.equal(ethers.utils.parseEther(String(400000 * 0.2)));
+
+        expect(await presaleToken.balanceOf(user4.address)).to.be.equal(ethers.utils.parseEther("0"));
+        await presale.connect(user4).claimTokensOrARefund();
+        await expect(presale.connect(user4).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user4.address)).to.be.equal(ethers.utils.parseEther(String(200000 * 0.2)));
+
+
+        expect((await presale.presaleCounts()).contributors).to.be.equal(3);
+        expect((await presale.presaleCounts()).claimsCount).to.be.equal(0);
+  
+      }
+
+
+      {
+        await network.provider.send("evm_increaseTime", [10 * OneMinute])
+        await network.provider.send("evm_mine")
+
+        expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther("0"));
+        await presale.connect(user1).unlockTokens();
+        await presale.connect(user1).unlockLPTokens();
+        await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
+        await expect(presale.connect(user1).unlockLPTokens()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String(1000000 * 0.5 + 400000 * 0.5 * 0) ));
+
+
+        await presale.connect(user2).claimTokensOrARefund();
+        await expect(presale.connect(user2).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user2.address)).to.be.equal(ethers.utils.parseEther(String(400000 * 0.2 + 400000 * 0.8 * 0.1) ));
+
+        await presale.connect(user3).claimTokensOrARefund();
+        await expect(presale.connect(user3).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user3.address)).to.be.equal(ethers.utils.parseEther(String(400000 * 0.2 + 400000 * 0.8 * 0.1)));
+
+        await presale.connect(user4).claimTokensOrARefund();
+        await expect(presale.connect(user4).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user4.address)).to.be.equal(ethers.utils.parseEther(String(200000 * 0.2 + 200000 * 0.8 * 0.1)));
+
+        expect((await presale.presaleCounts()).contributors).to.be.equal(3);
+        expect((await presale.presaleCounts()).claimsCount).to.be.equal(0);
+  
+
+      }
+
+      {
+        await network.provider.send("evm_increaseTime", [10 * OneMinute])
+        await network.provider.send("evm_mine")
+
+        await presale.connect(user1).unlockTokens();
+        await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
+        await expect(presale.connect(user1).unlockLPTokens()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String(1000000 * 0.5 + 1000000 * 0.5 * 0.1) ));
+
+
+        await presale.connect(user2).claimTokensOrARefund();
+        await expect(presale.connect(user2).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user2.address)).to.be.equal(ethers.utils.parseEther(String(400000 * 0.2 + 400000 * 0.8 * 0.2)));
+
+        await presale.connect(user3).claimTokensOrARefund();
+        await expect(presale.connect(user3).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user3.address)).to.be.equal(ethers.utils.parseEther(String(400000 * 0.2 + 400000 * 0.8 * 0.2)));
+
+        await presale.connect(user4).claimTokensOrARefund();
+        await expect(presale.connect(user4).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user4.address)).to.be.equal(ethers.utils.parseEther(String(200000 * 0.2 + 200000 * 0.8 * 0.2)));
+
+
+        expect((await presale.presaleCounts()).contributors).to.be.equal(3);
+        expect((await presale.presaleCounts()).claimsCount).to.be.equal(0);
+  
+      }
+
+      {
+        await network.provider.send("evm_increaseTime", [40 * OneMinute])
+        await network.provider.send("evm_mine")
+
+        await presale.connect(user1).unlockTokens();
+        await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
+        await expect(presale.connect(user1).unlockLPTokens()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String(1000000 * 0.5 + 1000000 * 0.5 * 0.5) ));
+
+
+        await presale.connect(user2).claimTokensOrARefund();
+        await expect(presale.connect(user2).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user2.address)).to.be.equal(ethers.utils.parseEther(String(400000 * 0.2 + 400000 * 0.8 * 0.6)));
+
+        await presale.connect(user3).claimTokensOrARefund();
+        await expect(presale.connect(user3).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user3.address)).to.be.equal(ethers.utils.parseEther(String(400000 * 0.2 + 400000 * 0.8 * 0.6)));
+
+        await presale.connect(user4).claimTokensOrARefund();
+        await expect(presale.connect(user4).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user4.address)).to.be.equal(ethers.utils.parseEther(String(200000 * 0.2 + 200000 * 0.8 * 0.6)));
+
+        expect((await presale.presaleCounts()).contributors).to.be.equal(3);
+        expect((await presale.presaleCounts()).claimsCount).to.be.equal(0);
+  
+      }
+
+      {
+        await network.provider.send("evm_increaseTime", [20 * OneMinute])
+        await network.provider.send("evm_mine")
+
+
+        await presale.connect(user1).unlockTokens();
+        await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
+        await expect(presale.connect(user1).unlockLPTokens()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String(1000000 * 0.5 + 1000000 * 0.5 * 0.7) ));
+
+
+        await presale.connect(user2).claimTokensOrARefund();
+        await expect(presale.connect(user2).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user2.address)).to.be.equal(ethers.utils.parseEther(String(400000 * 0.2 + 400000 * 0.8 * 0.8)));
+
+        await presale.connect(user3).claimTokensOrARefund();
+        await expect(presale.connect(user3).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user3.address)).to.be.equal(ethers.utils.parseEther(String(400000 * 0.2 + 400000 * 0.8 * 0.8)));
+
+        await presale.connect(user4).claimTokensOrARefund();
+        await expect(presale.connect(user4).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user4.address)).to.be.equal(ethers.utils.parseEther(String(200000 * 0.2 + 200000 * 0.8 * 0.8)));
+
+        expect((await presale.presaleCounts()).contributors).to.be.equal(3);
+        expect((await presale.presaleCounts()).claimsCount).to.be.equal(0);
+  
+
+      }
+
+      {
+        await network.provider.send("evm_increaseTime", [20 * OneMinute])
+        await network.provider.send("evm_mine")
+
+        await presale.connect(user1).unlockTokens();
+        await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
+        await expect(presale.connect(user1).unlockLPTokens()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String(1000000 * 0.5 + 1000000 * 0.5 * 0.9) ));
+
+
+        await presale.connect(user2).claimTokensOrARefund();
+        await expect(presale.connect(user2).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user2.address)).to.be.equal(ethers.utils.parseEther(String(400000 * 0.2 + 400000 * 0.8 * 1)));
+
+        await presale.connect(user3).claimTokensOrARefund();
+        await expect(presale.connect(user3).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user3.address)).to.be.equal(ethers.utils.parseEther(String(400000 * 0.2 + 400000 * 0.8 * 1)));
+
+        await presale.connect(user4).claimTokensOrARefund();
+        await expect(presale.connect(user4).claimTokensOrARefund()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user4.address)).to.be.equal(ethers.utils.parseEther(String(200000 * 0.2 + 200000 * 0.8 * 1)));
+
+        expect((await presale.presaleCounts()).contributors).to.be.equal(3);
+        expect((await presale.presaleCounts()).claimsCount).to.be.equal(3);
+  
+
+      }
+
+      {
+        await network.provider.send("evm_increaseTime", [100 * OneMinute])
+        await network.provider.send("evm_mine")
+
+        await presale.connect(user1).unlockTokens();
+        await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
+        await expect(presale.connect(user1).unlockLPTokens()).to.be.reverted;
+        expect(await presaleToken.balanceOf(user1.address)).to.be.equal(ethers.utils.parseEther(String(1000000 * 0.5 + 1000000 * 0.5 * 1) ));
+
+
+        await expect(presale.connect(user2).claimTokensOrARefund()).to.be.reverted;
+        await expect(presale.connect(user3).claimTokensOrARefund()).to.be.reverted;
+        await expect(presale.connect(user4).claimTokensOrARefund()).to.be.reverted;
+        await expect(presale.connect(user1).unlockTokens()).to.be.reverted;
+
+      }
+
+      const pairaddress = await factory.getPair(presaleToken.address, WBNBAddr.address);
+      const UniswapV2Pair: UniswapV2Pair__factory = await ethers.getContractFactory('UniswapV2Pair');
+      uniswapV2Pair = await UniswapV2Pair.attach(pairaddress);
+
+    });
 
     it("can start a presale by paying fee", async () => {
 
@@ -381,6 +696,10 @@ describe("PICNIC Launchpad Stack", () => {
 
       await presale.connect(user1).finalizePresale();
 
+      // console.log("finalizing time ", Number(await presale.finalizingTime()));
+      // console.log("extraTokens ", Number(await presale.extraTokens()));
+      // console.log("remianing tokens ", Number((await presale.presaleCounts()).remainingTokensForSale ) );
+
       expect((await presale.presaleInfo()).preSaleStatus).to.be.equal(2);
 
       {
@@ -401,13 +720,12 @@ describe("PICNIC Launchpad Stack", () => {
       }
 
       {
-
         await network.provider.send("evm_increaseTime", [10 * OneMinute])
         await network.provider.send("evm_mine")
 
         await presale.connect(user2).claimTokensOrARefund();
         await expect(presale.connect(user2).claimTokensOrARefund()).to.be.reverted;
-        expect(await presaleToken.balanceOf(user2.address)).to.be.equal(ethers.utils.parseEther(String(20 * 0.2 + 20 * 0.8 * 0.1)));
+        expect(await presaleToken.balanceOf(user2.address)).to.be.equal(ethers.utils.parseEther(String(20 * 0.2 + 20 * 0.8 * 0.1) ));
 
         await presale.connect(user3).claimTokensOrARefund();
         await expect(presale.connect(user3).claimTokensOrARefund()).to.be.reverted;
@@ -2745,21 +3063,6 @@ describe("PICNIC Launchpad Stack", () => {
       // Project completed
 
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     it("Successful presale", async () => {
 

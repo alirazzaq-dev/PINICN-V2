@@ -67,7 +67,6 @@ contract Launchpadv2 is Ownable {
 
         require( _participationCriteria.tokensPCForLP >= 50 && _participationCriteria.tokensPCForLP <= 95, "liquidity should be at least 50% or more");
 
-        require( _participationCriteria.tokensForSale > 0, "tokens for sale must be more than 0");
 
         require( _reqestedTokens.minTokensReq > 0, "_minTokensReq should be more than zero");
         require( _reqestedTokens.maxTokensReq > _reqestedTokens.minTokensReq, "_maxTokensReq > _minTokensReq");
@@ -77,7 +76,11 @@ contract Launchpadv2 is Ownable {
         require ( _presaleTimes.expiredAt > _presaleTimes.startedAt, "expiredAt should be more than one day from now" );
         require ( _presaleTimes.lpLockupDuration > 0, "Lockup period should be  7 or more days from now time" );
 
-        require ( _participationCriteria.priceOfEachToken > 0, "_priceOfEachToken should be more than zero" );
+        // require( _participationCriteria.tokensForSale > 0, "tokens for sale must be more than 0");
+        require ( 
+            _participationCriteria.priceOfEachToken > 0 &&
+            _participationCriteria.tokensForSale > 0
+            , "Price and Tokens for sale shoule be more than zero" );
 
         if(msg.sender != owner()) {
             require( msg.value >= upfrontfee, "Insufficient funds to start");

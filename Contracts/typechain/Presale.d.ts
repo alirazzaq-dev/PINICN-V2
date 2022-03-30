@@ -32,6 +32,7 @@ interface PresaleInterface extends ethers.utils.Interface {
     "emergencyWithdraw()": FunctionFragment;
     "extraTokens()": FunctionFragment;
     "finalizePresale()": FunctionFragment;
+    "finalizingTime()": FunctionFragment;
     "generalInfo()": FunctionFragment;
     "getContributorReleaseStatus(uint256,address)": FunctionFragment;
     "getWhiteListUsers()": FunctionFragment;
@@ -92,6 +93,10 @@ interface PresaleInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "finalizePresale",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "finalizingTime",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -213,6 +218,10 @@ interface PresaleInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "finalizePresale",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "finalizingTime",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -394,6 +403,8 @@ export class Presale extends BaseContract {
     finalizePresale(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    finalizingTime(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     generalInfo(
       overrides?: CallOverrides
@@ -600,6 +611,8 @@ export class Presale extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  finalizingTime(overrides?: CallOverrides): Promise<BigNumber>;
+
   generalInfo(
     overrides?: CallOverrides
   ): Promise<
@@ -795,6 +808,8 @@ export class Presale extends BaseContract {
 
     finalizePresale(overrides?: CallOverrides): Promise<void>;
 
+    finalizingTime(overrides?: CallOverrides): Promise<BigNumber>;
+
     generalInfo(
       overrides?: CallOverrides
     ): Promise<
@@ -983,6 +998,8 @@ export class Presale extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    finalizingTime(overrides?: CallOverrides): Promise<BigNumber>;
+
     generalInfo(overrides?: CallOverrides): Promise<BigNumber>;
 
     getContributorReleaseStatus(
@@ -1092,6 +1109,8 @@ export class Presale extends BaseContract {
     finalizePresale(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    finalizingTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     generalInfo(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
