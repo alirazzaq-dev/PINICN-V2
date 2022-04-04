@@ -19,30 +19,26 @@ contract Launchpadv2 is Ownable {
     uint public upfrontfee = 0.0002 ether;
     uint8 public salesFeeInPercent = 2;
 
-    // Declare a set state variable    
-    address public uniswapV2Router02;
-    
-    address public teamAddr;
-    address public devAddr;
+    // address public uniswapV2Router02 = 0x10ED43C718714eb63d5aA57B78B54704E256024E;    // BSC Mainnet router
+    address public uniswapV2Router02 = 0xD99D1c33F9fC3444f8101754aBC46c52416550D1;    // BSC Testnet router
+
+    address public teamAddr = 0xE813d775f33a97BDA25D71240525C724423D4Cd0;
+    address public devAddr = 0xE813d775f33a97BDA25D71240525C724423D4Cd0;
 
     ////////////////////////////// MAPPINGS ///////////////////////////////////
 
     mapping(uint => address) public presaleRecordByID;
     mapping(address => address[]) private presaleRecordByToken;
-    // mapping(address => bool) public isUserWhitelistedToStartProject;
 
     ////////////////////////////// FUNCTIONS ///////////////////////////////////
 
-    constructor( address _IUniswapV2Router02, address _teamAddr, address _devAddr ){
+    // constructor( address _IUniswapV2Router02, address _teamAddr, address _devAddr ){
 
-        // 0xD99D1c33F9fC3444f8101754aBC46c52416550D1    BSC Testnet router
-        // 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D    Ropston testnet
-        // launchpadAddresses = LaunchPadLib.LaunchpadAddresses (_IUniswapV2Router02);
-        uniswapV2Router02 = _IUniswapV2Router02;
-        teamAddr = _teamAddr;
-        devAddr = _devAddr;
+    //     uniswapV2Router02 = _IUniswapV2Router02;
+    //     teamAddr = _teamAddr;
+    //     devAddr = _devAddr;
 
-    }
+    // }
 
 
     function createPresale(
@@ -55,7 +51,7 @@ contract Launchpadv2 is Ownable {
         LaunchPadLib.GeneralInfo memory _generalInfo
         ) public payable {
 
-        require( address(_presaleInfo.preSaleToken) != address(0), "Presale project address can't be null");
+        // require( address(_presaleInfo.preSaleToken) != address(0), "Presale project address can't be null");
                     
         if(_participationCriteria.typeOfPresale == LaunchPadLib.PresaleType.TOKENHOLDERS) {
             require( _participationCriteria.criteriaToken != address(0), "Criteria token address can't be null");
@@ -76,7 +72,6 @@ contract Launchpadv2 is Ownable {
         require ( _presaleTimes.expiredAt > _presaleTimes.startedAt, "expiredAt should be more than one day from now" );
         require ( _presaleTimes.lpLockupDuration > 0, "Lockup period should be  7 or more days from now time" );
 
-        // require( _participationCriteria.tokensForSale > 0, "tokens for sale must be more than 0");
         require ( 
             _participationCriteria.priceOfEachToken > 0 &&
             _participationCriteria.tokensForSale > 0
@@ -121,7 +116,6 @@ contract Launchpadv2 is Ownable {
 
     }
 
-
     function getPresaleRecordsByToken(address _address) public view returns(address[] memory) {
         return presaleRecordByToken[_address];
     }
@@ -145,6 +139,15 @@ contract Launchpadv2 is Ownable {
         require(res2, "cannot send devTeamShare"); 
 
 
+    }
+    
+    function updateTeamAddress(address _address) public onlyOwner {
+        teamAddr = _address;
+    }
+
+    function updateDevAddress(address _address) public {
+        require(msg.sender == devAddr, "Only dev is allowed");
+        devAddr = _address;
     }
 
     receive() external payable {}

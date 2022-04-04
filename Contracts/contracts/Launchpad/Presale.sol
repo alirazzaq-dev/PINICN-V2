@@ -251,8 +251,9 @@ contract Presale {
 
 
                 uint tokensForLiquidity = tokensToAddLiquidity * 10**presaleInfo.decimals;
-                // require(IERC20(presaleInfo.preSaleToken).approve(address(uniswapV2Router02), tokensForLiquidity), "unable to approve token tranfer to pancakeSwapRouterAddr");
+                
                 IERC20(presaleInfo.preSaleToken).approve(address(uniswapV2Router02), tokensForLiquidity);
+
                 uniswapV2Router02.addLiquidityETH{value : poolShareBNB}(
                     presaleInfo.preSaleToken,
                     tokensForLiquidity,
@@ -318,8 +319,6 @@ contract Presale {
                     }
                 }
 
-                // participant[msg.sender].tokens -= (tokensToRelease / 10**presaleInfo.decimals);
-
                 require(tokensToRelease > 0, "Nothing to unlock");
                 require(
                     IERC20(presaleInfo.preSaleToken).transfer(msg.sender, tokensToRelease),
@@ -342,28 +341,24 @@ contract Presale {
     function withdrawExtraTokens() internal {
 
         uint tokensToReturn = extraTokens;
-        
-        // if(tokensToReturn > 0){
-        //     extraTokens = 0;
 
-            if(presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.FAILED || presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.CANCELED){
-                bool tokenDistribution = IERC20(presaleInfo.preSaleToken).transfer(presaleInfo.presaleOwner, tokensToReturn);
-                assert( tokenDistribution);
-            }
-            else if(participationCriteria.refundType == LaunchPadLib.RefundType.WITHDRAW ){
-                bool tokenDistribution = IERC20(presaleInfo.preSaleToken).transfer(presaleInfo.presaleOwner, tokensToReturn);
-                assert( tokenDistribution);
-            }
-            else{
-                bool tokenDistribution = IERC20(presaleInfo.preSaleToken).transfer(0x000000000000000000000000000000000000dEaD , tokensToReturn);
-                assert( tokenDistribution );
-            }
-        // }
+        if(presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.FAILED || presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.CANCELED){
+            bool tokenDistribution = IERC20(presaleInfo.preSaleToken).transfer(presaleInfo.presaleOwner, tokensToReturn);
+            assert( tokenDistribution);
+        }
+        else if(participationCriteria.refundType == LaunchPadLib.RefundType.WITHDRAW ){
+            bool tokenDistribution = IERC20(presaleInfo.preSaleToken).transfer(presaleInfo.presaleOwner, tokensToReturn);
+            assert( tokenDistribution);
+        }
+        else{
+            bool tokenDistribution = IERC20(presaleInfo.preSaleToken).transfer(0x000000000000000000000000000000000000dEaD , tokensToReturn);
+            assert( tokenDistribution );
+        }
+
     }
 
     function chageSaleType(LaunchPadLib.PresaleType _type, address _address, uint minimumTokens) public onlyPresaleOwner {
         if(_type == LaunchPadLib.PresaleType.TOKENHOLDERS) {
-            // require( _address != address(0), "Criteria token address can't be null");
             participationCriteria.typeOfPresale = _type;
             participationCriteria.criteriaToken = _address;
             participationCriteria.minTokensForParticipation = minimumTokens;

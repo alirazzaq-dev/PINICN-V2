@@ -1571,8 +1571,8 @@
       ]
     },
     "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\Presale.sol": {
-      "lastModificationDate": 1648635514988,
-      "contentHash": "18e6e7cca477882824ed1838af713fd8",
+      "lastModificationDate": 1649077813631,
+      "contentHash": "d28207a13dee57d78d8cb2e6d6a092a8",
       "sourceName": "contracts/Launchpad/Presale.sol",
       "solcConfig": {
         "version": "0.8.7",
@@ -1754,8 +1754,8 @@
       ]
     },
     "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\Launchpadv2.sol": {
-      "lastModificationDate": 1648632285648,
-      "contentHash": "3cb5e6cf0dbe3f5942a932f96a90e2da",
+      "lastModificationDate": 1649081540568,
+      "contentHash": "7987d731b377cc030fb913d7c57d2d50",
       "sourceName": "contracts/Launchpad/Launchpadv2.sol",
       "solcConfig": {
         "version": "0.8.7",

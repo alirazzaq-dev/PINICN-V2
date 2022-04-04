@@ -33,7 +33,9 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
     "teamAddr()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "uniswapV2Router02()": FunctionFragment;
+    "updateDevAddress(address)": FunctionFragment;
     "updateFees(uint256,uint8)": FunctionFragment;
+    "updateTeamAddress(address)": FunctionFragment;
     "upfrontfee()": FunctionFragment;
     "withdrawBNBs()": FunctionFragment;
   };
@@ -123,8 +125,16 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "updateDevAddress",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "updateFees",
     values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateTeamAddress",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "upfrontfee",
@@ -170,7 +180,15 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
     functionFragment: "uniswapV2Router02",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateDevAddress",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "updateFees", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "updateTeamAddress",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "upfrontfee", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "withdrawBNBs",
@@ -315,9 +333,19 @@ export class Launchpadv2 extends BaseContract {
 
     uniswapV2Router02(overrides?: CallOverrides): Promise<[string]>;
 
+    updateDevAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     updateFees(
       _upfrontFee: BigNumberish,
       _salesFeeInPercent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    updateTeamAddress(
+      _address: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -411,9 +439,19 @@ export class Launchpadv2 extends BaseContract {
 
   uniswapV2Router02(overrides?: CallOverrides): Promise<string>;
 
+  updateDevAddress(
+    _address: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   updateFees(
     _upfrontFee: BigNumberish,
     _salesFeeInPercent: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  updateTeamAddress(
+    _address: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -505,9 +543,19 @@ export class Launchpadv2 extends BaseContract {
 
     uniswapV2Router02(overrides?: CallOverrides): Promise<string>;
 
+    updateDevAddress(
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     updateFees(
       _upfrontFee: BigNumberish,
       _salesFeeInPercent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    updateTeamAddress(
+      _address: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -618,9 +666,19 @@ export class Launchpadv2 extends BaseContract {
 
     uniswapV2Router02(overrides?: CallOverrides): Promise<BigNumber>;
 
+    updateDevAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     updateFees(
       _upfrontFee: BigNumberish,
       _salesFeeInPercent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    updateTeamAddress(
+      _address: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -715,9 +773,19 @@ export class Launchpadv2 extends BaseContract {
 
     uniswapV2Router02(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    updateDevAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     updateFees(
       _upfrontFee: BigNumberish,
       _salesFeeInPercent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateTeamAddress(
+      _address: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
