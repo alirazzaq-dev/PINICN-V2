@@ -335,6 +335,17 @@ describe("PICNIC Launchpad Stack", () => {
 
       await expect(() => launchpad.withdrawBNBs()).to.changeEtherBalance(launchpad, `-${ethers.utils.parseEther("0.20")}`)
 
+      console.log(await launchpad.devAddr())
+      console.log(await launchpad.teamAddr())
+
+      await launchpad.updateTeamAddress(user8.address);
+      await launchpad.connect(devAddr).updateDevAddress(user8.address);
+
+      console.log(await launchpad.devAddr())
+      console.log(await launchpad.teamAddr())
+
+
+
       const presaleCount = await launchpad.presaleCount();
       expect(presaleCount).to.be.equal(1);
 

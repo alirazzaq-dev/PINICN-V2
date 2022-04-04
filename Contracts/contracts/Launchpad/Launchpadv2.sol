@@ -32,13 +32,13 @@ contract Launchpadv2 is Ownable {
 
     ////////////////////////////// FUNCTIONS ///////////////////////////////////
 
-    // constructor( address _IUniswapV2Router02, address _teamAddr, address _devAddr ){
+    constructor( address _uniswapV2Router02, address _teamAddr, address _devAddr ){
 
-    //     uniswapV2Router02 = _IUniswapV2Router02;
-    //     teamAddr = _teamAddr;
-    //     devAddr = _devAddr;
+        uniswapV2Router02 = _uniswapV2Router02;
+        teamAddr = _teamAddr;
+        devAddr = _devAddr;
 
-    // }
+    }
 
 
     function createPresale(
