@@ -165,6 +165,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.BEP20__factory>;
     getContractFactory(
+      name: "BEP9",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.BEP9__factory>;
+    getContractFactory(
       name: "PICNICToken",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.PICNICToken__factory>;
@@ -415,6 +419,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.BEP20>;
+    getContractAt(
+      name: "BEP9",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.BEP9>;
     getContractAt(
       name: "PICNICToken",
       address: string,

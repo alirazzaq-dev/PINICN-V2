@@ -1571,7 +1571,7 @@
       ]
     },
     "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\Presale.sol": {
-      "lastModificationDate": 1649077813631,
+      "lastModificationDate": 1649191403032,
       "contentHash": "d28207a13dee57d78d8cb2e6d6a092a8",
       "sourceName": "contracts/Launchpad/Presale.sol",
       "solcConfig": {
@@ -1754,8 +1754,8 @@
       ]
     },
     "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\Launchpad\\Launchpadv2.sol": {
-      "lastModificationDate": 1649094153201,
-      "contentHash": "99622d41ec3d20615ac1a9ea9a9059e7",
+      "lastModificationDate": 1649630319896,
+      "contentHash": "d3ef0a57e712e6ea19371ede8cd26b2d",
       "sourceName": "contracts/Launchpad/Launchpadv2.sol",
       "solcConfig": {
         "version": "0.8.7",
@@ -1784,9 +1784,6 @@
         "./Presale.sol",
         "./LaunchPadLib.sol",
         "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol",
-        "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol",
-        "@openzeppelin/contracts/utils/structs/EnumerableSet.sol",
         "@openzeppelin/contracts/access/Ownable.sol"
       ],
       "versionPragmas": [
@@ -2100,6 +2097,45 @@
         "SafeMathInt",
         "SafeMathUint",
         "SinsERC20Token"
+      ]
+    },
+    "D:\\Fiverr\\picnic-v2\\Contracts\\contracts\\helpers\\BEP9.sol": {
+      "lastModificationDate": 1649380809979,
+      "contentHash": "a0bd3fe9359382723527fef76aebc0c2",
+      "sourceName": "contracts/helpers/BEP9.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+        "@openzeppelin/contracts/utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "BEP9"
       ]
     }
   }

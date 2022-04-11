@@ -5,9 +5,6 @@ pragma solidity 0.8.7;
 import "./Presale.sol";
 import "./LaunchPadLib.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
-import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
-import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 
@@ -16,15 +13,19 @@ contract Launchpadv2 is Ownable {
     using LaunchPadLib for *;
 
     uint public presaleCount = 0;
-    uint public upfrontfee = 0.0002 ether;
+    uint public upfrontfee = 2 ether;
     uint8 public salesFeeInPercent = 2;
 
-    // address public uniswapV2Router02 = 0x10ED43C718714eb63d5aA57B78B54704E256024E;    // BSC Mainnet router
-    address public uniswapV2Router02 = 0xD99D1c33F9fC3444f8101754aBC46c52416550D1;    // BSC Testnet router
+    address public uniswapV2Router02 = 0x10ED43C718714eb63d5aA57B78B54704E256024E;    // BSC Mainnet router
+    // address public uniswapV2Router02 = 0xD99D1c33F9fC3444f8101754aBC46c52416550D1;    // BSC Testnet router
 
-    address public teamAddr = 0xE813d775f33a97BDA25D71240525C724423D4Cd0;
-    address public devAddr = 0xE813d775f33a97BDA25D71240525C724423D4Cd0;
+    address public teamAddr = 0xaEEE930D7Dc148862051CC0F43114FedAbAF34BC;
+    address public devAddr = 0x2a1706e0B87373445c500621a47cb26484D1DdfF;
 
+    // address public uniswapV2Router02;
+    // address public teamAddr;
+    // address public devAddr;
+    
     ////////////////////////////// MAPPINGS ///////////////////////////////////
 
     mapping(uint => address) public presaleRecordByID;
@@ -32,14 +33,11 @@ contract Launchpadv2 is Ownable {
 
     ////////////////////////////// FUNCTIONS ///////////////////////////////////
 
-    constructor( address _uniswapV2Router02, address _teamAddr, address _devAddr ){
-
-        uniswapV2Router02 = _uniswapV2Router02;
-        teamAddr = _teamAddr;
-        devAddr = _devAddr;
-
-    }
-
+    // constructor(address _a, address _b, address _c){
+    //     uniswapV2Router02 = _a;
+    //     teamAddr = _b;
+    //     devAddr = _c;
+    // }
 
     function createPresale(
         LaunchPadLib.PresaleInfo memory _presaleInfo,
@@ -61,7 +59,7 @@ contract Launchpadv2 is Ownable {
             require(_teamVesting.vestingTokens > 0, "Vesting tokens should be more than zero");
         }
 
-        require( _participationCriteria.tokensPCForLP >= 50 && _participationCriteria.tokensPCForLP <= 95, "liquidity should be at least 50% or more");
+        require( _participationCriteria.tokensPCForLP >= 20 && _participationCriteria.tokensPCForLP <= 95, "liquidity should be between 20%-95%");
 
 
         require( _reqestedTokens.minTokensReq > 0, "_minTokensReq should be more than zero");
@@ -146,7 +144,7 @@ contract Launchpadv2 is Ownable {
     }
 
     function updateDevAddress(address _address) public {
-        require(msg.sender == devAddr, "Only dev is allowed");
+        require(devAddr == address(msg.sender), "Only dev is allowed");
         devAddr = _address;
     }
 
