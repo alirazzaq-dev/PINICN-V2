@@ -11,7 +11,6 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
-  Overrides,
   PayableOverrides,
   CallOverrides,
 } from "ethers";
@@ -23,53 +22,29 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface PresaleInterface extends ethers.utils.Interface {
   functions: {
     "buyTokensOnPresale(uint256)": FunctionFragment;
-    "cancelSale()": FunctionFragment;
-    "chageSaleType(uint8,address,uint256)": FunctionFragment;
-    "claimTokensOrARefund()": FunctionFragment;
     "contributorCycles()": FunctionFragment;
     "contributorVestingRecord(uint256)": FunctionFragment;
     "contributorsVesting()": FunctionFragment;
-    "emergencyWithdraw()": FunctionFragment;
     "extraTokens()": FunctionFragment;
-    "finalizePresale()": FunctionFragment;
     "finalizingTime()": FunctionFragment;
     "generalInfo()": FunctionFragment;
-    "getContributorReleaseStatus(uint256,address)": FunctionFragment;
-    "getWhiteListUsers()": FunctionFragment;
     "master()": FunctionFragment;
     "participant(address)": FunctionFragment;
     "participationCriteria()": FunctionFragment;
     "presaleCounts()": FunctionFragment;
     "presaleInfo()": FunctionFragment;
     "presaleTimes()": FunctionFragment;
-    "removeWhiteListUsers(address[])": FunctionFragment;
-    "reqestedTokens()": FunctionFragment;
     "salesFeeInPercent()": FunctionFragment;
     "teamVesting()": FunctionFragment;
     "teamVestingRecord(uint256)": FunctionFragment;
     "temaVestingCycles()": FunctionFragment;
+    "tokenInfo()": FunctionFragment;
     "uniswapV2Router02()": FunctionFragment;
-    "unlockLPTokens()": FunctionFragment;
-    "unlockTokens()": FunctionFragment;
-    "updateGeneralInfo((string,string,string,string,string,string))": FunctionFragment;
-    "whiteListUsers(address[])": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "buyTokensOnPresale",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "cancelSale",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "chageSaleType",
-    values: [BigNumberish, string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "claimTokensOrARefund",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "contributorCycles",
@@ -84,15 +59,7 @@ interface PresaleInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "emergencyWithdraw",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "extraTokens",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "finalizePresale",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -101,14 +68,6 @@ interface PresaleInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "generalInfo",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getContributorReleaseStatus",
-    values: [BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getWhiteListUsers",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "master", values?: undefined): string;
@@ -130,14 +89,6 @@ interface PresaleInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "removeWhiteListUsers",
-    values: [string[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "reqestedTokens",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "salesFeeInPercent",
     values?: undefined
   ): string;
@@ -153,47 +104,14 @@ interface PresaleInterface extends ethers.utils.Interface {
     functionFragment: "temaVestingCycles",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "tokenInfo", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "uniswapV2Router02",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "unlockLPTokens",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "unlockTokens",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "updateGeneralInfo",
-    values: [
-      {
-        logoURL: string;
-        websiteURL: string;
-        twitterURL: string;
-        telegramURL: string;
-        discordURL: string;
-        description: string;
-      }
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "whiteListUsers",
-    values: [string[]]
-  ): string;
 
   decodeFunctionResult(
     functionFragment: "buyTokensOnPresale",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "cancelSale", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "chageSaleType",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "claimTokensOrARefund",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -209,15 +127,7 @@ interface PresaleInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "emergencyWithdraw",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "extraTokens",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "finalizePresale",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -226,14 +136,6 @@ interface PresaleInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "generalInfo",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getContributorReleaseStatus",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getWhiteListUsers",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "master", data: BytesLike): Result;
@@ -258,14 +160,6 @@ interface PresaleInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "removeWhiteListUsers",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "reqestedTokens",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "salesFeeInPercent",
     data: BytesLike
   ): Result;
@@ -281,24 +175,9 @@ interface PresaleInterface extends ethers.utils.Interface {
     functionFragment: "temaVestingCycles",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "tokenInfo", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "uniswapV2Router02",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "unlockLPTokens",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "unlockTokens",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "updateGeneralInfo",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "whiteListUsers",
     data: BytesLike
   ): Result;
 
@@ -354,21 +233,6 @@ export class Presale extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    cancelSale(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    chageSaleType(
-      _type: BigNumberish,
-      _address: string,
-      minimumTokens: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    claimTokensOrARefund(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     contributorCycles(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     contributorVestingRecord(
@@ -386,23 +250,15 @@ export class Presale extends BaseContract {
     contributorsVesting(
       overrides?: CallOverrides
     ): Promise<
-      [boolean, BigNumber, BigNumber, BigNumber] & {
+      [boolean, BigNumber, BigNumber, number] & {
         isEnabled: boolean;
         firstReleasePC: BigNumber;
-        vestingPeriodOfEachCycle: BigNumber;
-        tokensReleaseEachCyclePC: BigNumber;
+        eachCycleDuration: BigNumber;
+        eachCyclePC: number;
       }
     >;
 
-    emergencyWithdraw(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     extraTokens(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    finalizePresale(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
 
     finalizingTime(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -419,14 +275,6 @@ export class Presale extends BaseContract {
       }
     >;
 
-    getContributorReleaseStatus(
-      _time: BigNumberish,
-      _address: string,
-      overrides?: CallOverrides
-    ): Promise<[number]>;
-
-    getWhiteListUsers(overrides?: CallOverrides): Promise<[string[]]>;
-
     master(overrides?: CallOverrides): Promise<[string]>;
 
     participant(
@@ -439,13 +287,27 @@ export class Presale extends BaseContract {
     participationCriteria(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, number, BigNumber, string, BigNumber, number] & {
-        tokensForSale: BigNumber;
-        tokensPCForLP: BigNumber;
-        typeOfPresale: number;
-        priceOfEachToken: BigNumber;
-        criteriaToken: string;
-        minTokensForParticipation: BigNumber;
+      [
+        number,
+        string,
+        BigNumber,
+        BigNumber,
+        number,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        number
+      ] & {
+        saleType: number;
+        criteriaTokenAddress: string;
+        minCriteriaTokens: BigNumber;
+        presaleRate: BigNumber;
+        liquidity: number;
+        hardCap: BigNumber;
+        softCap: BigNumber;
+        minBuy: BigNumber;
+        maxBuy: BigNumber;
         refundType: number;
       }
     >;
@@ -453,8 +315,7 @@ export class Presale extends BaseContract {
     presaleCounts(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber] & {
-        remainingTokensForSale: BigNumber;
+      [BigNumber, BigNumber, BigNumber] & {
         accumulatedBalance: BigNumber;
         contributors: BigNumber;
         claimsCount: BigNumber;
@@ -464,12 +325,10 @@ export class Presale extends BaseContract {
     presaleInfo(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, number, string, BigNumber] & {
+      [BigNumber, string, number] & {
         id: BigNumber;
         presaleOwner: string;
         preSaleStatus: number;
-        preSaleToken: string;
-        decimals: BigNumber;
       }
     >;
 
@@ -483,33 +342,18 @@ export class Presale extends BaseContract {
       }
     >;
 
-    removeWhiteListUsers(
-      _addresses: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    reqestedTokens(
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        minTokensReq: BigNumber;
-        maxTokensReq: BigNumber;
-        softCap: BigNumber;
-      }
-    >;
-
     salesFeeInPercent(overrides?: CallOverrides): Promise<[number]>;
 
     teamVesting(
       overrides?: CallOverrides
     ): Promise<
-      [boolean, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      [boolean, BigNumber, BigNumber, BigNumber, BigNumber, number] & {
         isEnabled: boolean;
         vestingTokens: BigNumber;
         firstReleaseTime: BigNumber;
         firstReleasePC: BigNumber;
-        vestingPeriodOfEachCycle: BigNumber;
-        tokensReleaseEachCyclePC: BigNumber;
+        eachCycleDuration: BigNumber;
+        eachCyclePC: number;
       }
     >;
 
@@ -528,52 +372,16 @@ export class Presale extends BaseContract {
 
     temaVestingCycles(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    tokenInfo(
+      overrides?: CallOverrides
+    ): Promise<[string, number] & { tokenAddress: string; decimals: number }>;
+
     uniswapV2Router02(overrides?: CallOverrides): Promise<[string]>;
-
-    unlockLPTokens(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    unlockTokens(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    updateGeneralInfo(
-      _generalInfo: {
-        logoURL: string;
-        websiteURL: string;
-        twitterURL: string;
-        telegramURL: string;
-        discordURL: string;
-        description: string;
-      },
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    whiteListUsers(
-      _addresses: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
   };
 
   buyTokensOnPresale(
     numOfTokensRequested: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  cancelSale(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  chageSaleType(
-    _type: BigNumberish,
-    _address: string,
-    minimumTokens: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  claimTokensOrARefund(
-    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   contributorCycles(overrides?: CallOverrides): Promise<BigNumber>;
@@ -593,23 +401,15 @@ export class Presale extends BaseContract {
   contributorsVesting(
     overrides?: CallOverrides
   ): Promise<
-    [boolean, BigNumber, BigNumber, BigNumber] & {
+    [boolean, BigNumber, BigNumber, number] & {
       isEnabled: boolean;
       firstReleasePC: BigNumber;
-      vestingPeriodOfEachCycle: BigNumber;
-      tokensReleaseEachCyclePC: BigNumber;
+      eachCycleDuration: BigNumber;
+      eachCyclePC: number;
     }
   >;
 
-  emergencyWithdraw(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   extraTokens(overrides?: CallOverrides): Promise<BigNumber>;
-
-  finalizePresale(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   finalizingTime(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -626,14 +426,6 @@ export class Presale extends BaseContract {
     }
   >;
 
-  getContributorReleaseStatus(
-    _time: BigNumberish,
-    _address: string,
-    overrides?: CallOverrides
-  ): Promise<number>;
-
-  getWhiteListUsers(overrides?: CallOverrides): Promise<string[]>;
-
   master(overrides?: CallOverrides): Promise<string>;
 
   participant(
@@ -644,13 +436,27 @@ export class Presale extends BaseContract {
   participationCriteria(
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, BigNumber, number, BigNumber, string, BigNumber, number] & {
-      tokensForSale: BigNumber;
-      tokensPCForLP: BigNumber;
-      typeOfPresale: number;
-      priceOfEachToken: BigNumber;
-      criteriaToken: string;
-      minTokensForParticipation: BigNumber;
+    [
+      number,
+      string,
+      BigNumber,
+      BigNumber,
+      number,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      number
+    ] & {
+      saleType: number;
+      criteriaTokenAddress: string;
+      minCriteriaTokens: BigNumber;
+      presaleRate: BigNumber;
+      liquidity: number;
+      hardCap: BigNumber;
+      softCap: BigNumber;
+      minBuy: BigNumber;
+      maxBuy: BigNumber;
       refundType: number;
     }
   >;
@@ -658,8 +464,7 @@ export class Presale extends BaseContract {
   presaleCounts(
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, BigNumber, BigNumber, BigNumber] & {
-      remainingTokensForSale: BigNumber;
+    [BigNumber, BigNumber, BigNumber] & {
       accumulatedBalance: BigNumber;
       contributors: BigNumber;
       claimsCount: BigNumber;
@@ -669,12 +474,10 @@ export class Presale extends BaseContract {
   presaleInfo(
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, string, number, string, BigNumber] & {
+    [BigNumber, string, number] & {
       id: BigNumber;
       presaleOwner: string;
       preSaleStatus: number;
-      preSaleToken: string;
-      decimals: BigNumber;
     }
   >;
 
@@ -688,33 +491,18 @@ export class Presale extends BaseContract {
     }
   >;
 
-  removeWhiteListUsers(
-    _addresses: string[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  reqestedTokens(
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
-      minTokensReq: BigNumber;
-      maxTokensReq: BigNumber;
-      softCap: BigNumber;
-    }
-  >;
-
   salesFeeInPercent(overrides?: CallOverrides): Promise<number>;
 
   teamVesting(
     overrides?: CallOverrides
   ): Promise<
-    [boolean, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+    [boolean, BigNumber, BigNumber, BigNumber, BigNumber, number] & {
       isEnabled: boolean;
       vestingTokens: BigNumber;
       firstReleaseTime: BigNumber;
       firstReleasePC: BigNumber;
-      vestingPeriodOfEachCycle: BigNumber;
-      tokensReleaseEachCyclePC: BigNumber;
+      eachCycleDuration: BigNumber;
+      eachCyclePC: number;
     }
   >;
 
@@ -733,49 +521,17 @@ export class Presale extends BaseContract {
 
   temaVestingCycles(overrides?: CallOverrides): Promise<BigNumber>;
 
+  tokenInfo(
+    overrides?: CallOverrides
+  ): Promise<[string, number] & { tokenAddress: string; decimals: number }>;
+
   uniswapV2Router02(overrides?: CallOverrides): Promise<string>;
-
-  unlockLPTokens(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  unlockTokens(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  updateGeneralInfo(
-    _generalInfo: {
-      logoURL: string;
-      websiteURL: string;
-      twitterURL: string;
-      telegramURL: string;
-      discordURL: string;
-      description: string;
-    },
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  whiteListUsers(
-    _addresses: string[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
 
   callStatic: {
     buyTokensOnPresale(
       numOfTokensRequested: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    cancelSale(overrides?: CallOverrides): Promise<void>;
-
-    chageSaleType(
-      _type: BigNumberish,
-      _address: string,
-      minimumTokens: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    claimTokensOrARefund(overrides?: CallOverrides): Promise<void>;
 
     contributorCycles(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -794,19 +550,15 @@ export class Presale extends BaseContract {
     contributorsVesting(
       overrides?: CallOverrides
     ): Promise<
-      [boolean, BigNumber, BigNumber, BigNumber] & {
+      [boolean, BigNumber, BigNumber, number] & {
         isEnabled: boolean;
         firstReleasePC: BigNumber;
-        vestingPeriodOfEachCycle: BigNumber;
-        tokensReleaseEachCyclePC: BigNumber;
+        eachCycleDuration: BigNumber;
+        eachCyclePC: number;
       }
     >;
 
-    emergencyWithdraw(overrides?: CallOverrides): Promise<void>;
-
     extraTokens(overrides?: CallOverrides): Promise<BigNumber>;
-
-    finalizePresale(overrides?: CallOverrides): Promise<void>;
 
     finalizingTime(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -823,14 +575,6 @@ export class Presale extends BaseContract {
       }
     >;
 
-    getContributorReleaseStatus(
-      _time: BigNumberish,
-      _address: string,
-      overrides?: CallOverrides
-    ): Promise<number>;
-
-    getWhiteListUsers(overrides?: CallOverrides): Promise<string[]>;
-
     master(overrides?: CallOverrides): Promise<string>;
 
     participant(
@@ -843,13 +587,27 @@ export class Presale extends BaseContract {
     participationCriteria(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, number, BigNumber, string, BigNumber, number] & {
-        tokensForSale: BigNumber;
-        tokensPCForLP: BigNumber;
-        typeOfPresale: number;
-        priceOfEachToken: BigNumber;
-        criteriaToken: string;
-        minTokensForParticipation: BigNumber;
+      [
+        number,
+        string,
+        BigNumber,
+        BigNumber,
+        number,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        number
+      ] & {
+        saleType: number;
+        criteriaTokenAddress: string;
+        minCriteriaTokens: BigNumber;
+        presaleRate: BigNumber;
+        liquidity: number;
+        hardCap: BigNumber;
+        softCap: BigNumber;
+        minBuy: BigNumber;
+        maxBuy: BigNumber;
         refundType: number;
       }
     >;
@@ -857,8 +615,7 @@ export class Presale extends BaseContract {
     presaleCounts(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber] & {
-        remainingTokensForSale: BigNumber;
+      [BigNumber, BigNumber, BigNumber] & {
         accumulatedBalance: BigNumber;
         contributors: BigNumber;
         claimsCount: BigNumber;
@@ -868,12 +625,10 @@ export class Presale extends BaseContract {
     presaleInfo(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, number, string, BigNumber] & {
+      [BigNumber, string, number] & {
         id: BigNumber;
         presaleOwner: string;
         preSaleStatus: number;
-        preSaleToken: string;
-        decimals: BigNumber;
       }
     >;
 
@@ -887,33 +642,18 @@ export class Presale extends BaseContract {
       }
     >;
 
-    removeWhiteListUsers(
-      _addresses: string[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    reqestedTokens(
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        minTokensReq: BigNumber;
-        maxTokensReq: BigNumber;
-        softCap: BigNumber;
-      }
-    >;
-
     salesFeeInPercent(overrides?: CallOverrides): Promise<number>;
 
     teamVesting(
       overrides?: CallOverrides
     ): Promise<
-      [boolean, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      [boolean, BigNumber, BigNumber, BigNumber, BigNumber, number] & {
         isEnabled: boolean;
         vestingTokens: BigNumber;
         firstReleaseTime: BigNumber;
         firstReleasePC: BigNumber;
-        vestingPeriodOfEachCycle: BigNumber;
-        tokensReleaseEachCyclePC: BigNumber;
+        eachCycleDuration: BigNumber;
+        eachCyclePC: number;
       }
     >;
 
@@ -932,28 +672,11 @@ export class Presale extends BaseContract {
 
     temaVestingCycles(overrides?: CallOverrides): Promise<BigNumber>;
 
+    tokenInfo(
+      overrides?: CallOverrides
+    ): Promise<[string, number] & { tokenAddress: string; decimals: number }>;
+
     uniswapV2Router02(overrides?: CallOverrides): Promise<string>;
-
-    unlockLPTokens(overrides?: CallOverrides): Promise<void>;
-
-    unlockTokens(overrides?: CallOverrides): Promise<void>;
-
-    updateGeneralInfo(
-      _generalInfo: {
-        logoURL: string;
-        websiteURL: string;
-        twitterURL: string;
-        telegramURL: string;
-        discordURL: string;
-        description: string;
-      },
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    whiteListUsers(
-      _addresses: string[],
-      overrides?: CallOverrides
-    ): Promise<void>;
   };
 
   filters: {};
@@ -962,21 +685,6 @@ export class Presale extends BaseContract {
     buyTokensOnPresale(
       numOfTokensRequested: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    cancelSale(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    chageSaleType(
-      _type: BigNumberish,
-      _address: string,
-      minimumTokens: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    claimTokensOrARefund(
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     contributorCycles(overrides?: CallOverrides): Promise<BigNumber>;
@@ -988,27 +696,11 @@ export class Presale extends BaseContract {
 
     contributorsVesting(overrides?: CallOverrides): Promise<BigNumber>;
 
-    emergencyWithdraw(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     extraTokens(overrides?: CallOverrides): Promise<BigNumber>;
-
-    finalizePresale(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
 
     finalizingTime(overrides?: CallOverrides): Promise<BigNumber>;
 
     generalInfo(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getContributorReleaseStatus(
-      _time: BigNumberish,
-      _address: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getWhiteListUsers(overrides?: CallOverrides): Promise<BigNumber>;
 
     master(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1022,13 +714,6 @@ export class Presale extends BaseContract {
 
     presaleTimes(overrides?: CallOverrides): Promise<BigNumber>;
 
-    removeWhiteListUsers(
-      _addresses: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    reqestedTokens(overrides?: CallOverrides): Promise<BigNumber>;
-
     salesFeeInPercent(overrides?: CallOverrides): Promise<BigNumber>;
 
     teamVesting(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1040,53 +725,15 @@ export class Presale extends BaseContract {
 
     temaVestingCycles(overrides?: CallOverrides): Promise<BigNumber>;
 
+    tokenInfo(overrides?: CallOverrides): Promise<BigNumber>;
+
     uniswapV2Router02(overrides?: CallOverrides): Promise<BigNumber>;
-
-    unlockLPTokens(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    unlockTokens(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    updateGeneralInfo(
-      _generalInfo: {
-        logoURL: string;
-        websiteURL: string;
-        twitterURL: string;
-        telegramURL: string;
-        discordURL: string;
-        description: string;
-      },
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    whiteListUsers(
-      _addresses: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     buyTokensOnPresale(
       numOfTokensRequested: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    cancelSale(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    chageSaleType(
-      _type: BigNumberish,
-      _address: string,
-      minimumTokens: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    claimTokensOrARefund(
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     contributorCycles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1100,27 +747,11 @@ export class Presale extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    emergencyWithdraw(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     extraTokens(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    finalizePresale(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
 
     finalizingTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     generalInfo(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getContributorReleaseStatus(
-      _time: BigNumberish,
-      _address: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getWhiteListUsers(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     master(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1139,13 +770,6 @@ export class Presale extends BaseContract {
 
     presaleTimes(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    removeWhiteListUsers(
-      _addresses: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    reqestedTokens(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     salesFeeInPercent(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     teamVesting(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1157,31 +781,8 @@ export class Presale extends BaseContract {
 
     temaVestingCycles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    tokenInfo(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     uniswapV2Router02(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    unlockLPTokens(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    unlockTokens(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    updateGeneralInfo(
-      _generalInfo: {
-        logoURL: string;
-        websiteURL: string;
-        twitterURL: string;
-        telegramURL: string;
-        discordURL: string;
-        description: string;
-      },
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    whiteListUsers(
-      _addresses: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
   };
 }

@@ -22,7 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface Launchpadv2Interface extends ethers.utils.Interface {
   functions: {
-    "createPresale((uint256,address,uint8,address,uint256),(uint256,uint256,uint8,uint256,address,uint256,uint8),(uint256,uint256,uint256),(uint256,uint256,uint256),(bool,uint256,uint256,uint256),(bool,uint256,uint256,uint256,uint256,uint256),(string,string,string,string,string,string))": FunctionFragment;
+    "createPresale((address,uint8),(uint8,string,uint256,uint256,uint8,uint256,uint256,uint256,uint256,uint8),(uint256,uint256,uint256),(bool,uint256,uint256,uint8),(bool,uint256,uint256,uint256,uint256,uint8),(string,string,string,string,string,string))": FunctionFragment;
     "devAddr()": FunctionFragment;
     "getPresaleRecordsByToken(address)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -43,20 +43,17 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "createPresale",
     values: [
+      { tokenAddress: string; decimals: BigNumberish },
       {
-        id: BigNumberish;
-        presaleOwner: string;
-        preSaleStatus: BigNumberish;
-        preSaleToken: string;
-        decimals: BigNumberish;
-      },
-      {
-        tokensForSale: BigNumberish;
-        tokensPCForLP: BigNumberish;
-        typeOfPresale: BigNumberish;
-        priceOfEachToken: BigNumberish;
-        criteriaToken: string;
-        minTokensForParticipation: BigNumberish;
+        saleType: BigNumberish;
+        criteriaTokenAddress: string;
+        minCriteriaTokens: BigNumberish;
+        presaleRate: BigNumberish;
+        liquidity: BigNumberish;
+        hardCap: BigNumberish;
+        softCap: BigNumberish;
+        minBuy: BigNumberish;
+        maxBuy: BigNumberish;
         refundType: BigNumberish;
       },
       {
@@ -65,23 +62,18 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
         lpLockupDuration: BigNumberish;
       },
       {
-        minTokensReq: BigNumberish;
-        maxTokensReq: BigNumberish;
-        softCap: BigNumberish;
-      },
-      {
         isEnabled: boolean;
         firstReleasePC: BigNumberish;
-        vestingPeriodOfEachCycle: BigNumberish;
-        tokensReleaseEachCyclePC: BigNumberish;
+        eachCycleDuration: BigNumberish;
+        eachCyclePC: BigNumberish;
       },
       {
         isEnabled: boolean;
         vestingTokens: BigNumberish;
         firstReleaseTime: BigNumberish;
         firstReleasePC: BigNumberish;
-        vestingPeriodOfEachCycle: BigNumberish;
-        tokensReleaseEachCyclePC: BigNumberish;
+        eachCycleDuration: BigNumberish;
+        eachCyclePC: BigNumberish;
       },
       {
         logoURL: string;
@@ -251,20 +243,17 @@ export class Launchpadv2 extends BaseContract {
 
   functions: {
     createPresale(
-      _presaleInfo: {
-        id: BigNumberish;
-        presaleOwner: string;
-        preSaleStatus: BigNumberish;
-        preSaleToken: string;
-        decimals: BigNumberish;
-      },
+      _tokenInfo: { tokenAddress: string; decimals: BigNumberish },
       _participationCriteria: {
-        tokensForSale: BigNumberish;
-        tokensPCForLP: BigNumberish;
-        typeOfPresale: BigNumberish;
-        priceOfEachToken: BigNumberish;
-        criteriaToken: string;
-        minTokensForParticipation: BigNumberish;
+        saleType: BigNumberish;
+        criteriaTokenAddress: string;
+        minCriteriaTokens: BigNumberish;
+        presaleRate: BigNumberish;
+        liquidity: BigNumberish;
+        hardCap: BigNumberish;
+        softCap: BigNumberish;
+        minBuy: BigNumberish;
+        maxBuy: BigNumberish;
         refundType: BigNumberish;
       },
       _presaleTimes: {
@@ -272,24 +261,19 @@ export class Launchpadv2 extends BaseContract {
         expiredAt: BigNumberish;
         lpLockupDuration: BigNumberish;
       },
-      _reqestedTokens: {
-        minTokensReq: BigNumberish;
-        maxTokensReq: BigNumberish;
-        softCap: BigNumberish;
-      },
       _contributorsVesting: {
         isEnabled: boolean;
         firstReleasePC: BigNumberish;
-        vestingPeriodOfEachCycle: BigNumberish;
-        tokensReleaseEachCyclePC: BigNumberish;
+        eachCycleDuration: BigNumberish;
+        eachCyclePC: BigNumberish;
       },
       _teamVesting: {
         isEnabled: boolean;
         vestingTokens: BigNumberish;
         firstReleaseTime: BigNumberish;
         firstReleasePC: BigNumberish;
-        vestingPeriodOfEachCycle: BigNumberish;
-        tokensReleaseEachCyclePC: BigNumberish;
+        eachCycleDuration: BigNumberish;
+        eachCyclePC: BigNumberish;
       },
       _generalInfo: {
         logoURL: string;
@@ -357,20 +341,17 @@ export class Launchpadv2 extends BaseContract {
   };
 
   createPresale(
-    _presaleInfo: {
-      id: BigNumberish;
-      presaleOwner: string;
-      preSaleStatus: BigNumberish;
-      preSaleToken: string;
-      decimals: BigNumberish;
-    },
+    _tokenInfo: { tokenAddress: string; decimals: BigNumberish },
     _participationCriteria: {
-      tokensForSale: BigNumberish;
-      tokensPCForLP: BigNumberish;
-      typeOfPresale: BigNumberish;
-      priceOfEachToken: BigNumberish;
-      criteriaToken: string;
-      minTokensForParticipation: BigNumberish;
+      saleType: BigNumberish;
+      criteriaTokenAddress: string;
+      minCriteriaTokens: BigNumberish;
+      presaleRate: BigNumberish;
+      liquidity: BigNumberish;
+      hardCap: BigNumberish;
+      softCap: BigNumberish;
+      minBuy: BigNumberish;
+      maxBuy: BigNumberish;
       refundType: BigNumberish;
     },
     _presaleTimes: {
@@ -378,24 +359,19 @@ export class Launchpadv2 extends BaseContract {
       expiredAt: BigNumberish;
       lpLockupDuration: BigNumberish;
     },
-    _reqestedTokens: {
-      minTokensReq: BigNumberish;
-      maxTokensReq: BigNumberish;
-      softCap: BigNumberish;
-    },
     _contributorsVesting: {
       isEnabled: boolean;
       firstReleasePC: BigNumberish;
-      vestingPeriodOfEachCycle: BigNumberish;
-      tokensReleaseEachCyclePC: BigNumberish;
+      eachCycleDuration: BigNumberish;
+      eachCyclePC: BigNumberish;
     },
     _teamVesting: {
       isEnabled: boolean;
       vestingTokens: BigNumberish;
       firstReleaseTime: BigNumberish;
       firstReleasePC: BigNumberish;
-      vestingPeriodOfEachCycle: BigNumberish;
-      tokensReleaseEachCyclePC: BigNumberish;
+      eachCycleDuration: BigNumberish;
+      eachCyclePC: BigNumberish;
     },
     _generalInfo: {
       logoURL: string;
@@ -463,20 +439,17 @@ export class Launchpadv2 extends BaseContract {
 
   callStatic: {
     createPresale(
-      _presaleInfo: {
-        id: BigNumberish;
-        presaleOwner: string;
-        preSaleStatus: BigNumberish;
-        preSaleToken: string;
-        decimals: BigNumberish;
-      },
+      _tokenInfo: { tokenAddress: string; decimals: BigNumberish },
       _participationCriteria: {
-        tokensForSale: BigNumberish;
-        tokensPCForLP: BigNumberish;
-        typeOfPresale: BigNumberish;
-        priceOfEachToken: BigNumberish;
-        criteriaToken: string;
-        minTokensForParticipation: BigNumberish;
+        saleType: BigNumberish;
+        criteriaTokenAddress: string;
+        minCriteriaTokens: BigNumberish;
+        presaleRate: BigNumberish;
+        liquidity: BigNumberish;
+        hardCap: BigNumberish;
+        softCap: BigNumberish;
+        minBuy: BigNumberish;
+        maxBuy: BigNumberish;
         refundType: BigNumberish;
       },
       _presaleTimes: {
@@ -484,24 +457,19 @@ export class Launchpadv2 extends BaseContract {
         expiredAt: BigNumberish;
         lpLockupDuration: BigNumberish;
       },
-      _reqestedTokens: {
-        minTokensReq: BigNumberish;
-        maxTokensReq: BigNumberish;
-        softCap: BigNumberish;
-      },
       _contributorsVesting: {
         isEnabled: boolean;
         firstReleasePC: BigNumberish;
-        vestingPeriodOfEachCycle: BigNumberish;
-        tokensReleaseEachCyclePC: BigNumberish;
+        eachCycleDuration: BigNumberish;
+        eachCyclePC: BigNumberish;
       },
       _teamVesting: {
         isEnabled: boolean;
         vestingTokens: BigNumberish;
         firstReleaseTime: BigNumberish;
         firstReleasePC: BigNumberish;
-        vestingPeriodOfEachCycle: BigNumberish;
-        tokensReleaseEachCyclePC: BigNumberish;
+        eachCycleDuration: BigNumberish;
+        eachCyclePC: BigNumberish;
       },
       _generalInfo: {
         logoURL: string;
@@ -584,20 +552,17 @@ export class Launchpadv2 extends BaseContract {
 
   estimateGas: {
     createPresale(
-      _presaleInfo: {
-        id: BigNumberish;
-        presaleOwner: string;
-        preSaleStatus: BigNumberish;
-        preSaleToken: string;
-        decimals: BigNumberish;
-      },
+      _tokenInfo: { tokenAddress: string; decimals: BigNumberish },
       _participationCriteria: {
-        tokensForSale: BigNumberish;
-        tokensPCForLP: BigNumberish;
-        typeOfPresale: BigNumberish;
-        priceOfEachToken: BigNumberish;
-        criteriaToken: string;
-        minTokensForParticipation: BigNumberish;
+        saleType: BigNumberish;
+        criteriaTokenAddress: string;
+        minCriteriaTokens: BigNumberish;
+        presaleRate: BigNumberish;
+        liquidity: BigNumberish;
+        hardCap: BigNumberish;
+        softCap: BigNumberish;
+        minBuy: BigNumberish;
+        maxBuy: BigNumberish;
         refundType: BigNumberish;
       },
       _presaleTimes: {
@@ -605,24 +570,19 @@ export class Launchpadv2 extends BaseContract {
         expiredAt: BigNumberish;
         lpLockupDuration: BigNumberish;
       },
-      _reqestedTokens: {
-        minTokensReq: BigNumberish;
-        maxTokensReq: BigNumberish;
-        softCap: BigNumberish;
-      },
       _contributorsVesting: {
         isEnabled: boolean;
         firstReleasePC: BigNumberish;
-        vestingPeriodOfEachCycle: BigNumberish;
-        tokensReleaseEachCyclePC: BigNumberish;
+        eachCycleDuration: BigNumberish;
+        eachCyclePC: BigNumberish;
       },
       _teamVesting: {
         isEnabled: boolean;
         vestingTokens: BigNumberish;
         firstReleaseTime: BigNumberish;
         firstReleasePC: BigNumberish;
-        vestingPeriodOfEachCycle: BigNumberish;
-        tokensReleaseEachCyclePC: BigNumberish;
+        eachCycleDuration: BigNumberish;
+        eachCyclePC: BigNumberish;
       },
       _generalInfo: {
         logoURL: string;
@@ -691,20 +651,17 @@ export class Launchpadv2 extends BaseContract {
 
   populateTransaction: {
     createPresale(
-      _presaleInfo: {
-        id: BigNumberish;
-        presaleOwner: string;
-        preSaleStatus: BigNumberish;
-        preSaleToken: string;
-        decimals: BigNumberish;
-      },
+      _tokenInfo: { tokenAddress: string; decimals: BigNumberish },
       _participationCriteria: {
-        tokensForSale: BigNumberish;
-        tokensPCForLP: BigNumberish;
-        typeOfPresale: BigNumberish;
-        priceOfEachToken: BigNumberish;
-        criteriaToken: string;
-        minTokensForParticipation: BigNumberish;
+        saleType: BigNumberish;
+        criteriaTokenAddress: string;
+        minCriteriaTokens: BigNumberish;
+        presaleRate: BigNumberish;
+        liquidity: BigNumberish;
+        hardCap: BigNumberish;
+        softCap: BigNumberish;
+        minBuy: BigNumberish;
+        maxBuy: BigNumberish;
         refundType: BigNumberish;
       },
       _presaleTimes: {
@@ -712,24 +669,19 @@ export class Launchpadv2 extends BaseContract {
         expiredAt: BigNumberish;
         lpLockupDuration: BigNumberish;
       },
-      _reqestedTokens: {
-        minTokensReq: BigNumberish;
-        maxTokensReq: BigNumberish;
-        softCap: BigNumberish;
-      },
       _contributorsVesting: {
         isEnabled: boolean;
         firstReleasePC: BigNumberish;
-        vestingPeriodOfEachCycle: BigNumberish;
-        tokensReleaseEachCyclePC: BigNumberish;
+        eachCycleDuration: BigNumberish;
+        eachCyclePC: BigNumberish;
       },
       _teamVesting: {
         isEnabled: boolean;
         vestingTokens: BigNumberish;
         firstReleaseTime: BigNumberish;
         firstReleasePC: BigNumberish;
-        vestingPeriodOfEachCycle: BigNumberish;
-        tokensReleaseEachCyclePC: BigNumberish;
+        eachCycleDuration: BigNumberish;
+        eachCyclePC: BigNumberish;
       },
       _generalInfo: {
         logoURL: string;
