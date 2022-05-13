@@ -4,9 +4,9 @@ pragma solidity 0.8.7;
 
 import "./Presale.sol";
 import "./LaunchPadLib.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 
 contract Launchpadv2 is Ownable {
@@ -32,6 +32,9 @@ contract Launchpadv2 is Ownable {
     mapping(uint => address) public presaleRecordByID;
     mapping(address => address[]) private presaleRecordByToken;
 
+    event PresaleCreated(uint id, address presaleAddress);
+
+
     ////////////////////////////// FUNCTIONS ///////////////////////////////////
 
     constructor(address _uniswapV2Router02, address _teamAddr, address _devAddr){
@@ -50,35 +53,18 @@ contract Launchpadv2 is Ownable {
         LaunchPadLib.GeneralInfo memory _generalInfo
         ) public payable {
 
-        // require( address(_presaleInfo.preSaleToken) != address(0), "Presale project address can't be null");
-                    
-        // if(_participationCriteria.typeOfPresale == LaunchPadLib.PresaleType.TOKENHOLDERS) {
-        //     require( _participationCriteria.criteriaToken != address(0), "Criteria token address can't be null");
-        // }
 
-        // if(_teamVesting.isEnabled){
-        //     require(_teamVesting.vestingTokens > 0, "Vesting tokens should be more than zero");
-        // }
+        if(_teamVesting.isEnabled){
+            require(_teamVesting.vestingTokens > 0, "Vesting tokens should be more than zero");
+        }
 
-        // require( _participationCriteria.tokensPCForLP >= 20 && _participationCriteria.tokensPCForLP <= 95, "liquidity should be between 20%-95%");
+        require( _participationCriteria.liquidity >= 20 && _participationCriteria.liquidity <= 95, "liquidity should be between 20%-95%");
+        require ( _presaleTimes.startedAt > block.timestamp && _presaleTimes.expiredAt > _presaleTimes.startedAt, "Presale times are not valid" );
+        require(_participationCriteria.hardCap > 0 && _participationCriteria.softCap >= _participationCriteria.hardCap/2, "Invalid hardcap or softcap");
 
-
-        // require( _reqestedTokens.minTokensReq > 0, "_minTokensReq should be more than zero");
-        // require( _reqestedTokens.maxTokensReq > _reqestedTokens.minTokensReq, "_maxTokensReq > _minTokensReq");
-        // require( _reqestedTokens.softCap >= (_participationCriteria.tokensForSale / 2), "softcap should be at least 50% or more");
-
-        // require ( _presaleTimes.startedAt > block.timestamp, "startedAt should be more than from now" );
-        // require ( _presaleTimes.expiredAt > _presaleTimes.startedAt, "expiredAt should be more than one day from now" );
-        // require ( _presaleTimes.lpLockupDuration > 0, "Lockup period should be  7 or more days from now time" );
-
-        // require ( 
-        //     _participationCriteria.priceOfEachToken > 0 &&
-        //     _participationCriteria.tokensForSale > 0
-        //     , "Price and Tokens for sale shoule be more than zero" );
-
-        // if(msg.sender != owner()) {
-        //     require( msg.value >= upfrontfee, "Insufficient funds to start");
-        // }
+        if(msg.sender != owner()) {
+            require( msg.value >= upfrontfee, "Insufficient funds to start");
+        }
 
         presaleCount++;
         
@@ -96,19 +82,22 @@ contract Launchpadv2 is Ownable {
                 uniswapV2Router02
         );
 
-        uint tokensForSale = _participationCriteria.hardCap/_participationCriteria.presaleRate;
+        uint tokensForSale = (_participationCriteria.hardCap * _participationCriteria.presaleRate * 10**_tokenInfo.decimals) / 1 ether ;
         uint tokensForLP = (tokensForSale * _participationCriteria.liquidity) / 100;
         uint tokensForVesting = _teamVesting.vestingTokens * 10**_tokenInfo.decimals;
-
         uint totalTokens = tokensForSale + tokensForLP + tokensForVesting;
 
-        require(
-            IERC20(_tokenInfo.tokenAddress).transferFrom(msg.sender, address(_presale), totalTokens),
-             "Unable to transfer presale tokens to the contract"
-            );
+        IERC20(_tokenInfo.tokenAddress).transferFrom(msg.sender, address(_presale), totalTokens);
+
+        // require(
+        //     IERC20(_tokenInfo.tokenAddress).transferFrom(msg.sender, address(_presale), totalTokens),
+        //      "Unable to transfer presale tokens to the contract"
+        //     );
                    
         presaleRecordByToken[_tokenInfo.tokenAddress].push(address(_presale));
         presaleRecordByID[presaleCount] = address(_presale);
+
+        emit PresaleCreated(presaleCount, address(_presale));
 
     }
 

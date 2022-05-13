@@ -5,14 +5,14 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+// import "hardhat/console.sol";
 
 import "./LaunchPadLib.sol";
 
 contract Presale {
 
-    using LaunchPadLib for *;
-    // using EnumerableSet for EnumerableSet.AddressSet;
-    // EnumerableSet.AddressSet private whiteListedUsers;
+    using EnumerableSet for EnumerableSet.AddressSet;
+    EnumerableSet.AddressSet private whiteListedUsers;
 
     address immutable public master;
     uint8 public salesFeeInPercent;
@@ -20,18 +20,22 @@ contract Presale {
     
     LaunchPadLib.TokenInfo public tokenInfo;
     LaunchPadLib.PresaleInfo public presaleInfo;
+
     LaunchPadLib.ParticipationCriteria public participationCriteria;
     LaunchPadLib.PresaleTimes public presaleTimes;
 
-    // LaunchPadLib.ReqestedTokens public reqestedTokens;
     LaunchPadLib.PresalectCounts public presaleCounts;
     LaunchPadLib.GeneralInfo public generalInfo;
-    uint public extraTokens;
 
     LaunchPadLib.ContributorsVesting public contributorsVesting;
     LaunchPadLib.TeamVesting public teamVesting;
 
-    mapping(address => LaunchPadLib.Participant) public participant;
+    mapping(address => Participant) public participant;
+    struct Participant {
+        uint256 value;
+        uint256 tokens;
+    }
+
 
     mapping (uint => ContributorsVestingRecord) public contributorVestingRecord;
     uint public contributorCycles = 0;
@@ -56,9 +60,14 @@ contract Presale {
         ReleaseStatus releaseStatus;
     }
 
+    event ContributionsAdded(address contributor, uint amount, uint requestedTokens);
+    event ContributionsRemoved(address contributor, uint amount);
+    event Claimed(address contributor, uint value, uint tokens);
+    event Finalized(LaunchPadLib.PreSaleStatus status, uint finalizedTime);
+    event SaleTypeChanged(LaunchPadLib.PresaleType _type, address _address, uint minimumTokens);
+
     modifier isPresaleActive() {
-        require (block.timestamp >= presaleTimes.startedAt, "Presale hasn't begin yet. please wait");
-        require( block.timestamp < presaleTimes.expiredAt, "Presale is over. Try next time");
+        require (block.timestamp >= presaleTimes.startedAt && block.timestamp < presaleTimes.expiredAt, "Presale is not active");
         if(presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.PENDING){
             presaleInfo.preSaleStatus = LaunchPadLib.PreSaleStatus.INPROGRESS;
         }
@@ -66,29 +75,29 @@ contract Presale {
         _;
     }
 
-    // modifier onlyPresaleOwner() {
-    //     require(presaleInfo.presaleOwner == msg.sender, "Ownable: caller is not the owner of this presale");
-    //     _;
-    // }
+    modifier onlyPresaleOwner() {
+        require(presaleInfo.presaleOwner == msg.sender, "Ownable: caller is not the owner of this presale");
+        _;
+    }
 
-    // modifier isPresaleEnded(){
-    //     require (
-    //         presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.SUCCEED || 
-    //         presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.FAILED || 
-    //         presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.CANCELED, 
-    //         "Presale is not concluded yet"
-    //     );
-    //     _;
-    // }
+    modifier isPresaleEnded(){
+        require (
+            presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.SUCCEED || 
+            presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.FAILED || 
+            presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.CANCELED, 
+            "Presale is not concluded yet"
+        );
+        _;
+    }
 
-    // modifier isPresaleNotEnded() {
-    //     require(
-    //         presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.INPROGRESS || 
-    //         presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.PENDING, 
-    //         "Presale is not in progress"
-    //     );
-    //     _;
-    // }
+    modifier isPresaleNotEnded() {
+        require(
+            presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.INPROGRESS || 
+            presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.PENDING, 
+            "Presale is not in progress"
+        );
+        _;
+    }
 
     constructor (
         LaunchPadLib.TokenInfo memory _tokenInfo,
@@ -102,7 +111,8 @@ contract Presale {
         address _uniswapV2Router02
     ){
         master = msg.sender;
-        presaleCounts = LaunchPadLib.PresalectCounts(0, 0, 0 );
+        
+        // presaleCounts = LaunchPadLib.PresalectCounts(0, 0, 0 );
 
         tokenInfo = _tokenInfo;
         presaleInfo = _presaleInfo;
@@ -152,8 +162,8 @@ contract Presale {
                     );
                     assignedTokensPC += _contributorsVesting.eachCyclePC;
                 }
-                    uint difference = totalTokensPC - assignedTokensPC;
-                    contributorVestingRecord[contributorCycles].percentageToRelease += difference;
+                    // uint difference = totalTokensPC - assignedTokensPC;
+                    contributorVestingRecord[contributorCycles].percentageToRelease += totalTokensPC - assignedTokensPC;
             }
 
     }
@@ -162,7 +172,7 @@ contract Presale {
             
             uint totalLockedTokensPC = 100;
             uint initialReleasePC = _teamVesting.firstReleasePC;
-            uint initialReleaseTime = _teamVesting.firstReleaseTime * 1 minutes;
+            uint initialReleaseTime = _teamVesting.firstReleaseDelay * 1 minutes;
             teamVestingRecord[0] = TeamVestingRecord(
                 0, 
                 initialReleaseTime, 
@@ -191,278 +201,309 @@ contract Presale {
                     assignedTokensPC += _teamVesting.eachCyclePC;
                 }
 
-                    uint difference = totalLockedTokensPC - assignedTokensPC;
-                    teamVestingRecord[temaVestingCycles].percentageToRelease += difference;
+                    // uint difference = totalLockedTokensPC - assignedTokensPC;
+                    teamVestingRecord[temaVestingCycles].percentageToRelease += totalLockedTokensPC - assignedTokensPC;
             }
     }
 
-    function buyTokensOnPresale(uint256 numOfTokensRequested) public payable isPresaleActive {
+    function contributeToSale() public payable isPresaleActive {
 
-        // LaunchPadLib.Participant memory currentParticipant = participant[msg.sender];
+        uint allowed = participationCriteria.hardCap - presaleCounts.accumulatedBalance;
 
-        // require(msg.value >= (numOfTokensRequested * participationCriteria.priceOfEachToken ) , "insufficient funds");
+        Participant memory currentParticipant = participant[msg.sender];
+        uint preveousContribution =  currentParticipant.value;
+        uint contribution = msg.value;
+
+        require(contribution <= allowed && contribution + preveousContribution <= participationCriteria.maxContribution , "contribution is not valid");
+
+        if(currentParticipant.tokens == 0) {
+            require(contribution >= (participationCriteria.minContribution), "too low contribution");
+            presaleCounts.contributors++;
+        }
+
+        if(participationCriteria.presaleType == LaunchPadLib.PresaleType.WHITELISTED){
+            require( isWhiteListed(msg.sender), "Only whitelisted users are allowed to participate");   
+        }
         
-        // require(presaleCounts.remainingTokensForSale > 0 , "the sale is sold out");
-        // require(numOfTokensRequested <= presaleCounts.remainingTokensForSale, "insufficient tokens to fulfill this order");
-
-        // if(participationCriteria.typeOfPresale == LaunchPadLib.PresaleType.WHITELISTED){
-        //     require( EnumerableSet.contains(whiteListedUsers, msg.sender), "Only whitelisted users are allowed to participate");   
-        // }
+        if(participationCriteria.presaleType == LaunchPadLib.PresaleType.TOKENHOLDERS){
+            require(IERC20(participationCriteria.criteriaToken).balanceOf(msg.sender) >= participationCriteria.minCriteriaTokens, "You don't hold enough criteria tokens");
+        }
         
-        // if(participationCriteria.typeOfPresale == LaunchPadLib.PresaleType.TOKENHOLDERS){
-        //     require(IERC20(participationCriteria.criteriaToken).balanceOf(msg.sender) >= participationCriteria.minTokensForParticipation, "You don't hold enough criteria tokens");
-        // }
-        
-        // if(currentParticipant.tokens == 0) {
-        //     require(numOfTokensRequested >= reqestedTokens.minTokensReq, "Request for tokens is low, Please request more than minTokensReq");
-        //     presaleCounts.contributors++;
-        // }
+        uint requestedTokens = (contribution * participationCriteria.presaleRate) / 1 ether;
 
-        // require(numOfTokensRequested + currentParticipant.tokens <= reqestedTokens.maxTokensReq, "Request for tokens is high, Please request less than maxTokensReq");
+        participant[msg.sender].tokens += requestedTokens;
+        participant[msg.sender].value += contribution;
+        presaleCounts.accumulatedBalance += contribution;
 
-        // presaleCounts.accumulatedBalance = presaleCounts.accumulatedBalance + msg.value;
-        // presaleCounts.remainingTokensForSale = presaleCounts.remainingTokensForSale - numOfTokensRequested;
-       
-        // participant[msg.sender].value = currentParticipant.value + msg.value;
-        // participant[msg.sender].tokens = currentParticipant.tokens + numOfTokensRequested;
+        emit ContributionsAdded(msg.sender, contribution, requestedTokens);
+
         
     }
 
-    // function finalizePresale() public onlyPresaleOwner isPresaleNotEnded {
+    function emergencyWithdraw() public {
+
+        require(presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.INPROGRESS, "Presale is not in progress");
+
+        Participant memory currentParticipant = participant[msg.sender];
+        require(currentParticipant.value > 0, "Nothing to withdraw");
+
+        uint valueToReturn = (currentParticipant.value * 95) / 100;
+
+        participant[msg.sender].value = 0;
+        participant[msg.sender].tokens = 0;
         
-    //     require (
-    //         block.timestamp > presaleTimes.expiredAt ||
-    //         presaleCounts.remainingTokensForSale == 0,
-    //         "Presale is not over yet"
-    //     );
+        presaleCounts.accumulatedBalance -= currentParticipant.value;
+        // presaleCounts.remainingTokensForSale = presaleCounts.remainingTokensForSale + currentParticipant.tokens;
+
+        presaleCounts.contributors--;
         
-    //     uint256 totalTokensSold = participationCriteria.tokensForSale - presaleCounts.remainingTokensForSale;
+        (bool res1,) = payable(msg.sender).call{value: valueToReturn}("");
+        require(res1, "cannot refund to contributors"); 
+
+        (bool res2,) = payable(master).call{value: currentParticipant.value - valueToReturn}("");
+        require(res2, "cannot send devTeamShare"); 
+
+        emit ContributionsRemoved(msg.sender, currentParticipant.value);
+
+    }
+
+    function finalizePresale() public onlyPresaleOwner isPresaleNotEnded {
         
-    //     if( totalTokensSold >= reqestedTokens.softCap ){
+        require (
+            block.timestamp > presaleTimes.expiredAt ||
+            presaleCounts.accumulatedBalance >= participationCriteria.hardCap,
+            "Presale is not over yet"
+        );
+        
+        
+        if( presaleCounts.accumulatedBalance >= participationCriteria.softCap ){
+
+            uint256 totalTokensSold = (presaleCounts.accumulatedBalance * participationCriteria.presaleRate * 10**tokenInfo.decimals) / 1 ether ;
             
-    //         uint256 tokensToAddLiquidity = (totalTokensSold * participationCriteria.tokensPCForLP) / 100;
+            uint256 tokensToAddLiquidity = (totalTokensSold * participationCriteria.liquidity) / 100;
             
-    //             uint256 revenueFromPresale = presaleCounts.accumulatedBalance;
-    //             uint256 poolShareBNB = (revenueFromPresale * participationCriteria.tokensPCForLP) / 100;
-    //             uint256 devTeamShareBNB = (revenueFromPresale * salesFeeInPercent) / 100;
-    //             uint256 ownersShareBNB = revenueFromPresale - (poolShareBNB + devTeamShareBNB);
+            uint256 revenueFromPresale = presaleCounts.accumulatedBalance;
+            uint256 poolShareBNB = (revenueFromPresale * participationCriteria.liquidity) / 100;
+            uint256 devTeamShareBNB = (revenueFromPresale * salesFeeInPercent) / 100;
+            uint256 ownersShareBNB = revenueFromPresale - (poolShareBNB + devTeamShareBNB);
 
-    //             (bool res1,) = payable(presaleInfo.presaleOwner).call{value: ownersShareBNB}("");
-    //             require(res1, "cannot send devTeamShare"); 
+            (bool res1,) = payable(presaleInfo.presaleOwner).call{value: ownersShareBNB}("");
+            require(res1, "cannot send devTeamShare"); 
 
-    //             (bool res2,) = payable(master).call{value: devTeamShareBNB}("");
-    //             require(res2, "cannot send devTeamShare"); 
+            (bool res2,) = payable(master).call{value: devTeamShareBNB}("");
+            require(res2, "cannot send devTeamShare"); 
+            
+            IERC20(tokenInfo.tokenAddress).approve(address(uniswapV2Router02), tokensToAddLiquidity);
 
+            uniswapV2Router02.addLiquidityETH{value : poolShareBNB}(
+                tokenInfo.tokenAddress,
+                tokensToAddLiquidity,
+                0,
+                0,
+                address(this),
+                block.timestamp + 60
+            );
+               
+                presaleInfo.preSaleStatus = LaunchPadLib.PreSaleStatus.SUCCEED;
 
-    //             uint tokensForLiquidity = tokensToAddLiquidity * 10**presaleInfo.decimals;
-                
-    //             IERC20(presaleInfo.preSaleToken).approve(address(uniswapV2Router02), tokensForLiquidity);
+                uint extraTokens = IERC20(tokenInfo.tokenAddress).balanceOf(address(this)) - totalTokensSold - teamVesting.vestingTokens*10**tokenInfo.decimals;
+             
+                withdrawExtraTokens(extraTokens);
+                finalizingTime = block.timestamp;
+                emit Finalized(presaleInfo.preSaleStatus, finalizingTime);
 
-    //             uniswapV2Router02.addLiquidityETH{value : poolShareBNB}(
-    //                 presaleInfo.preSaleToken,
-    //                 tokensForLiquidity,
-    //                 0,
-    //                 0,
-    //                 address(this),
-    //                 block.timestamp + 60
-    //             );
-
-    //             uint remainingTokensFromLP = (presaleCounts.remainingTokensForSale * participationCriteria.tokensPCForLP ) / 100;
-    //             extraTokens = (presaleCounts.remainingTokensForSale + remainingTokensFromLP) * 10**presaleInfo.decimals;
-                
-    //             presaleInfo.preSaleStatus = LaunchPadLib.PreSaleStatus.SUCCEED;
-    //             withdrawExtraTokens();
-    //             finalizingTime = block.timestamp;
            
-    //     }
-    //     else {
+        }
+        else {
 
-    //         presaleInfo.preSaleStatus = LaunchPadLib.PreSaleStatus.FAILED;
-    //         extraTokens = IERC20(presaleInfo.preSaleToken).balanceOf(address(this));
-    //         withdrawExtraTokens();
+            presaleInfo.preSaleStatus = LaunchPadLib.PreSaleStatus.FAILED;
+            uint extraTokens = IERC20(tokenInfo.tokenAddress).balanceOf(address(this));
+            
+            withdrawExtraTokens(extraTokens);
+            emit Finalized(presaleInfo.preSaleStatus, 0);
 
-    //     }        
-    // }
+        }        
+    }
 
-    // function claimTokensOrARefund() public isPresaleEnded {
+    function withdrawExtraTokens(uint tokensToReturn) internal {
 
-    //     LaunchPadLib.Participant memory _participant = participant[msg.sender];
-    //     require(_participant.value > 0, "Nothing to claim");
+        if(tokensToReturn > 0){
+            if(presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.FAILED || presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.CANCELED){
+                bool tokenDistribution = IERC20(tokenInfo.tokenAddress).transfer(presaleInfo.presaleOwner, tokensToReturn);
+                assert( tokenDistribution);
+            }
+            else if(participationCriteria.refundType == LaunchPadLib.RefundType.WITHDRAW ){
+                bool tokenDistribution = IERC20(tokenInfo.tokenAddress).transfer(presaleInfo.presaleOwner, tokensToReturn);
+                assert( tokenDistribution);
+            }
+            else{
+                bool tokenDistribution = IERC20(tokenInfo.tokenAddress).transfer(0x000000000000000000000000000000000000dEaD , tokensToReturn);
+                assert( tokenDistribution );
+            }
+        }
+
+    }
+
+    function claimTokensOrARefund() public isPresaleEnded {
+
+        Participant memory _participant = participant[msg.sender];
+        require(_participant.value > 0, "Nothing to claim");
  
-    //     if (presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.SUCCEED) {
+        if (presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.SUCCEED) {
 
-    //         if(!contributorsVesting.isEnabled){
-    //             // participant[msg.sender].value = 0;
-    //             participant[msg.sender].tokens = 0;
-    //             participant[msg.sender].value = 0;
-    //             presaleCounts.claimsCount++;
+            if(!contributorsVesting.isEnabled){
+                participant[msg.sender].tokens = 0;
+                participant[msg.sender].value = 0;
+                presaleCounts.claimsCount++;
 
-    //             require(_participant.tokens > 0, "No tokens to claim");
-    //             bool tokenDistribution = IERC20(presaleInfo.preSaleToken).transfer(msg.sender, _participant.tokens * 10**presaleInfo.decimals);
-    //             require(tokenDistribution, "Unable to transfer tokens to the participant");
+                require(_participant.tokens > 0, "No tokens to claim");
+                bool tokenDistribution = IERC20(tokenInfo.tokenAddress).transfer(msg.sender, _participant.tokens * 10**tokenInfo.decimals);
+                require(tokenDistribution, "Unable to transfer tokens to the participant");
 
-    //         }
-    //         else {
+                emit Claimed(msg.sender, 0, _participant.tokens);
 
-    //             uint tokensLocked = _participant.tokens * 10**presaleInfo.decimals;
-    //             uint tokensToRelease;
+            }
+            else {
 
-    //             for(uint i = 0; i<= contributorCycles; i++){
-    //                 if(
-    //                     block.timestamp >= (finalizingTime + contributorVestingRecord[i].releaseTime) && 
-    //                     releaseStatus[finalizingTime + contributorVestingRecord[i].releaseTime][msg.sender] == ReleaseStatus.UNRELEASED
-    //                     ){
-    //                     tokensToRelease += (tokensLocked * contributorVestingRecord[i].tokensPC * contributorVestingRecord[i].percentageToRelease) / 10000;
-    //                     releaseStatus[finalizingTime + contributorVestingRecord[i].releaseTime][msg.sender] = ReleaseStatus.RELEASED;
+                uint tokensLocked = _participant.tokens * 10**tokenInfo.decimals;
+                uint tokensToRelease;
 
-    //                     if(i == contributorCycles) {
-    //                         participant[msg.sender].value = 0;
-    //                         participant[msg.sender].tokens = 0;
-    //                         presaleCounts.claimsCount++;
-    //                     }
-    //                 }
-    //             }
+                for(uint i = 0; i<= contributorCycles; i++){
+                    if(
+                        block.timestamp >= (finalizingTime + contributorVestingRecord[i].releaseTime) && 
+                        releaseStatus[finalizingTime + contributorVestingRecord[i].releaseTime][msg.sender] == ReleaseStatus.UNRELEASED
+                        ){
+                        tokensToRelease += (tokensLocked * contributorVestingRecord[i].tokensPC * contributorVestingRecord[i].percentageToRelease) / 10000;
+                        releaseStatus[finalizingTime + contributorVestingRecord[i].releaseTime][msg.sender] = ReleaseStatus.RELEASED;
 
-    //             require(tokensToRelease > 0, "Nothing to unlock");
-    //             require(
-    //                 IERC20(presaleInfo.preSaleToken).transfer(msg.sender, tokensToRelease),
-    //                 "Unable to transfer presale tokens to the presale owner"
-    //                 );
-    //         }
-    //     }
-    //     else {
-    //         participant[msg.sender].tokens = 0;
-    //         participant[msg.sender].value = 0;
-    //         presaleCounts.claimsCount++;
+                        if(i == contributorCycles) {
+                            participant[msg.sender].value = 0;
+                            participant[msg.sender].tokens = 0;
+                            presaleCounts.claimsCount++;
+                        }
+                    }
+                }
 
-    //         require(_participant.value > 0, "No amount to refund");
-    //         bool refund = payable(msg.sender).send(_participant.value);
-    //         require(refund, "Unable to refund amount to the participant");
-    //     }
+                require(tokensToRelease > 0, "Nothing to unlock");
 
-    // }
+                require(
+                    IERC20(tokenInfo.tokenAddress).transfer(msg.sender, tokensToRelease),
+                    "Unable to transfer presale tokens to the presale owner"
+                    );
 
-    // function withdrawExtraTokens() internal {
+                emit Claimed(msg.sender, 0, tokensToRelease/10**tokenInfo.decimals);
 
-    //     uint tokensToReturn = extraTokens;
+            }
+        }
+        else {
+            participant[msg.sender].tokens = 0;
+            participant[msg.sender].value = 0;
+            presaleCounts.claimsCount++;
 
-    //     if(presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.FAILED || presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.CANCELED){
-    //         bool tokenDistribution = IERC20(presaleInfo.preSaleToken).transfer(presaleInfo.presaleOwner, tokensToReturn);
-    //         assert( tokenDistribution);
-    //     }
-    //     else if(participationCriteria.refundType == LaunchPadLib.RefundType.WITHDRAW ){
-    //         bool tokenDistribution = IERC20(presaleInfo.preSaleToken).transfer(presaleInfo.presaleOwner, tokensToReturn);
-    //         assert( tokenDistribution);
-    //     }
-    //     else{
-    //         bool tokenDistribution = IERC20(presaleInfo.preSaleToken).transfer(0x000000000000000000000000000000000000dEaD , tokensToReturn);
-    //         assert( tokenDistribution );
-    //     }
+            require(_participant.value > 0, "No amount to refund");
+            bool refund = payable(msg.sender).send(_participant.value);
+            require(refund, "Unable to refund amount to the participant");
 
-    // }
+            emit Claimed(msg.sender, _participant.value, 0);
 
-    // function chageSaleType(LaunchPadLib.PresaleType _type, address _address, uint minimumTokens) public onlyPresaleOwner {
-    //     if(_type == LaunchPadLib.PresaleType.TOKENHOLDERS) {
-    //         participationCriteria.typeOfPresale = _type;
-    //         participationCriteria.criteriaToken = _address;
-    //         participationCriteria.minTokensForParticipation = minimumTokens;
-    //     }
-    //     else {
-    //         participationCriteria.typeOfPresale = _type;
-    //     }
-    // }
+        }
 
-    // function unlockTokens() public onlyPresaleOwner isPresaleEnded {
+    }
 
-    //     require(teamVesting.isEnabled, "No tokens were locked");
+    function chageSaleType(LaunchPadLib.PresaleType _type, address _address, uint minimumTokens) public onlyPresaleOwner {
+        if(_type == LaunchPadLib.PresaleType.TOKENHOLDERS) {
+            participationCriteria.presaleType = _type;
+            participationCriteria.criteriaToken = _address;
+            participationCriteria.minCriteriaTokens = minimumTokens;
+        }
+        else {
+            participationCriteria.presaleType = _type;
+        }
 
-    //     uint tokensLocked = teamVesting.vestingTokens * 10**presaleInfo.decimals;
-    //     uint tokensToRelease;
+        // emit SaleTypeChanged(_type);
+        emit SaleTypeChanged(_type, _address, minimumTokens);
 
-    //     for(uint i = 0; i<= temaVestingCycles; i++){            
-    //         if(block.timestamp >= finalizingTime + teamVestingRecord[i].releaseTime && teamVestingRecord[i].releaseStatus == ReleaseStatus.UNRELEASED){
-    //                 tokensToRelease += (tokensLocked * teamVestingRecord[i].tokensPC * teamVestingRecord[i].percentageToRelease) / 10000;
-    //                 teamVestingRecord[i].releaseStatus = ReleaseStatus.RELEASED;
-    //         }
-    //     }
+    }
 
-    //     require(tokensToRelease > 0, "Nothing to unlock");
-    //     require(
-    //         IERC20(presaleInfo.preSaleToken).transfer(msg.sender, tokensToRelease),
-    //         "Unable to transfer presale tokens to the presale owner"
-    //         );
+    function unlockTokens() public onlyPresaleOwner isPresaleEnded {
 
-    // }
+        // require(teamVesting.isEnabled, "No tokens were locked");
 
-    // function unlockLPTokens() public onlyPresaleOwner isPresaleEnded {
+        uint tokensLocked = teamVesting.vestingTokens * 10**tokenInfo.decimals;
+        uint tokensToRelease;
 
-    //     address factory = IUniswapV2Router02(uniswapV2Router02).factory();
-    //     address WBNBAddr = IUniswapV2Router02(uniswapV2Router02).WETH();
+        for(uint i = 0; i<= temaVestingCycles; i++){            
+            if(block.timestamp >= finalizingTime + teamVestingRecord[i].releaseTime && teamVestingRecord[i].releaseStatus == ReleaseStatus.UNRELEASED){
+                    tokensToRelease += (tokensLocked * teamVestingRecord[i].tokensPC * teamVestingRecord[i].percentageToRelease) / 10000;
+                    teamVestingRecord[i].releaseStatus = ReleaseStatus.RELEASED;
+            }
+        }
 
-    //     address pairAddress = IUniswapV2Factory(factory).getPair(presaleInfo.preSaleToken, WBNBAddr);
-    //     uint availableLP = IERC20(pairAddress).balanceOf(address(this));
+        require(tokensToRelease > 0, "Nothing to unlock");
+        IERC20(tokenInfo.tokenAddress).transfer(msg.sender, tokensToRelease);
 
-    //     require(availableLP > 0, "Nothing to claim");
-    //     require(block.timestamp >= finalizingTime + presaleTimes.lpLockupDuration, "Not unlocked yet");
+        // require(
+        //     IERC20(tokenInfo.tokenAddress).transfer(msg.sender, tokensToRelease),
+        //     "Unable to transfer presale tokens to the presale owner"
+        //     );
+
+        // emit TokensUnLocked(tokensToRelease);
+
+    }
+
+    function unlockLPTokens() public onlyPresaleOwner isPresaleEnded {
+
+        address factory = IUniswapV2Router02(uniswapV2Router02).factory();
+        address WBNBAddr = IUniswapV2Router02(uniswapV2Router02).WETH();
+
+        address pairAddress = IUniswapV2Factory(factory).getPair(tokenInfo.tokenAddress, WBNBAddr);
+        uint availableLP = IERC20(pairAddress).balanceOf(address(this));
+
+        require(availableLP > 0, "Nothing to claim");
+        require(block.timestamp >= finalizingTime + presaleTimes.lpLockupDuration, "Not unlocked yet");
         
-    //     bool res = IERC20(pairAddress).transfer(presaleInfo.presaleOwner, availableLP);
-    //     require(res, "Unable to transfer presale tokens to the presale owner");
+        IERC20(pairAddress).transfer(presaleInfo.presaleOwner, availableLP);
+        // bool res = IERC20(pairAddress).transfer(presaleInfo.presaleOwner, availableLP);
+        // require(res, "Unable to transfer presale tokens to the presale owner");
 
-    // }
+        // emit LPTokensUnLocked(availableLP);
 
-    // function whiteListUsers(address[] memory _addresses) public onlyPresaleOwner {
-    //     for(uint i=0; i < _addresses.length; i++){
-    //             EnumerableSet.add(whiteListedUsers, _addresses[i]); 
-    //     }
-    // }
 
-    // function removeWhiteListUsers(address[] memory _addresses) public onlyPresaleOwner {
-    //     for(uint i=0; i < _addresses.length; i++){
-    //         EnumerableSet.remove(whiteListedUsers, _addresses[i]); 
-    //     }
-    // }
+    }
 
-    // function getWhiteListUsers() public view returns (address[] memory) {
-    //     return EnumerableSet.values(whiteListedUsers);
-    // }
+    function isWhiteListed(address user) view public returns (bool){
+        return EnumerableSet.contains(whiteListedUsers, user);
+    }
 
-    // function emergencyWithdraw() public {
+    function whiteListUsers(address[] memory _addresses) public onlyPresaleOwner {
+        for(uint i=0; i < _addresses.length; i++){
+                EnumerableSet.add(whiteListedUsers, _addresses[i]); 
+        }
+    }
 
-    //     require(presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.INPROGRESS, "Presale is not in progress");
+    function removeWhiteListUsers(address[] memory _addresses) public onlyPresaleOwner {
+        for(uint i=0; i < _addresses.length; i++){
+            EnumerableSet.remove(whiteListedUsers, _addresses[i]); 
+        }
+    }
 
-    //     LaunchPadLib.Participant memory currentParticipant = participant[msg.sender];
-    //     require(currentParticipant.value > 0, "Nothing to withdraw");
+    function getWhiteListUsers() public view returns (address[] memory) {
+        return EnumerableSet.values(whiteListedUsers);
+    }
 
-    //     uint valueToReturn = (currentParticipant.value * 95) / 100;
+    function cancelSale() public onlyPresaleOwner isPresaleNotEnded {
+        presaleInfo.preSaleStatus = LaunchPadLib.PreSaleStatus.CANCELED;
+        uint extraTokens = IERC20(tokenInfo.tokenAddress).balanceOf(address(this));
+        withdrawExtraTokens(extraTokens);
+        emit Finalized(LaunchPadLib.PreSaleStatus.CANCELED, 0);
+    }
 
-    //     participant[msg.sender].value = 0;
-    //     participant[msg.sender].tokens = 0;
-        
-    //     presaleCounts.accumulatedBalance = presaleCounts.accumulatedBalance - currentParticipant.value;
-    //     presaleCounts.remainingTokensForSale = presaleCounts.remainingTokensForSale + currentParticipant.tokens;
+    function getContributorReleaseStatus(uint _time, address _address) public view returns(ReleaseStatus){
+        return releaseStatus[_time][_address];
+    }
 
-    //     presaleCounts.contributors--;
-        
-    //     (bool res1,) = payable(msg.sender).call{value: valueToReturn}("");
-    //     require(res1, "cannot refund to contributors"); 
-
-    //     (bool res2,) = payable(master).call{value: currentParticipant.value - valueToReturn}("");
-    //     require(res2, "cannot send devTeamShare"); 
-
-    // }
-
-    // function cancelSale() public onlyPresaleOwner isPresaleNotEnded {
-    //     presaleInfo.preSaleStatus = LaunchPadLib.PreSaleStatus.CANCELED;
-    //     extraTokens = IERC20(presaleInfo.preSaleToken).balanceOf(address(this));
-    //     withdrawExtraTokens();
-    // }
-
-    // function getContributorReleaseStatus(uint _time, address _address) public view returns(ReleaseStatus){
-    //     return releaseStatus[_time][_address];
-    // }
-
-    // function updateGeneralInfo(LaunchPadLib.GeneralInfo memory _generalInfo) public {
-    //     generalInfo = _generalInfo;
-    // }
+    function updateGeneralInfo(LaunchPadLib.GeneralInfo memory _generalInfo) public onlyPresaleOwner {
+        generalInfo = _generalInfo;
+    }
 
 }

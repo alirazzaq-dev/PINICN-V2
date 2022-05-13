@@ -21,30 +21,14 @@ interface LaunchPadLibInterface extends ethers.utils.Interface {
   functions: {};
 
   events: {
-    "Bought(uint256,uint256,address)": EventFragment;
-    "Claimed(uint256,address)": EventFragment;
-    "Withdrawed(uint256,address)": EventFragment;
+    "PresaleCreated(uint256,address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "Bought"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Claimed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Withdrawed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PresaleCreated"): EventFragment;
 }
 
-export type BoughtEvent = TypedEvent<
-  [BigNumber, BigNumber, string] & {
-    tokens: BigNumber;
-    amount: BigNumber;
-    user: string;
-  }
->;
-
-export type ClaimedEvent = TypedEvent<
-  [BigNumber, string] & { amount: BigNumber; user: string }
->;
-
-export type WithdrawedEvent = TypedEvent<
-  [BigNumber, string] & { amount: BigNumber; user: string }
+export type PresaleCreatedEvent = TypedEvent<
+  [BigNumber, string] & { id: BigNumber; presaleAddress: string }
 >;
 
 export class LaunchPadLib extends BaseContract {
@@ -95,54 +79,20 @@ export class LaunchPadLib extends BaseContract {
   callStatic: {};
 
   filters: {
-    "Bought(uint256,uint256,address)"(
-      tokens?: null,
-      amount?: null,
-      user?: null
-    ): TypedEventFilter<
-      [BigNumber, BigNumber, string],
-      { tokens: BigNumber; amount: BigNumber; user: string }
-    >;
-
-    Bought(
-      tokens?: null,
-      amount?: null,
-      user?: null
-    ): TypedEventFilter<
-      [BigNumber, BigNumber, string],
-      { tokens: BigNumber; amount: BigNumber; user: string }
-    >;
-
-    "Claimed(uint256,address)"(
-      amount?: null,
-      user?: null
+    "PresaleCreated(uint256,address)"(
+      id?: null,
+      presaleAddress?: null
     ): TypedEventFilter<
       [BigNumber, string],
-      { amount: BigNumber; user: string }
+      { id: BigNumber; presaleAddress: string }
     >;
 
-    Claimed(
-      amount?: null,
-      user?: null
+    PresaleCreated(
+      id?: null,
+      presaleAddress?: null
     ): TypedEventFilter<
       [BigNumber, string],
-      { amount: BigNumber; user: string }
-    >;
-
-    "Withdrawed(uint256,address)"(
-      amount?: null,
-      user?: null
-    ): TypedEventFilter<
-      [BigNumber, string],
-      { amount: BigNumber; user: string }
-    >;
-
-    Withdrawed(
-      amount?: null,
-      user?: null
-    ): TypedEventFilter<
-      [BigNumber, string],
-      { amount: BigNumber; user: string }
+      { id: BigNumber; presaleAddress: string }
     >;
   };
 

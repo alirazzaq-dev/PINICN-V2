@@ -13,67 +13,23 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "tokens",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
+        name: "id",
         type: "uint256",
       },
       {
         indexed: false,
         internalType: "address",
-        name: "user",
+        name: "presaleAddress",
         type: "address",
       },
     ],
-    name: "Bought",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-    ],
-    name: "Claimed",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-    ],
-    name: "Withdrawed",
+    name: "PresaleCreated",
     type: "event",
   },
 ];
 
 const _bytecode =
-  "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220daa442db1f0ae3a73a68f6325abdde9b4fc3c0dd0004290d96d31a231f4c5db264736f6c63430008070033";
+  "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122019a63d04dd5eb281fa1e300410f96477afd201e6ee04b9e742ec50695bf5ea5064736f6c63430008070033";
 
 export class LaunchPadLib__factory extends ContractFactory {
   constructor(

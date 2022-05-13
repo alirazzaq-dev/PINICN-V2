@@ -22,7 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface Launchpadv2Interface extends ethers.utils.Interface {
   functions: {
-    "createPresale((address,uint8),(uint8,string,uint256,uint256,uint8,uint256,uint256,uint256,uint256,uint8),(uint256,uint256,uint256),(bool,uint256,uint256,uint8),(bool,uint256,uint256,uint256,uint256,uint8),(string,string,string,string,string,string))": FunctionFragment;
+    "createPresale((address,uint8),(uint8,address,uint256,uint256,uint8,uint256,uint256,uint256,uint256,uint8),(uint256,uint256,uint256),(bool,uint256,uint256,uint8),(bool,uint256,uint256,uint256,uint256,uint8),(string,string,string,string,string,string))": FunctionFragment;
     "devAddr()": FunctionFragment;
     "getPresaleRecordsByToken(address)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -45,15 +45,15 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
     values: [
       { tokenAddress: string; decimals: BigNumberish },
       {
-        saleType: BigNumberish;
-        criteriaTokenAddress: string;
+        presaleType: BigNumberish;
+        criteriaToken: string;
         minCriteriaTokens: BigNumberish;
         presaleRate: BigNumberish;
         liquidity: BigNumberish;
         hardCap: BigNumberish;
         softCap: BigNumberish;
-        minBuy: BigNumberish;
-        maxBuy: BigNumberish;
+        minContribution: BigNumberish;
+        maxContribution: BigNumberish;
         refundType: BigNumberish;
       },
       {
@@ -70,7 +70,7 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
       {
         isEnabled: boolean;
         vestingTokens: BigNumberish;
-        firstReleaseTime: BigNumberish;
+        firstReleaseDelay: BigNumberish;
         firstReleasePC: BigNumberish;
         eachCycleDuration: BigNumberish;
         eachCyclePC: BigNumberish;
@@ -189,13 +189,19 @@ interface Launchpadv2Interface extends ethers.utils.Interface {
 
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
+    "PresaleCreated(uint256,address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PresaleCreated"): EventFragment;
 }
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
+>;
+
+export type PresaleCreatedEvent = TypedEvent<
+  [BigNumber, string] & { id: BigNumber; presaleAddress: string }
 >;
 
 export class Launchpadv2 extends BaseContract {
@@ -245,15 +251,15 @@ export class Launchpadv2 extends BaseContract {
     createPresale(
       _tokenInfo: { tokenAddress: string; decimals: BigNumberish },
       _participationCriteria: {
-        saleType: BigNumberish;
-        criteriaTokenAddress: string;
+        presaleType: BigNumberish;
+        criteriaToken: string;
         minCriteriaTokens: BigNumberish;
         presaleRate: BigNumberish;
         liquidity: BigNumberish;
         hardCap: BigNumberish;
         softCap: BigNumberish;
-        minBuy: BigNumberish;
-        maxBuy: BigNumberish;
+        minContribution: BigNumberish;
+        maxContribution: BigNumberish;
         refundType: BigNumberish;
       },
       _presaleTimes: {
@@ -270,7 +276,7 @@ export class Launchpadv2 extends BaseContract {
       _teamVesting: {
         isEnabled: boolean;
         vestingTokens: BigNumberish;
-        firstReleaseTime: BigNumberish;
+        firstReleaseDelay: BigNumberish;
         firstReleasePC: BigNumberish;
         eachCycleDuration: BigNumberish;
         eachCyclePC: BigNumberish;
@@ -343,15 +349,15 @@ export class Launchpadv2 extends BaseContract {
   createPresale(
     _tokenInfo: { tokenAddress: string; decimals: BigNumberish },
     _participationCriteria: {
-      saleType: BigNumberish;
-      criteriaTokenAddress: string;
+      presaleType: BigNumberish;
+      criteriaToken: string;
       minCriteriaTokens: BigNumberish;
       presaleRate: BigNumberish;
       liquidity: BigNumberish;
       hardCap: BigNumberish;
       softCap: BigNumberish;
-      minBuy: BigNumberish;
-      maxBuy: BigNumberish;
+      minContribution: BigNumberish;
+      maxContribution: BigNumberish;
       refundType: BigNumberish;
     },
     _presaleTimes: {
@@ -368,7 +374,7 @@ export class Launchpadv2 extends BaseContract {
     _teamVesting: {
       isEnabled: boolean;
       vestingTokens: BigNumberish;
-      firstReleaseTime: BigNumberish;
+      firstReleaseDelay: BigNumberish;
       firstReleasePC: BigNumberish;
       eachCycleDuration: BigNumberish;
       eachCyclePC: BigNumberish;
@@ -441,15 +447,15 @@ export class Launchpadv2 extends BaseContract {
     createPresale(
       _tokenInfo: { tokenAddress: string; decimals: BigNumberish },
       _participationCriteria: {
-        saleType: BigNumberish;
-        criteriaTokenAddress: string;
+        presaleType: BigNumberish;
+        criteriaToken: string;
         minCriteriaTokens: BigNumberish;
         presaleRate: BigNumberish;
         liquidity: BigNumberish;
         hardCap: BigNumberish;
         softCap: BigNumberish;
-        minBuy: BigNumberish;
-        maxBuy: BigNumberish;
+        minContribution: BigNumberish;
+        maxContribution: BigNumberish;
         refundType: BigNumberish;
       },
       _presaleTimes: {
@@ -466,7 +472,7 @@ export class Launchpadv2 extends BaseContract {
       _teamVesting: {
         isEnabled: boolean;
         vestingTokens: BigNumberish;
-        firstReleaseTime: BigNumberish;
+        firstReleaseDelay: BigNumberish;
         firstReleasePC: BigNumberish;
         eachCycleDuration: BigNumberish;
         eachCyclePC: BigNumberish;
@@ -548,21 +554,37 @@ export class Launchpadv2 extends BaseContract {
       [string, string],
       { previousOwner: string; newOwner: string }
     >;
+
+    "PresaleCreated(uint256,address)"(
+      id?: null,
+      presaleAddress?: null
+    ): TypedEventFilter<
+      [BigNumber, string],
+      { id: BigNumber; presaleAddress: string }
+    >;
+
+    PresaleCreated(
+      id?: null,
+      presaleAddress?: null
+    ): TypedEventFilter<
+      [BigNumber, string],
+      { id: BigNumber; presaleAddress: string }
+    >;
   };
 
   estimateGas: {
     createPresale(
       _tokenInfo: { tokenAddress: string; decimals: BigNumberish },
       _participationCriteria: {
-        saleType: BigNumberish;
-        criteriaTokenAddress: string;
+        presaleType: BigNumberish;
+        criteriaToken: string;
         minCriteriaTokens: BigNumberish;
         presaleRate: BigNumberish;
         liquidity: BigNumberish;
         hardCap: BigNumberish;
         softCap: BigNumberish;
-        minBuy: BigNumberish;
-        maxBuy: BigNumberish;
+        minContribution: BigNumberish;
+        maxContribution: BigNumberish;
         refundType: BigNumberish;
       },
       _presaleTimes: {
@@ -579,7 +601,7 @@ export class Launchpadv2 extends BaseContract {
       _teamVesting: {
         isEnabled: boolean;
         vestingTokens: BigNumberish;
-        firstReleaseTime: BigNumberish;
+        firstReleaseDelay: BigNumberish;
         firstReleasePC: BigNumberish;
         eachCycleDuration: BigNumberish;
         eachCyclePC: BigNumberish;
@@ -653,15 +675,15 @@ export class Launchpadv2 extends BaseContract {
     createPresale(
       _tokenInfo: { tokenAddress: string; decimals: BigNumberish },
       _participationCriteria: {
-        saleType: BigNumberish;
-        criteriaTokenAddress: string;
+        presaleType: BigNumberish;
+        criteriaToken: string;
         minCriteriaTokens: BigNumberish;
         presaleRate: BigNumberish;
         liquidity: BigNumberish;
         hardCap: BigNumberish;
         softCap: BigNumberish;
-        minBuy: BigNumberish;
-        maxBuy: BigNumberish;
+        minContribution: BigNumberish;
+        maxContribution: BigNumberish;
         refundType: BigNumberish;
       },
       _presaleTimes: {
@@ -678,7 +700,7 @@ export class Launchpadv2 extends BaseContract {
       _teamVesting: {
         isEnabled: boolean;
         vestingTokens: BigNumberish;
-        firstReleaseTime: BigNumberish;
+        firstReleaseDelay: BigNumberish;
         firstReleasePC: BigNumberish;
         eachCycleDuration: BigNumberish;
         eachCyclePC: BigNumberish;
