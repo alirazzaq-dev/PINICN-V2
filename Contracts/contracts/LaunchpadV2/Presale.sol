@@ -229,7 +229,7 @@ contract Presale {
             require(IERC20(participationCriteria.criteriaToken).balanceOf(msg.sender) >= participationCriteria.minCriteriaTokens, "You don't hold enough criteria tokens");
         }
         
-        uint requestedTokens = (contribution * participationCriteria.presaleRate) / 1 ether;
+        uint requestedTokens = (contribution * participationCriteria.presaleRate * 10**tokenInfo.decimals) / 1 ether;
 
         participant[msg.sender].tokens += requestedTokens;
         participant[msg.sender].value += contribution;
@@ -357,7 +357,7 @@ contract Presale {
                 presaleCounts.claimsCount++;
 
                 require(_participant.tokens > 0, "No tokens to claim");
-                bool tokenDistribution = IERC20(tokenInfo.tokenAddress).transfer(msg.sender, _participant.tokens * 10**tokenInfo.decimals);
+                bool tokenDistribution = IERC20(tokenInfo.tokenAddress).transfer(msg.sender, _participant.tokens);
                 require(tokenDistribution, "Unable to transfer tokens to the participant");
 
                 emit Claimed(msg.sender, 0, _participant.tokens);
@@ -365,7 +365,7 @@ contract Presale {
             }
             else {
 
-                uint tokensLocked = _participant.tokens * 10**tokenInfo.decimals;
+                uint tokensLocked = _participant.tokens;
                 uint tokensToRelease;
 
                 for(uint i = 0; i<= contributorCycles; i++){

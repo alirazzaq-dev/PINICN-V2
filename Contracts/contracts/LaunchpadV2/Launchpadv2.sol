@@ -60,7 +60,13 @@ contract Launchpadv2 is Ownable {
 
         require( _participationCriteria.liquidity >= 20 && _participationCriteria.liquidity <= 95, "liquidity should be between 20%-95%");
         require ( _presaleTimes.startedAt > block.timestamp && _presaleTimes.expiredAt > _presaleTimes.startedAt, "Presale times are not valid" );
-        require(_participationCriteria.hardCap > 0 && _participationCriteria.softCap >= _participationCriteria.hardCap/2, "Invalid hardcap or softcap");
+        require(
+            _participationCriteria.softCap > 0 && 
+            _participationCriteria.softCap >= _participationCriteria.hardCap/2 && 
+            _participationCriteria.minContribution > 0 && 
+            _participationCriteria.minContribution >= _participationCriteria.minContribution/2,
+            "Invalid hardcap or softcap");
+        // require(_participationCriteria.minContribution > 0 && _participationCriteria.minContribution >= _participationCriteria.minContribution/2, "Invalid min or max contribution");
 
         if(msg.sender != owner()) {
             require( msg.value >= upfrontfee, "Insufficient funds to start");
