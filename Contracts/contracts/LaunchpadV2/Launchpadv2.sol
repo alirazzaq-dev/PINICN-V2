@@ -58,15 +58,22 @@ contract Launchpadv2 is Ownable {
             require(_teamVesting.vestingTokens > 0, "Vesting tokens should be more than zero");
         }
 
-        require( _participationCriteria.liquidity >= 20 && _participationCriteria.liquidity <= 95, "liquidity should be between 20%-95%");
-        require ( _presaleTimes.startedAt > block.timestamp && _presaleTimes.expiredAt > _presaleTimes.startedAt, "Presale times are not valid" );
+        require( 
+            _participationCriteria.liquidity >= 20 && 
+            _participationCriteria.liquidity <= 95 && 
+            _presaleTimes.startedAt > block.timestamp && 
+            _presaleTimes.expiredAt > _presaleTimes.startedAt, 
+            "Liquidity or Times are invalid"
+            );
+
         require(
             _participationCriteria.softCap > 0 && 
+            _participationCriteria.softCap < _participationCriteria.hardCap && 
             _participationCriteria.softCap >= _participationCriteria.hardCap/2 && 
             _participationCriteria.minContribution > 0 && 
-            _participationCriteria.minContribution >= _participationCriteria.minContribution/2,
-            "Invalid hardcap or softcap");
-        // require(_participationCriteria.minContribution > 0 && _participationCriteria.minContribution >= _participationCriteria.minContribution/2, "Invalid min or max contribution");
+            _participationCriteria.minContribution < _participationCriteria.maxContribution,
+            "Invalid hardcap/softcap or minContribution/maxContribution"
+            );
 
         if(msg.sender != owner()) {
             require( msg.value >= upfrontfee, "Insufficient funds to start");
@@ -94,11 +101,6 @@ contract Launchpadv2 is Ownable {
         uint totalTokens = tokensForSale + tokensForLP + tokensForVesting;
 
         IERC20(_tokenInfo.tokenAddress).transferFrom(msg.sender, address(_presale), totalTokens);
-
-        // require(
-        //     IERC20(_tokenInfo.tokenAddress).transferFrom(msg.sender, address(_presale), totalTokens),
-        //      "Unable to transfer presale tokens to the contract"
-        //     );
                    
         presaleRecordByToken[_tokenInfo.tokenAddress].push(address(_presale));
         presaleRecordByID[presaleCount] = address(_presale);

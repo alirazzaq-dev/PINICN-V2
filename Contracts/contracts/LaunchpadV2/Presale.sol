@@ -34,6 +34,7 @@ contract Presale {
     struct Participant {
         uint256 value;
         uint256 tokens;
+        uint256 unclaimed;
     }
 
 
@@ -63,13 +64,15 @@ contract Presale {
     event ContributionsAdded(address contributor, uint amount, uint requestedTokens);
     event ContributionsRemoved(address contributor, uint amount);
     event Claimed(address contributor, uint value, uint tokens);
-    event Finalized(LaunchPadLib.PreSaleStatus status, uint finalizedTime);
-    event SaleTypeChanged(LaunchPadLib.PresaleType _type, address _address, uint minimumTokens);
+    event Finalized(uint8 status, uint finalizedTime);
+    event SaleTypeChanged(uint8 _type, address _address, uint minimumTokens);
 
     modifier isPresaleActive() {
         require (block.timestamp >= presaleTimes.startedAt && block.timestamp < presaleTimes.expiredAt, "Presale is not active");
         if(presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.PENDING){
             presaleInfo.preSaleStatus = LaunchPadLib.PreSaleStatus.INPROGRESS;
+            emit Finalized(uint8(LaunchPadLib.PreSaleStatus.INPROGRESS), 0);
+
         }
         require(presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.INPROGRESS, "Presale is not in progress");
         _;
@@ -112,8 +115,6 @@ contract Presale {
     ){
         master = msg.sender;
         
-        // presaleCounts = LaunchPadLib.PresalectCounts(0, 0, 0 );
-
         tokenInfo = _tokenInfo;
         presaleInfo = _presaleInfo;
         participationCriteria = _participationCriteria;
@@ -232,6 +233,8 @@ contract Presale {
         uint requestedTokens = (contribution * participationCriteria.presaleRate * 10**tokenInfo.decimals) / 1 ether;
 
         participant[msg.sender].tokens += requestedTokens;
+        participant[msg.sender].unclaimed += requestedTokens;
+
         participant[msg.sender].value += contribution;
         presaleCounts.accumulatedBalance += contribution;
 
@@ -251,6 +254,7 @@ contract Presale {
 
         participant[msg.sender].value = 0;
         participant[msg.sender].tokens = 0;
+        participant[msg.sender].unclaimed = 0;
         
         presaleCounts.accumulatedBalance -= currentParticipant.value;
         // presaleCounts.remainingTokensForSale = presaleCounts.remainingTokensForSale + currentParticipant.tokens;
@@ -310,7 +314,7 @@ contract Presale {
              
                 withdrawExtraTokens(extraTokens);
                 finalizingTime = block.timestamp;
-                emit Finalized(presaleInfo.preSaleStatus, finalizingTime);
+                emit Finalized(uint8(LaunchPadLib.PreSaleStatus.SUCCEED), finalizingTime);
 
            
         }
@@ -320,7 +324,7 @@ contract Presale {
             uint extraTokens = IERC20(tokenInfo.tokenAddress).balanceOf(address(this));
             
             withdrawExtraTokens(extraTokens);
-            emit Finalized(presaleInfo.preSaleStatus, 0);
+            emit Finalized(uint8(LaunchPadLib.PreSaleStatus.FAILED), 0);
 
         }        
     }
@@ -347,13 +351,14 @@ contract Presale {
     function claimTokensOrARefund() public isPresaleEnded {
 
         Participant memory _participant = participant[msg.sender];
-        require(_participant.value > 0, "Nothing to claim");
+        require(_participant.unclaimed > 0, "Nothing to claim");
  
         if (presaleInfo.preSaleStatus == LaunchPadLib.PreSaleStatus.SUCCEED) {
 
             if(!contributorsVesting.isEnabled){
-                participant[msg.sender].tokens = 0;
-                participant[msg.sender].value = 0;
+                // participant[msg.sender].tokens = 0;
+                // participant[msg.sender].value = 0;
+                participant[msg.sender].unclaimed = 0;
                 presaleCounts.claimsCount++;
 
                 require(_participant.tokens > 0, "No tokens to claim");
@@ -377,27 +382,31 @@ contract Presale {
                         releaseStatus[finalizingTime + contributorVestingRecord[i].releaseTime][msg.sender] = ReleaseStatus.RELEASED;
 
                         if(i == contributorCycles) {
-                            participant[msg.sender].value = 0;
-                            participant[msg.sender].tokens = 0;
+                            // participant[msg.sender].value = 0;
+                            // participant[msg.sender].tokens = 0;
                             presaleCounts.claimsCount++;
                         }
                     }
                 }
 
                 require(tokensToRelease > 0, "Nothing to unlock");
+                participant[msg.sender].unclaimed -= tokensToRelease;
 
                 require(
                     IERC20(tokenInfo.tokenAddress).transfer(msg.sender, tokensToRelease),
                     "Unable to transfer presale tokens to the presale owner"
                     );
 
-                emit Claimed(msg.sender, 0, tokensToRelease/10**tokenInfo.decimals);
+
+                emit Claimed(msg.sender, 0, tokensToRelease);
 
             }
         }
         else {
             participant[msg.sender].tokens = 0;
             participant[msg.sender].value = 0;
+            participant[msg.sender].unclaimed = 0;
+
             presaleCounts.claimsCount++;
 
             require(_participant.value > 0, "No amount to refund");
@@ -420,8 +429,7 @@ contract Presale {
             participationCriteria.presaleType = _type;
         }
 
-        // emit SaleTypeChanged(_type);
-        emit SaleTypeChanged(_type, _address, minimumTokens);
+        emit SaleTypeChanged(uint8(_type), _address, minimumTokens);
 
     }
 
@@ -495,7 +503,7 @@ contract Presale {
         presaleInfo.preSaleStatus = LaunchPadLib.PreSaleStatus.CANCELED;
         uint extraTokens = IERC20(tokenInfo.tokenAddress).balanceOf(address(this));
         withdrawExtraTokens(extraTokens);
-        emit Finalized(LaunchPadLib.PreSaleStatus.CANCELED, 0);
+        emit Finalized(uint8(LaunchPadLib.PreSaleStatus.CANCELED), 0);
     }
 
     function getContributorReleaseStatus(uint _time, address _address) public view returns(ReleaseStatus){

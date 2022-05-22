@@ -470,7 +470,11 @@ export class Presale extends BaseContract {
       arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber] & { value: BigNumber; tokens: BigNumber }
+      [BigNumber, BigNumber, BigNumber] & {
+        value: BigNumber;
+        tokens: BigNumber;
+        unclaimed: BigNumber;
+      }
     >;
 
     participationCriteria(
@@ -680,7 +684,13 @@ export class Presale extends BaseContract {
   participant(
     arg0: string,
     overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber] & { value: BigNumber; tokens: BigNumber }>;
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber] & {
+      value: BigNumber;
+      tokens: BigNumber;
+      unclaimed: BigNumber;
+    }
+  >;
 
   participationCriteria(
     overrides?: CallOverrides
@@ -880,7 +890,11 @@ export class Presale extends BaseContract {
       arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber] & { value: BigNumber; tokens: BigNumber }
+      [BigNumber, BigNumber, BigNumber] & {
+        value: BigNumber;
+        tokens: BigNumber;
+        unclaimed: BigNumber;
+      }
     >;
 
     participationCriteria(
