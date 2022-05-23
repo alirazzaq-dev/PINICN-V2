@@ -152,8 +152,8 @@ describe("PICNIC Launchpad Stack", () => {
 
       const tokensForSale  = 1 * presaleRate *  decimalFactor;
       const tokensForLP  = tokensForSale * 0.70 ;
-      // const tokensForVesting  = 100000 * decimalFactor;
-      const totalTokens = tokensForSale + tokensForLP;
+      const tokensForVesting  = 1500 * decimalFactor;
+      const totalTokens = tokensForSale + tokensForLP + tokensForVesting;
 
       // console.log("tokensForSale ", tokensForSale)
       // console.log("tokensForLP ", tokensForLP)
@@ -193,12 +193,12 @@ describe("PICNIC Launchpad Stack", () => {
           eachCyclePC: 20
         },
         {
-          isEnabled: false,
-          vestingTokens: 0,
-          firstReleaseDelay: 0,
-          firstReleasePC: 0,
-          eachCycleDuration: 0,
-          eachCyclePC: 0
+          isEnabled: true,
+          vestingTokens: 1500,
+          firstReleaseDelay: 10,
+          firstReleasePC: 30,
+          eachCycleDuration: 10,
+          eachCyclePC: 25
         },
         {
           logoURL: "",
@@ -261,38 +261,64 @@ describe("PICNIC Launchpad Stack", () => {
     //   // // Contribitors are claiming their 
       
       const tokensPerHead = 0.5 * presaleRate * decimalFactor
-
+      const unlockedTokensPerCycle = 1500 * decimalFactor;
+      const firstRelease = unlockedTokensPerCycle * 0.30;
+      const remaingLockedTokens = unlockedTokensPerCycle * 0.70;
       // First cycle
 
       let factor = 0;
 
-      await presale.connect(user2).claimTokensOrARefund();
-      expect((await bep9.balanceOf(user2.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
-      expect((await presale.participant(user2.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // await presale.connect(user2).claimTokensOrARefund();
+      // expect((await bep9.balanceOf(user2.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // expect((await presale.participant(user2.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
 
-      await presale.connect(user3).claimTokensOrARefund();
-      expect((await bep9.balanceOf(user3.address))).to.be.equal((String(tokensPerHead*0.5 + tokensPerHead*0.5*factor)));
-      expect((await presale.participant(user3.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // await presale.connect(user3).claimTokensOrARefund();
+      // expect((await bep9.balanceOf(user3.address))).to.be.equal((String(tokensPerHead*0.5 + tokensPerHead*0.5*factor)));
+      // expect((await presale.participant(user3.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
       
 
       await network.provider.send("evm_increaseTime", [10 * OneMinute])
       await network.provider.send("evm_mine");
-      
+
+      await presale.connect(user1).unlockTokens();
+      expect((await bep9.balanceOf(user1.address))).to.be.equal((String(firstRelease + remaingLockedTokens * 0 )));
+
+      await network.provider.send("evm_increaseTime", [10 * OneMinute])
+      await network.provider.send("evm_mine");
+
+      await presale.connect(user1).unlockTokens();
+      expect((await bep9.balanceOf(user1.address))).to.be.equal((String(firstRelease + remaingLockedTokens * 0.25 )));
+
+      await network.provider.send("evm_increaseTime", [10 * OneMinute])
+      await network.provider.send("evm_mine");
+
+      await presale.connect(user1).unlockTokens();
+      expect((await bep9.balanceOf(user1.address))).to.be.equal((String(firstRelease + remaingLockedTokens * 0.5 )));
+
+      await network.provider.send("evm_increaseTime", [10 * OneMinute])
+      await network.provider.send("evm_mine");
+
+      await presale.connect(user1).unlockTokens();
+      expect((await bep9.balanceOf(user1.address))).to.be.equal((String(firstRelease + remaingLockedTokens * 0.75 )));
+
+      await network.provider.send("evm_increaseTime", [10 * OneMinute])
+      await network.provider.send("evm_mine");
+
+      await presale.connect(user1).unlockTokens();
+      expect((await bep9.balanceOf(user1.address))).to.be.equal((String(firstRelease + remaingLockedTokens * 1 )));
 
       // Second cycle
       
       factor = 0.2;
   
-      // await presale.connect(user1).unlockTokens();
-      // expect((await bep9.balanceOf(user1.address))).to.be.equal((String(100000*0.5 * decimalFactor + 100000*0.5*0 * decimalFactor)));
 
-      await presale.connect(user2).claimTokensOrARefund();
-      expect((await bep9.balanceOf(user2.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
-      expect((await presale.participant(user2.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // await presale.connect(user2).claimTokensOrARefund();
+      // expect((await bep9.balanceOf(user2.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // expect((await presale.participant(user2.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
       
-      await presale.connect(user3).claimTokensOrARefund();
-      expect((await bep9.balanceOf(user3.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
-      expect((await presale.participant(user3.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // await presale.connect(user3).claimTokensOrARefund();
+      // expect((await bep9.balanceOf(user3.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // expect((await presale.participant(user3.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
       
 
 
@@ -306,13 +332,13 @@ describe("PICNIC Launchpad Stack", () => {
       // await presale.connect(user1).unlockTokens();
       // expect((await bep9.balanceOf(user1.address))).to.be.equal((String(100000*0.5 * decimalFactor + 100000*0.5*0.2 * decimalFactor)));
 
-      await presale.connect(user2).claimTokensOrARefund();
-      expect((await bep9.balanceOf(user2.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
-      expect((await presale.participant(user2.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // await presale.connect(user2).claimTokensOrARefund();
+      // expect((await bep9.balanceOf(user2.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // expect((await presale.participant(user2.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
       
-      await presale.connect(user3).claimTokensOrARefund();
-      expect((await bep9.balanceOf(user3.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
-      expect((await presale.participant(user3.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // await presale.connect(user3).claimTokensOrARefund();
+      // expect((await bep9.balanceOf(user3.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // expect((await presale.participant(user3.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
       
 
       // Fourth cycle 
@@ -325,13 +351,13 @@ describe("PICNIC Launchpad Stack", () => {
       // await presale.connect(user1).unlockTokens();
       // expect((await bep9.balanceOf(user1.address))).to.be.equal((String(100000*0.5 * decimalFactor + 100000*0.5*0.4 * decimalFactor)));
 
-      await presale.connect(user2).claimTokensOrARefund();
-      expect((await bep9.balanceOf(user2.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
-      expect((await presale.participant(user2.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // await presale.connect(user2).claimTokensOrARefund();
+      // expect((await bep9.balanceOf(user2.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // expect((await presale.participant(user2.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
       
-      await presale.connect(user3).claimTokensOrARefund();
-      expect((await bep9.balanceOf(user3.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
-      expect((await presale.participant(user3.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // await presale.connect(user3).claimTokensOrARefund();
+      // expect((await bep9.balanceOf(user3.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // expect((await presale.participant(user3.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
       
 
       // Fifth cycle 
@@ -344,13 +370,13 @@ describe("PICNIC Launchpad Stack", () => {
       // await presale.connect(user1).unlockTokens();
       // expect((await bep9.balanceOf(user1.address))).to.be.equal((String(100000*0.5 * decimalFactor + 100000*0.5*0.6 * decimalFactor)));
 
-      await presale.connect(user2).claimTokensOrARefund();
-      expect((await bep9.balanceOf(user2.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
-      expect((await presale.participant(user2.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // await presale.connect(user2).claimTokensOrARefund();
+      // expect((await bep9.balanceOf(user2.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // expect((await presale.participant(user2.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
       
-      await presale.connect(user3).claimTokensOrARefund();
-      expect((await bep9.balanceOf(user3.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
-      expect((await presale.participant(user3.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // await presale.connect(user3).claimTokensOrARefund();
+      // expect((await bep9.balanceOf(user3.address))).to.be.equal((String(tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
+      // expect((await presale.participant(user3.address)).unclaimed).to.be.equal(String(tokensPerHead - (tokensPerHead*0.5  + tokensPerHead*0.5*factor)));
       
            
 
@@ -365,21 +391,21 @@ describe("PICNIC Launchpad Stack", () => {
       // await presale.connect(user1).unlockTokens();
       // expect((await bep9.balanceOf(user1.address))).to.be.equal((String(100000*0.5 * decimalFactor + 100000*0.5*0.8 * decimalFactor)));
 
-      await presale.connect(user2).claimTokensOrARefund();
-      expect((await bep9.balanceOf(user2.address))).to.be.equal(tokensPerHead);
-      expect((await presale.participant(user2.address)).unclaimed).to.be.equal(0);
+      // await presale.connect(user2).claimTokensOrARefund();
+      // expect((await bep9.balanceOf(user2.address))).to.be.equal(tokensPerHead);
+      // expect((await presale.participant(user2.address)).unclaimed).to.be.equal(0);
       
-      await presale.connect(user3).claimTokensOrARefund();
-      expect((await bep9.balanceOf(user3.address))).to.be.equal(tokensPerHead);
-      expect((await presale.participant(user3.address)).unclaimed).to.be.equal(0);
+      // await presale.connect(user3).claimTokensOrARefund();
+      // expect((await bep9.balanceOf(user3.address))).to.be.equal(tokensPerHead);
+      // expect((await presale.participant(user3.address)).unclaimed).to.be.equal(0);
       
 
       await network.provider.send("evm_increaseTime", [10 * OneMinute])
       await network.provider.send("evm_mine");
 
 
-      await expect(presale.connect(user2).claimTokensOrARefund()).to.be.reverted;
-      await expect(presale.connect(user3).claimTokensOrARefund()).to.be.reverted;
+      // await expect(presale.connect(user2).claimTokensOrARefund()).to.be.reverted;
+      // await expect(presale.connect(user3).claimTokensOrARefund()).to.be.reverted;
 
       // // Seven cycle 
 

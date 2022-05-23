@@ -14,7 +14,7 @@ contract Launchpadv2 is Ownable {
     using LaunchPadLib for *;
 
     uint public presaleCount = 0;
-    uint public upfrontfee = 0.2 ether;
+    uint public upfrontfee = 0 ether;
     uint8 public salesFeeInPercent = 2;
 
     // address public uniswapV2Router02 = 0x10ED43C718714eb63d5aA57B78B54704E256024E;    // BSC Mainnet router
