@@ -140,6 +140,24 @@ describe("PICNIC Launchpad Stack", () => {
 
   describe("As a user ", async () => {
 
+    it("update fess function check", async () => {
+      
+      console.log("Old Fee", (await launchpad.upfrontfee()).toString());
+
+      await launchpad.updateFees(ethers.utils.parseEther("2"), 5);
+      
+      console.log("New Fee", (await launchpad.upfrontfee()).toString());
+      
+      await launchpad.updateFees(ethers.utils.parseEther("0.2"), 25);
+
+      console.log("Newwww Fee", (await launchpad.upfrontfee()).toString());
+      
+      await launchpad.updateFees(ethers.utils.parseEther("0.0002"), 35);
+
+      console.log("Newwwwwwwwww Fee", (await launchpad.upfrontfee()).toString());
+
+    })
+
     it("hardcore test ", async () => {
 
       let latestBlock = await ethers.provider.getBlock("latest");
@@ -208,7 +226,7 @@ describe("PICNIC Launchpad Stack", () => {
           discordURL: "",
           description: ""
         },
-        { value: ethers.utils.parseEther("0.20") }
+        { value: ethers.utils.parseEther("2") }
   
       )
       

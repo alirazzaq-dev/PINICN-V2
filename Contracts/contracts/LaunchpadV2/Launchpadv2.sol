@@ -14,19 +14,15 @@ contract Launchpadv2 is Ownable {
     using LaunchPadLib for *;
 
     uint public presaleCount = 0;
-    uint public upfrontfee = 0 ether;
+    uint public upfrontfee = 2 ether;
     uint8 public salesFeeInPercent = 2;
 
-    // address public uniswapV2Router02 = 0x10ED43C718714eb63d5aA57B78B54704E256024E;    // BSC Mainnet router
+    address public uniswapV2Router02 = 0x10ED43C718714eb63d5aA57B78B54704E256024E;    // BSC Mainnet router
     // address public uniswapV2Router02 = 0xD99D1c33F9fC3444f8101754aBC46c52416550D1;    // BSC Testnet router
 
-    // address public teamAddr = 0xaEEE930D7Dc148862051CC0F43114FedAbAF34BC;
-    // address public devAddr = 0x2a1706e0B87373445c500621a47cb26484D1DdfF;
+    address public teamAddr = 0xaEEE930D7Dc148862051CC0F43114FedAbAF34BC;
+    address public devAddr = 0x2a1706e0B87373445c500621a47cb26484D1DdfF;
 
-    address public uniswapV2Router02;
-    address public teamAddr;
-    address public devAddr;
-    
     ////////////////////////////// MAPPINGS ///////////////////////////////////
 
     mapping(uint => address) public presaleRecordByID;
@@ -37,11 +33,11 @@ contract Launchpadv2 is Ownable {
 
     ////////////////////////////// FUNCTIONS ///////////////////////////////////
 
-    constructor(address _uniswapV2Router02, address _teamAddr, address _devAddr){
-        uniswapV2Router02 = _uniswapV2Router02;
-        teamAddr = _teamAddr;
-        devAddr = _devAddr;
-    }
+    // constructor(address _uniswapV2Router02, address _teamAddr, address _devAddr){
+    //     uniswapV2Router02 = _uniswapV2Router02;
+    //     teamAddr = _teamAddr;
+    //     devAddr = _devAddr;
+    // }
 
     
     function createPresale(
@@ -114,7 +110,7 @@ contract Launchpadv2 is Ownable {
     }
 
     function updateFees(uint _upfrontFee, uint8 _salesFeeInPercent) public onlyOwner {
-        upfrontfee = _upfrontFee;
+        upfrontfee = _upfrontFee; 
         salesFeeInPercent = _salesFeeInPercent;
     }
 
